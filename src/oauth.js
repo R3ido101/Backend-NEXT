@@ -7,11 +7,11 @@ import { getConfig } from '../config';
 import { addTimeStringToDate, generateUID } from './utils';
 
 import APIError from './errors/APIError';
-import OAuthScope from './models/OAuthScope';
-import OAuthClient from './models/OAuthClient';
-import OAuthAccessToken from './models/OAuthAccessToken';
-import OAuthRefreshToken from './models/OAuthRefreshToken';
-import OAuthAuthorizationCode from './models/OAuthAuthorizationCode';
+import OAuthScope from './models/oauth/OAuthScope';
+import OAuthClient from './models/oauth/OAuthClient';
+import OAuthAccessToken from './models/oauth/OAuthAccessToken';
+import OAuthRefreshToken from './models/oauth/OAuthRefreshToken';
+import OAuthAuthorizationCode from './models/oauth/OAuthAuthorizationCode';
 
 const config = getConfig();
 const server = oauth2orize.createServer();
@@ -301,7 +301,7 @@ export const decision = [
 ];
 
 export const token = [
-    passport.authenticate(['basic', 'oauth2-client-password'], {session: false}),
+    passport.authenticate(['oauth2-client-password'], {session: false}),
     server.token(),
     server.errorHandler()
 ];

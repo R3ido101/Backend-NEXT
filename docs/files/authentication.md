@@ -78,6 +78,12 @@ Then you'll receive back a JSON response like below:
 ### Client Credentials
 This allows you to get an access token directly using your client credentials (client id and client secret) so you can directly use the API to access authenticated routes with your own user.
 
+**NOTE:** In order to access the /token route for this grant type, you must provided your client ID and client secret as basic authentication header when making the request like below:
+
+```
+Authentication: Basic ${base64encode(${clientID}:${clientSecret}}
+```
+
 #### Example
 First make a POST request to `{{{OAUTH_BASE_URL}}}/token` with the following JSON:
 

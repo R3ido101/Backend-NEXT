@@ -9,8 +9,8 @@ import ClientPasswordStrategy from 'passport-oauth2-client-password';
 
 import User from './models/User';
 import APIError from './errors/APIError';
-import OAuthClient from './models/OAuthClient';
-import OAuthAccessToken from './models/OAuthAccessToken';
+import OAuthClient from './models/oauth/OAuthClient';
+import OAuthAccessToken from './models/oauth/OAuthAccessToken';
 
 passport.use(new AnonymousStrategy());
 
@@ -45,24 +45,6 @@ passport.deserializeUser(async function (id, done) {
         return done(err);
     }
 });
-
-passport.use(new BasicStrategy(async function (username, password, done) {
-    try {
-        const client = await OAuthClient.query().where({client_id: username}).first();
-
-        if (!client) {
-            return done(null, false);
-        }
-
-        if (client.client_secret !== password) {
-            return done(null, false);
-        }
-
-        return done(null, client);
-    } catch (err) {
-        return done(err);
-    }
-}));
 
 passport.use(new ClientPasswordStrategy(async function (clientId, clientSecret, done) {
     try {

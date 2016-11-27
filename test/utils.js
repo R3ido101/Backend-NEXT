@@ -5,9 +5,9 @@ import { generateUID } from '../src/utils';
 import Pack from '../src/models/Pack';
 import Role from '../src/models/Role';
 import User from '../src/models/User';
-import OAuthScope from '../src/models/OAuthScope';
-import OAuthClient from '../src/models/OAuthClient';
-import OAuthAccessToken from '../src/models/OAuthAccessToken';
+import OAuthScope from './src/models/oauth/OAuthScope';
+import OAuthClient from './src/models/oauth/OAuthClient';
+import OAuthAccessToken from './src/models/oauth/OAuthAccessToken';
 
 import { getSafeString } from '../src/utils';
 

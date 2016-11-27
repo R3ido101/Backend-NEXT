@@ -1,19 +1,20 @@
 import { Model } from 'objection';
-import BaseModel from './BaseModel';
+import BaseModel from '../BaseModel';
 
-class OAuthAccessToken extends BaseModel {
-    static tableName = 'oauth_access_tokens';
+class OAuthAuthorizationCode extends BaseModel {
+    static tableName = 'oauth_authorization_codes';
 
     static jsonSchema = {
         type: 'object',
 
-        required: ['user_id', 'client_id', 'access_token', 'scope', 'expires_at'],
+        required: ['user_id', 'client_id', 'authorization_code', 'redirect_uri', 'scope', 'expires_at'],
 
         properties: {
             id: {type: 'integer'},
             user_id: {type: 'integer', minimum: 1},
             client_id: {type: 'integer', minimum: 1},
-            access_token: {type: 'string'},
+            authorization_code: {type: 'string'},
+            redirect_uri: {type: 'string'},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},
             created_at: {type: ['string', 'null'], format: 'date-time', default: null},
@@ -24,26 +25,18 @@ class OAuthAccessToken extends BaseModel {
 
     static relationMappings = {
         client: {
-            relation: Model.HasOneRelation,
+            relation: Model.BelongsToOneRelation,
             modelClass: `${__dirname}/OAuthClient`,
             join: {
-                from: 'oauth_access_tokens.user_id',
+                from: 'oauth_authorization_codes.user_id',
                 to: 'oauth_clients.id'
             }
         },
-        refresh_token: {
-            relation: Model.HasOneRelation,
-            modelClass: `${__dirname}/OAuthRefreshToken`,
-            join: {
-                from: 'oauth_access_tokens.id',
-                to: 'oauth_refresh_tokens.refresh_token_id'
-            }
-        },
         user: {
-            relation: Model.HasOneRelation,
-            modelClass: `${__dirname}/User`,
+            relation: Model.BelongsToOneRelation,
+            modelClass: `${__dirname}/../User`,
             join: {
-                from: 'oauth_access_tokens.user_id',
+                from: 'oauth_authorization_codes.client_id',
                 to: 'users.id'
             }
         }
@@ -55,8 +48,7 @@ class OAuthAccessToken extends BaseModel {
      * @type {object}
      */
     static transforms = {
-        revoked: (input) => (!!input),
-        scope: (input) => (input.split(','))
+        revoked: (input) => (!!input)
     };
 
     /**
@@ -75,22 +67,6 @@ class OAuthAccessToken extends BaseModel {
 
         return json;
     }
-
-    /**
-     * Checks to see if this access token has the provided scope or not.
-     *
-     * @param {string} scope
-     * @returns {boolean}
-     */
-    hasScope(scope) {
-        if (!this.scope || !this.scope.length) {
-            return false;
-        }
-
-        const validScopes = this.scope.filter((name) => (name === scope));
-
-        return validScopes.length;
-    }
 }
 
-export default OAuthAccessToken;
+export default OAuthAuthorizationCode;

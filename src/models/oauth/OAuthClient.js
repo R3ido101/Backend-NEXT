@@ -1,5 +1,6 @@
 import { Model } from 'objection';
-import BaseModel from './BaseModel';
+
+import BaseModel from '../BaseModel';
 
 class OAuthClient extends BaseModel {
     static tableName = 'oauth_clients';
@@ -10,13 +11,13 @@ class OAuthClient extends BaseModel {
         required: ['name', 'user_id', 'client_id', 'client_secret', 'redirect_uri'],
 
         properties: {
-            id: {type: 'integer'},
-            name: {type: 'string'},
+            id: {type: 'integer', minimum: 1},
+            name: {type: 'string', minLength: 3, maxLength: 255},
             user_id: {type: 'integer', minimum: 1},
             client_id: {type: 'string'},
             client_secret: {type: 'string'},
             redirect_uri: {type: 'string'},
-            created_at: {type: ['string', 'null'], format: 'date-time', default: null},
+            created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
         }
     };
@@ -24,7 +25,7 @@ class OAuthClient extends BaseModel {
     static relationMappings = {
         user: {
             relation: Model.BelongsToOneRelation,
-            modelClass: `${__dirname}/User`,
+            modelClass: `${__dirname}/../User`,
             join: {
                 from: 'oauth_clients.user_id',
                 to: 'users.id'

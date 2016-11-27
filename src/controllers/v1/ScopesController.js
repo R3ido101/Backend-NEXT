@@ -1,6 +1,6 @@
 import BaseController from '../BaseController';
 
-import OAuthScope from '../../models/OAuthScope';
+import OAuthScope from '../../models/oauth/OAuthScope';
 
 class ScopesController extends BaseController {
     /**
