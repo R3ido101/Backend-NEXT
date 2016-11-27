@@ -8,6 +8,8 @@ Before you begin you need to make sure you have the latest LTS version of NodeJS
 
 **NOTE:** This repository is **NOT** compatible with Yarn. Please don't attempt to use Yarn as there are some issues. Support will not be given with Yarn.
 
+You will also want to make sure you've setup your system for NodeGyp by following their [install docs](https://github.com/nodejs/node-gyp#installation) for your system.
+
 Clone the repository and run the following commands under your project root:
 
 ```shell
