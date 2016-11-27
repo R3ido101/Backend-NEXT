@@ -63,7 +63,7 @@ server.grant(oauth2orize.grant.token({scopeSeparator: ','}, async function (clie
             user_id: user.id,
             client_id: client.id,
             scope: ares.scope,
-            access_token: generateUID(256),
+            access_token: generateUID(60),
             expires_at: addTimeStringToDate(config.oauth.validity.access_token)
         });
 
@@ -73,7 +73,7 @@ server.grant(oauth2orize.grant.token({scopeSeparator: ','}, async function (clie
 
         const refreshToken = await OAuthRefreshToken.query().insert({
             access_token_id: accessToken.id,
-            refresh_token: generateUID(256),
+            refresh_token: generateUID(60),
             scope: accessToken.scope,
             expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
         });
@@ -103,7 +103,7 @@ server.exchange(oauth2orize.exchange.clientCredentials({scopeSeparator: ','}, as
             user_id: client.user_id,
             client_id: client.id,
             scope: scope.join(','),
-            access_token: generateUID(256),
+            access_token: generateUID(60),
             expires_at: addTimeStringToDate(config.oauth.validity.access_token)
         });
 
@@ -113,7 +113,7 @@ server.exchange(oauth2orize.exchange.clientCredentials({scopeSeparator: ','}, as
 
         const refreshToken = await OAuthRefreshToken.query().insert({
             access_token_id: accessToken.id,
-            refresh_token: generateUID(256),
+            refresh_token: generateUID(60),
             scope: accessToken.scope,
             expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
         });
@@ -161,7 +161,7 @@ server.exchange(oauth2orize.exchange.authorizationCode({scopeSeparator: ','}, as
             user_id: authorizationCode.user_id,
             client_id: authorizationCode.client_id,
             scope: authorizationCode.scope,
-            access_token: generateUID(256),
+            access_token: generateUID(60),
             expires_at: addTimeStringToDate(config.oauth.validity.access_token)
         });
 
@@ -171,7 +171,7 @@ server.exchange(oauth2orize.exchange.authorizationCode({scopeSeparator: ','}, as
 
         const refreshToken = await OAuthRefreshToken.query().insert({
             access_token_id: accessToken.id,
-            refresh_token: generateUID(256),
+            refresh_token: generateUID(60),
             scope: accessToken.scope,
             expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
         });
@@ -227,7 +227,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
             user_id: oldAccessToken.user_id,
             client_id: oldAccessToken.client_id,
             scope: oldAccessToken.scope.join(','),
-            access_token: generateUID(256),
+            access_token: generateUID(60),
             expires_at: addTimeStringToDate(config.oauth.validity.access_token)
         });
 
@@ -237,7 +237,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
 
         const refreshToken = await OAuthRefreshToken.query().insert({
             access_token_id: accessToken.id,
-            refresh_token: generateUID(256),
+            refresh_token: generateUID(60),
             scope: accessToken.scope,
             expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
         });

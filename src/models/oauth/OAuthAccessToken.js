@@ -10,13 +10,13 @@ class OAuthAccessToken extends BaseModel {
         required: ['user_id', 'client_id', 'access_token', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'integer'},
+            id: {type: 'integer', minimum: 1},
             user_id: {type: 'integer', minimum: 1},
             client_id: {type: 'integer', minimum: 1},
-            access_token: {type: 'string'},
+            access_token: {type: 'string', minLength: 60, maxLength: 60},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},
-            created_at: {type: ['string', 'null'], format: 'date-time', default: null},
+            created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
             expires_at: {type: 'string', format: 'date-time'}
         }

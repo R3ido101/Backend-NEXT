@@ -2,7 +2,6 @@ import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import { isFuture, parse } from 'date-fns';
 import LocalStrategy from 'passport-local';
-import { BasicStrategy } from 'passport-http';
 import BearerStrategy from 'passport-http-bearer';
 import AnonymousStrategy from 'passport-anonymous';
 import ClientPasswordStrategy from 'passport-oauth2-client-password';

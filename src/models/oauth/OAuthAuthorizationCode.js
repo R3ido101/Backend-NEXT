@@ -10,11 +10,11 @@ class OAuthAuthorizationCode extends BaseModel {
         required: ['user_id', 'client_id', 'authorization_code', 'redirect_uri', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'integer'},
+            id: {type: 'integer', minimum: 1},
             user_id: {type: 'integer', minimum: 1},
             client_id: {type: 'integer', minimum: 1},
-            authorization_code: {type: 'string'},
-            redirect_uri: {type: 'string'},
+            authorization_code: {type: 'string', minLength: 60, maxLength: 60},
+            redirect_uri: {type: 'string', format: 'uri'},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},
             created_at: {type: ['string', 'null'], format: 'date-time', default: null},

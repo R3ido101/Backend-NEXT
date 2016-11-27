@@ -10,24 +10,24 @@ class OAuthRefreshToken extends BaseModel {
         required: ['access_token_id', 'refresh_token', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'integer'},
+            id: {type: 'integer', minimum: 1},
             access_token_id: {type: 'integer', minimum: 1},
-            refresh_token: {type: 'string'},
+            refresh_token: {type: 'string', minLength: 60, maxLength: 60},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},
-            created_at: {type: ['string', 'null'], format: 'date-time', default: null},
+            created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
             expires_at: {type: 'string', format: 'date-time'}
         }
     };
 
     static relationMappings = {
-        user: {
+        accessToken: {
             relation: Model.BelongsToOneRelation,
-            modelClass: `${__dirname}/../User`,
+            modelClass: `${__dirname}/OAuthAccessToken`,
             join: {
-                from: 'oauth_refresh_tokens.user_id',
-                to: 'users.id'
+                from: 'oauth_refresh_tokens.access_token_id',
+                to: 'oauth_access_tokens.id'
             }
         }
     };

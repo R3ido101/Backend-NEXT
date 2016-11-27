@@ -14,9 +14,9 @@ class OAuthClient extends BaseModel {
             id: {type: 'integer', minimum: 1},
             name: {type: 'string', minLength: 3, maxLength: 255},
             user_id: {type: 'integer', minimum: 1},
-            client_id: {type: 'string'},
-            client_secret: {type: 'string'},
-            redirect_uri: {type: 'string'},
+            client_id: {type: 'string', minLength: 60, maxLength: 60},
+            client_secret: {type: 'string', minLength: 60, maxLength: 60},
+            redirect_uri: {type: 'string', format: 'uri'},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
         }

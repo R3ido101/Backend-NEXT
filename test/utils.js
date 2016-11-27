@@ -5,9 +5,9 @@ import { generateUID } from '../src/utils';
 import Pack from '../src/models/Pack';
 import Role from '../src/models/Role';
 import User from '../src/models/User';
-import OAuthScope from './src/models/oauth/OAuthScope';
-import OAuthClient from './src/models/oauth/OAuthClient';
-import OAuthAccessToken from './src/models/oauth/OAuthAccessToken';
+import OAuthScope from '../src/models/oauth/OAuthScope';
+import OAuthClient from '../src/models/oauth/OAuthClient';
+import OAuthAccessToken from '../src/models/oauth/OAuthAccessToken';
 
 import { getSafeString } from '../src/utils';
 
@@ -118,7 +118,7 @@ export async function addRoleToUser(role, user) {
 
 export async function createAccessToken(overrides = {}) {
     const defaults = {
-        access_token: generateUID(128),
+        access_token: generateUID(60),
         expires_at: Faker.date.future()
     };
 
@@ -131,8 +131,8 @@ export async function createAccessToken(overrides = {}) {
 export async function createOAuthClient(overrides = {}) {
     const defaults = {
         name: Faker.random.word(),
-        client_id: generateUID(128),
-        client_secret: generateUID(128),
+        client_id: generateUID(60),
+        client_secret: generateUID(60),
         redirect_uri: Faker.internet.url()
     };
 
