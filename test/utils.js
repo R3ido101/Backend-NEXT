@@ -68,7 +68,7 @@ export async function createRole(overrides = {}) {
     const createdById = overrides.created_by || (await createUser()).id;
 
     const defaults = {
-        name: Faker.random.word(),
+        name: Faker.random.words(2),
         description: Faker.random.words(10),
         created_by: createdById
     };
@@ -130,7 +130,7 @@ export async function createAccessToken(overrides = {}) {
 
 export async function createOAuthClient(overrides = {}) {
     const defaults = {
-        name: Faker.random.word(),
+        name: Faker.random.words(2),
         client_id: generateUID(60),
         client_secret: generateUID(60),
         redirect_uri: Faker.internet.url()
