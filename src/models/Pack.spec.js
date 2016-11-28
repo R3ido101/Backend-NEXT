@@ -183,7 +183,7 @@ describe('Model: Pack', function () {
     });
 
     describe('launcherTags', function () {
-        it('should attach a pack tag to a pack', async function () {
+        it('should attach a launcher tag to a pack', async function () {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'

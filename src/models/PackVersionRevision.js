@@ -1,3 +1,4 @@
+import sha1 from 'sha1';
 import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
@@ -8,7 +9,7 @@ class PackVersionRevision extends BaseModel {
     static jsonSchema = {
         type: 'object',
 
-        required: ['hash', 'json'],
+        required: ['json'],
 
         properties: {
             id: {type: 'integer', minimum: 1},
@@ -24,7 +25,7 @@ class PackVersionRevision extends BaseModel {
 
     static relationMappings = {
         packVersion: {
-            relation: Model.BelongsToOneRelation,
+            relation: Model.HasOneRelation,
             modelClass: `${__dirname}/PackVersion`,
             join: {
                 from: 'pack_version_revisions.pack_version_id',
@@ -32,6 +33,28 @@ class PackVersionRevision extends BaseModel {
             }
         }
     };
+
+    /**
+     * Before inserting make sure we generate the hash.
+     *
+     * @param {object} queryContext
+     */
+    $beforeInsert(queryContext) {
+        super.$beforeInsert(queryContext);
+
+        this.hash = sha1(this.json);
+    }
+
+    /**
+     * Before updating make sure we generate the hash.
+     *
+     * @param {object} queryContext
+     */
+    $beforeUpdate(queryContext) {
+        super.$beforeUpdate(queryContext);
+
+        this.hash = sha1(this.json);
+    }
 }
 
 export default PackVersionRevision;

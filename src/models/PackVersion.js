@@ -25,7 +25,7 @@ class PackVersion extends BaseModel {
 
     static relationMappings = {
         minecraftVersion: {
-            relation: Model.BelongsToOneRelation,
+            relation: Model.HasOneRelation,
             modelClass: `${__dirname}/MinecraftVersion`,
             join: {
                 from: 'pack_versions.minecraft_version_id',
@@ -33,7 +33,7 @@ class PackVersion extends BaseModel {
             }
         },
         pack: {
-            relation: Model.BelongsToOneRelation,
+            relation: Model.HasOneRelation,
             modelClass: `${__dirname}/Pack`,
             join: {
                 from: 'pack_versions.pack_id',
@@ -41,7 +41,7 @@ class PackVersion extends BaseModel {
             }
         },
         publishedRevision: {
-            relation: Model.BelongsToOneRelation,
+            relation: Model.HasOneRelation,
             modelClass: `${__dirname}/PackVersionRevision`,
             join: {
                 from: 'pack_versions.published_revision_id',

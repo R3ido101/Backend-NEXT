@@ -18,6 +18,17 @@ class MinecraftVersion extends BaseModel {
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
         }
     };
+
+    static relationMappings = {
+        packVersions: {
+            relation: Model.HasManyRelation,
+            modelClass: `${__dirname}/PackVersion`,
+            join: {
+                from: 'minecraft_versions.id',
+                to: 'pack_versions.minecraft_version_id'
+            }
+        }
+    };
 }
 
 export default MinecraftVersion;

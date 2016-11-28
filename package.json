@@ -69,6 +69,7 @@
     "remarkable-meta": "~1.0.1",
     "resource-router-middleware": "~0.6.0",
     "response-time": "~2.3.2",
+    "sha1": "~1.1.1",
     "sqlite3": "~3.1.8",
     "validate.js": "~0.11.1"
   },
