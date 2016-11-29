@@ -17,7 +17,7 @@ class User extends BaseModel {
         properties: {
             id: {type: 'integer', minimum: 1},
             username: {type: 'string', minLength: 3, maxLength: 64},
-            email: {type: 'string', minLength: 1, maxLength: 255, format: 'email'},
+            email: {type: 'string', minLength: 1, format: 'email'},
             password: {type: 'string', minLength: 1, maxLength: 60},
             must_change_password: {type: 'boolean', default: false},
             is_banned: {type: 'boolean', default: false},
@@ -28,6 +28,22 @@ class User extends BaseModel {
     };
 
     static relationMappings = {
+        packLeaderboards: {
+            relation: Model.HasManyRelation,
+            modelClass: `${__dirname}/PackLeaderboard`,
+            join: {
+                from: 'users.id',
+                to: 'pack_leaderboards.user_id'
+            }
+        },
+        packLogs: {
+            relation: Model.HasManyRelation,
+            modelClass: `${__dirname}/PackLog`,
+            join: {
+                from: 'users.id',
+                to: 'pack_logs.user_id'
+            }
+        },
         packs: {
             relation: Model.ManyToManyRelation,
             modelClass: `${__dirname}/Pack`,

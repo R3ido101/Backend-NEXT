@@ -6,6 +6,9 @@ import knex from '../../db';
 import Pack from './Pack';
 import Role from './Role';
 import User from './User';
+import PackLog from './PackLog';
+import PackVersion from './PackVersion';
+import PackLeaderboard from './PackLeaderboard';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
@@ -122,6 +125,92 @@ describe('Model: User', function () {
             const expectedError = '"username": "should NOT be shorter than 3 characters"';
 
             return expect(User.query().insert(input)).to.be.rejectedWith(expectedError);
+        });
+    });
+
+    describe('packLeaderboards', function () {
+        it('should return the pack leaderboards for a user', async function () {
+            const user = await User.query().insert({
+                username: 'test',
+                password: 'testing',
+                email: 'test@example.com'
+            });
+
+            await Pack.query().insert({
+                name: 'Test Pack',
+                description: 'This is a test pack',
+                type: 'public'
+            });
+
+            await PackVersion.query().insert({
+                version: '1.2.3',
+                pack_id: 1
+            });
+
+            await PackLeaderboard.query().insert({
+                pack_id: 1,
+                user_id: 1,
+                pack_version_id: 1,
+                username: 'test',
+                time_played: 44
+            });
+
+            const packLeaderboards = await user.$relatedQuery('packLeaderboards');
+
+            expect(packLeaderboards).to.be.an('array').with.length(1);
+
+            const packLeaderboard = packLeaderboards[0];
+
+            expect(packLeaderboard).to.be.an('object');
+
+            expect(packLeaderboard).to.have.property('id').that.equals(1);
+
+            expect(packLeaderboard).to.have.property('username').that.equals('test');
+
+            expect(packLeaderboard).to.have.property('time_played').that.equals(44);
+        });
+    });
+
+    describe('packLogs', function () {
+        it('should return the pack logs for a user', async function () {
+            const user = await User.query().insert({
+                username: 'test',
+                password: 'testing',
+                email: 'test@example.com'
+            });
+
+            await Pack.query().insert({
+                name: 'Test Pack',
+                description: 'This is a test pack',
+                type: 'public'
+            });
+
+            await PackVersion.query().insert({
+                version: '1.2.3',
+                pack_id: 1
+            });
+
+            await PackLog.query().insert({
+                pack_id: 1,
+                user_id: 1,
+                pack_version_id: 1,
+                username: 'test',
+                action: 'pack_install'
+            });
+
+            const packLogs = await user.$relatedQuery('packLogs');
+
+            expect(packLogs).to.be.an('array').with.length(1);
+
+            const packLog = packLogs[0];
+
+            expect(packLog).to.be.an('object');
+
+            expect(packLog).to.have.property('id').that.equals(1);
+
+            expect(packLog).to.have.property('username').that.equals('test');
+
+            expect(packLog).to.have.property('action').that.equals('pack_install');
         });
     });
 

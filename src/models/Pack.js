@@ -34,6 +34,22 @@ class Pack extends BaseModel {
                 to: 'launcher_tags.pack_id'
             }
         },
+        packLeaderboards: {
+            relation: Model.HasManyRelation,
+            modelClass: `${__dirname}/PackLeaderboard`,
+            join: {
+                from: 'packs.id',
+                to: 'pack_leaderboards.pack_id'
+            }
+        },
+        packLogs: {
+            relation: Model.HasManyRelation,
+            modelClass: `${__dirname}/PackLog`,
+            join: {
+                from: 'packs.id',
+                to: 'pack_logs.pack_id'
+            }
+        },
         packTags: {
             relation: Model.HasManyRelation,
             modelClass: `${__dirname}/PackTag`,
