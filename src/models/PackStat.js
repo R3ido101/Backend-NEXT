@@ -18,7 +18,7 @@ class PackStat extends BaseModel {
             pack_updates: {type: 'integer', minimum: 0, default: 0},
             server_installs: {type: 'integer', minimum: 0, default: 0},
             server_updates: {type: 'integer', minimum: 0, default: 0},
-            time_played: {type: 'integer', minimum: 0, default: 0},
+            time_played: {type: 'integer', minimum: 0, default: 0}
         }
     };
 
