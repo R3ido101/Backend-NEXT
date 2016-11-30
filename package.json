@@ -10,14 +10,18 @@
     "build": "babel src -D -d dist --presets es2015,stage-0",
     "start": "node dist",
     "prestart": "npm run -s build",
-    "lint": "eslint src config test migrations knexfile.js",
-    "lint:watch": "esw src config test migrations knexfile.js --watch",
+    "lint": "eslint cli src config test migrations knexfile.js",
+    "lint:watch": "esw cli src config test migrations knexfile.js --watch",
     "test": "cross-env NODE_ENV=test mocha --opts ./mocha.opts",
     "test:watch": "cross-env NODE_ENV=test mocha --opts ./mocha.opts --watch",
     "test:clean": "rimraf ./db/test.sqlite3 && cross-env NODE_ENV=test npm run migrate && cross-env NODE_ENV=test npm run seed",
     "seed": "knex seed:run",
     "migrate": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback"
+    "migrate:rollback": "knex migrate:rollback",
+    "cli": "npm run cli:dev",
+    "cli:dev": "cross-env NODE_ENV=development babel-node ./cli --presets es2015,stage-0",
+    "cli:test": "cross-env NODE_ENV=test babel-node ./cli --presets es2015,stage-0",
+    "cli:production": "cross-env NODE_ENV=production babel-node ./cli --presets es2015,stage-0"
   },
   "repository": {
     "type": "git",
@@ -73,7 +77,8 @@
     "response-time": "~2.3.2",
     "sha1": "~1.1.1",
     "sqlite3": "~3.1.8",
-    "validate.js": "~0.11.1"
+    "validate.js": "~0.11.1",
+    "vantage": "^1.7.0"
   },
   "devDependencies": {
     "babel-cli": "~6.18.0",

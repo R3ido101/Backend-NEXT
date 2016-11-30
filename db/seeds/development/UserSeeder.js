@@ -14,23 +14,22 @@ exports.seed = function (knex, Promise) {
         knex('oauth_clients').del(),
 
         // Inserts seed entries
-        knex('users').insert({
-            username: 'admin',
-            password: bcrypt.hashSync('password', config.bcryptRounds),
-            email: 'test@example.com',
-            must_change_password: 0,
-            created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
-        }),
+        knex('users').insert([
+            {
+                username: 'admin',
+                password: bcrypt.hashSync('password', config.bcryptRounds),
+                email: 'admin@example.com',
+                created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+            }
+        ]),
         knex('roles').insert({
             name: 'admin',
             description: 'Can administer the system.',
-            created_by: 1,
             created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
         }),
         knex('user_roles').insert({
             role_id: 1,
             user_id: 1,
-            created_by: 1,
             created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
         }),
         knex('oauth_clients').insert([
