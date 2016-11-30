@@ -5,11 +5,11 @@ import knex from '../db';
 
 Model.knex(knex);
 
-import addCommands from './commands';
+import loadCommands from './loadCommands';
 
 const vantage = Vantage();
 
-addCommands(vantage);
+loadCommands(vantage);
 
 vantage
     .delimiter('Backend-NEXT~$')
