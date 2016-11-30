@@ -73,12 +73,14 @@ class DocsController extends BaseController {
                     try {
                         return hljs.highlight(lang, str).value;
                     } catch (err) {
+                        // do nothing
                     }
                 }
 
                 try {
                     return hljs.highlightAuto(str).value;
                 } catch (err) {
+                    // do nothing
                 }
 
                 return '';
