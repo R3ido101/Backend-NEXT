@@ -80,7 +80,7 @@ passport.use(new BearerStrategy(async function (accessToken, done) {
             return done(null, false);
         }
 
-        return done(null, user, {token});
+        return done(null, user.$omit('password'), {token});
     } catch (err) {
         return done(err);
     }

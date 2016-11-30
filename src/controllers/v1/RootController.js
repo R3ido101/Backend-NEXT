@@ -19,7 +19,8 @@ class RootController extends BaseController {
                 scopes: req.authInfo.token.scope,
                 created_at: req.authInfo.token.created_at,
                 expires_at: req.authInfo.token.expires_at
-            }
+            },
+            user: req.user
         };
 
         return res.json({

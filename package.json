@@ -50,6 +50,7 @@
     "express-rate-limit": "RyanTheAllmighty/express-rate-limit#feature/add-skip-function",
     "express-session": "~1.14.2",
     "helmet": "~3.1.0",
+    "highlight.js": "^9.8.0",
     "http-status": "~0.2.3",
     "knex": "0.12.6",
     "markdown-toc": "~0.13.0",

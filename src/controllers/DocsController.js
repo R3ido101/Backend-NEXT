@@ -1,6 +1,7 @@
 import fs from 'fs';
 import pug from 'pug';
 import path from 'path';
+import hljs from 'highlight.js';
 import meta from 'remarkable-meta';
 import Remarkable from 'remarkable';
 import markdownTOC from 'markdown-toc';
@@ -66,7 +67,23 @@ class DocsController extends BaseController {
         const content = fs.readFileSync(filePath, 'utf8');
         const templateFile = path.resolve(`${process.cwd()}/docs/templates/base.pug`);
 
-        const markdown = new Remarkable();
+        const markdown = new Remarkable({
+            highlight: function (str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(lang, str).value;
+                    } catch (err) {
+                    }
+                }
+
+                try {
+                    return hljs.highlightAuto(str).value;
+                } catch (err) {
+                }
+
+                return '';
+            }
+        });
 
         markdown.use(meta);
 
