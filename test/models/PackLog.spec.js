@@ -3,16 +3,16 @@ import chai, { expect } from 'chai';
 
 import knex from '../../db';
 
-import Pack from './Pack';
-import User from './User';
-import PackVersion from './PackVersion';
-import PackLeaderboard from './PackLeaderboard';
+import Pack from '../../src/models/Pack';
+import User from '../../src/models/User';
+import PackLog from '../../src/models/PackLog';
+import PackVersion from '../../src/models/PackVersion';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
  * expected
  */
-describe('Model: PackLeaderboard', function () {
+describe('Model: PackLog', function () {
     before(() => {
         Model.knex(knex);
     });
@@ -28,7 +28,7 @@ describe('Model: PackLeaderboard', function () {
     });
 
     describe('insert', function () {
-        it('should create a pack leaderboard', async function () {
+        it('should create a pack log', async function () {
             await User.query().insert({
                 username: 'test',
                 password: 'testing',
@@ -46,38 +46,38 @@ describe('Model: PackLeaderboard', function () {
                 pack_id: 1
             });
 
-            const packLeaderboard = await PackLeaderboard.query().insert({
+            const packLog = await PackLog.query().insert({
                 pack_id: 1,
                 user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
-                time_played: 44
+                action: 'pack_install'
             });
 
-            expect(packLeaderboard).to.be.an('object');
+            expect(packLog).to.be.an('object');
 
-            expect(packLeaderboard).to.have.property('id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('id').that.equals(1);
+            expect(packLog).to.have.property('id').that.is.a('number');
+            expect(packLog).to.have.property('id').that.equals(1);
 
-            expect(packLeaderboard).to.have.property('pack_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('pack_id').that.equals(1);
+            expect(packLog).to.have.property('pack_id').that.is.a('number');
+            expect(packLog).to.have.property('pack_id').that.equals(1);
 
-            expect(packLeaderboard).to.have.property('pack_version_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('pack_version_id').that.equals(1);
+            expect(packLog).to.have.property('pack_version_id').that.is.a('number');
+            expect(packLog).to.have.property('pack_version_id').that.equals(1);
 
-            expect(packLeaderboard).to.have.property('user_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('user_id').that.equals(1);
+            expect(packLog).to.have.property('user_id').that.is.a('number');
+            expect(packLog).to.have.property('user_id').that.equals(1);
 
-            expect(packLeaderboard).to.have.property('username').that.is.a('string');
-            expect(packLeaderboard).to.have.property('username').that.equals('test');
+            expect(packLog).to.have.property('username').that.is.a('string');
+            expect(packLog).to.have.property('username').that.equals('test');
 
-            expect(packLeaderboard).to.have.property('time_played').that.is.a('number');
-            expect(packLeaderboard).to.have.property('time_played').that.equals(44);
+            expect(packLog).to.have.property('action').that.is.a('string');
+            expect(packLog).to.have.property('action').that.equals('pack_install');
         });
     });
 
     describe('pack', function () {
-        it('should return the pack for a pack leaderboard', async function () {
+        it('should return the pack for a pack log', async function () {
             await User.query().insert({
                 username: 'test',
                 password: 'testing',
@@ -95,15 +95,15 @@ describe('Model: PackLeaderboard', function () {
                 pack_id: 1
             });
 
-            const packLeaderboard = await PackLeaderboard.query().insert({
+            const packLog = await PackLog.query().insert({
                 pack_id: 1,
                 user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
-                time_played: 44
+                action: 'pack_install'
             });
 
-            const packs = await packLeaderboard.$relatedQuery('pack');
+            const packs = await packLog.$relatedQuery('pack');
 
             expect(packs).to.be.an('array').with.length(1);
 
@@ -120,7 +120,7 @@ describe('Model: PackLeaderboard', function () {
     });
 
     describe('packVersion', function () {
-        it('should return the pack version for a pack leaderboard', async function () {
+        it('should return the pack version for a pack log', async function () {
             await User.query().insert({
                 username: 'test',
                 password: 'testing',
@@ -138,15 +138,15 @@ describe('Model: PackLeaderboard', function () {
                 pack_id: 1
             });
 
-            const packLeaderboard = await PackLeaderboard.query().insert({
+            const packLog = await PackLog.query().insert({
                 pack_id: 1,
                 user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
-                time_played: 44
+                action: 'pack_install'
             });
 
-            const packVersions = await packLeaderboard.$relatedQuery('packVersion');
+            const packVersions = await packLog.$relatedQuery('packVersion');
 
             expect(packVersions).to.be.an('array').with.length(1);
 
@@ -161,7 +161,7 @@ describe('Model: PackLeaderboard', function () {
     });
 
     describe('user', function () {
-        it('should return the user for a pack leaderboard', async function () {
+        it('should return the user for a pack log', async function () {
             await User.query().insert({
                 username: 'test',
                 password: 'testing',
@@ -179,15 +179,15 @@ describe('Model: PackLeaderboard', function () {
                 pack_id: 1
             });
 
-            const packLeaderboard = await PackLeaderboard.query().insert({
+            const packLog = await PackLog.query().insert({
                 pack_id: 1,
                 user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
-                time_played: 44
+                action: 'pack_install'
             });
 
-            const users = await packLeaderboard.$relatedQuery('user');
+            const users = await packLog.$relatedQuery('user');
 
             expect(users).to.be.an('array').with.length(1);
 

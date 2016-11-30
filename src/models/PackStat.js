@@ -5,6 +5,8 @@ import BaseModel from './BaseModel';
 class PackStat extends BaseModel {
     static tableName = 'pack_stats';
 
+    static timestamps = false;
+
     static jsonSchema = {
         type: 'object',
 

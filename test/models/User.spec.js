@@ -3,12 +3,12 @@ import chai, { expect } from 'chai';
 
 import knex from '../../db';
 
-import Pack from './Pack';
-import Role from './Role';
-import User from './User';
-import PackLog from './PackLog';
-import PackVersion from './PackVersion';
-import PackLeaderboard from './PackLeaderboard';
+import Pack from '../../src/models/Pack';
+import Role from '../../src/models/Role';
+import User from '../../src/models/User';
+import PackLog from '../../src/models/PackLog';
+import PackVersion from '../../src/models/PackVersion';
+import PackLeaderboard from '../../src/models/PackLeaderboard';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as

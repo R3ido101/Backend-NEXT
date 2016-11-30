@@ -3,8 +3,8 @@ import chai, { expect } from 'chai';
 
 import knex from '../../db';
 
-import Pack from './Pack';
-import PackTag from './PackTag';
+import Pack from '../../src/models/Pack';
+import PackTag from '../../src/models/PackTag';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as

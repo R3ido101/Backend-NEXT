@@ -3,9 +3,9 @@ import chai, { expect } from 'chai';
 
 import knex from '../../db';
 
-import Pack from './Pack';
-import PackVersion from './PackVersion';
-import PackVersionRevision from './PackVersionRevision';
+import Pack from '../../src/models/Pack';
+import PackVersion from '../../src/models/PackVersion';
+import PackVersionRevision from '../../src/models/PackVersionRevision';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as

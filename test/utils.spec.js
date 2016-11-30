@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai';
 
-import * as utils from './utils';
+import * as utils from '../src/utils';
 import * as dateFns from 'date-fns';
 
 describe('Utils', function () {

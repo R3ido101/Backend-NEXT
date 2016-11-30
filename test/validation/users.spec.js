@@ -2,9 +2,9 @@ import { expect } from 'chai';
 import validate from 'validate.js';
 
 import knex from '../../db';
-import * as usersValidations from './users';
-import setupCustomValidators from './custom';
-import * as testUtils from '../../test/utils';
+import * as usersValidations from '../../src/validation/users';
+import setupCustomValidators from '../../src/validation/custom';
+import * as testUtils from '../utils';
 
 describe('users validations', function () {
     beforeEach(function (done) {

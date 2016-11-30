@@ -3,8 +3,8 @@ import chai, { expect } from 'chai';
 
 import knex from '../../db';
 
-import Role from './Role';
-import User from './User';
+import Role from '../../src/models/Role';
+import User from '../../src/models/User';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as

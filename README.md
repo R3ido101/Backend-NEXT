@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/ATLauncher/Backend-NEXT/tree/initial-code.svg?style=svg)](https://circleci.com/gh/ATLauncher/Backend-NEXT/tree/initial-code)
+[![CircleCI](https://circleci.com/gh/ATLauncher/Backend-NEXT/tree/feature/initial-code.svg?style=svg)](https://circleci.com/gh/ATLauncher/Backend-NEXT/tree/feature/initial-code)
 
 # Backend-NEXT
 Backend API server for ATLauncher NEXT.
@@ -37,7 +37,7 @@ To run the tests simply run the following command:
 npm test
 ```
 
-This will run `npm run test:clean` before running the tests which will remove the test database, run the migrations as well as the seeds.
+You can run `npm run test:clean` which will remove the test database, run the migrations as well as the seeds.
 
 ### Linting
 Please make sure you run all your code through the linter before creating a pull request as all pull requests are automatically checked by the CI process and will cause delays if not linted properly.
@@ -59,7 +59,7 @@ They're divided up into 3 main files:
  - `production.json`: This file contains setting overrides for when in prodution.
 
 ## Running in production
-To run in production you should use some tool such as NodeMon of Forever to keep your server up and running all the time.
+To run in production you should use some tool such as NodeMon or Forever to keep your server up and running all the time.
 
 First thing you need to do is run the migrations for the production environment:
 
