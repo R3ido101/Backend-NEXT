@@ -58,8 +58,17 @@ describe('Model: User', function () {
 
             expect(user).to.have.property('ban_reason').that.is.null;
 
+            expect(user).to.have.property('is_verified').that.is.a('boolean');
+            expect(user).to.have.property('is_verified').that.equals(false);
+
+            expect(user).to.have.property('verification_code').that.is.null;
+
+            expect(user).to.have.property('tfa_secret').that.is.null;
+
             expect(user).to.have.property('created_at').that.is.a('string');
             expect(user).to.have.property('updated_at').that.is.null;
+            expect(user).to.have.property('verified_at').that.is.null;
+            expect(user).to.have.property('banned_at').that.is.null;
         });
 
         it('should return undefined if a user cannot be found by id', async function () {

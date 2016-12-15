@@ -21,9 +21,13 @@ export default function loadCommands(vantage) {
     files.forEach((file) => {
         const command = require(file);
 
-        vantage
+        const vantageCommand = vantage
             .command(command.default.command)
             .description(command.default.description)
             .action(command.default.action);
+
+        if (command.default.option) {
+            vantageCommand.option(command.default.option.name, command.default.option.description);
+        }
     });
 }

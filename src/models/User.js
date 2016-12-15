@@ -22,8 +22,13 @@ class User extends BaseModel {
             must_change_password: {type: 'boolean', default: false},
             is_banned: {type: 'boolean', default: false},
             ban_reason: {type: ['string', 'null'], default: null},
+            is_verified: {type: 'boolean', default: false},
+            verification_code: {type: ['string', 'null'], minLength: 128, maxLength: 128, default: null},
+            tfa_secret: {type: ['string', 'null'], minLength: 32, maxLength: 32, default: null},
             created_at: {type: 'string', format: 'date-time'},
-            updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
+            updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
+            banned_at: {type: ['string', 'null'], format: 'date-time', default: null},
+            verified_at: {type: ['string', 'null'], format: 'date-time', default: null}
         }
     };
 
@@ -85,8 +90,9 @@ class User extends BaseModel {
      * @type {object}
      */
     static transforms = {
-        must_change_password: (input) => (!!input),
-        is_banned: (input) => (!!input)
+        is_banned: (input) => (!!input),
+        is_verified: (input) => (!!input),
+        must_change_password: (input) => (!!input)
     };
 
     /**

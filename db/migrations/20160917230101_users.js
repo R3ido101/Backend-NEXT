@@ -8,8 +8,13 @@ exports.up = function (knex) {
         table.boolean('must_change_password').notNullable().defaultTo(false);
         table.boolean('is_banned').notNullable().defaultTo(false);
         table.text('ban_reason').nullable().defaultTo(null);
+        table.boolean('is_verified').notNullable().defaultTo(false);
+        table.string('verification_code', 128).nullable().defaultTo(null);
+        table.string('tfa_secret', 32).nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.timestamp('updated_at').nullable().defaultTo(null);
+        table.timestamp('banned_at').nullable().defaultTo(null);
+        table.timestamp('verified_at').nullable().defaultTo(null);
 
         // indexes
         table.index('username');

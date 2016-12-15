@@ -2,6 +2,9 @@ import Vantage from 'vantage';
 import { Model } from 'objection';
 
 import knex from '../db';
+import { getConfig } from '../config';
+
+const config = getConfig();
 
 Model.knex(knex);
 
@@ -13,5 +16,5 @@ loadCommands(vantage);
 
 vantage
     .delimiter('Backend-NEXT~$')
-    .listen(80)
+    .listen(config.cli.port)
     .show();

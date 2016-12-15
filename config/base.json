@@ -1,5 +1,8 @@
 {
     "bcryptRounds": 10,
+    "cli": {
+        "port": 7777
+    },
     "session": {
         "name": "atlauncher-backend",
         "resave": false,

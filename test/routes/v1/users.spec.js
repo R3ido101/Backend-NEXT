@@ -65,6 +65,20 @@ describe('/v1/users', function () {
             });
 
             it('should return all the users in the system', async function () {
+                const expectedOutput = {
+                    username: 'test',
+                    email: 'test@example.com',
+                    must_change_password: false,
+                    is_banned: false,
+                    ban_reason: null,
+                    is_verified: false,
+                    verification_code: null,
+                    tfa_secret: null,
+                    updated_at: null,
+                    verified_at: null,
+                    banned_at: null
+                };
+
                 const response = await chai.request(app).get('/v1/users').set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(200);
@@ -78,9 +92,9 @@ describe('/v1/users', function () {
                 const user = body[1];
 
                 expect(user).to.be.an('object');
-                expect(user.username).to.equal('test');
+                expect(user).to.shallowDeepEqual(expectedOutput);
+                expect(user).to.contain.all.keys(['id', 'created_at']);
                 expect(user.password).to.be.undefined;
-                expect(user.email).to.equal('test@example.com');
             });
         });
 
