@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+  - '6'
+before_install:
+  - rm -rf node_modules/sqlite3
+install:
+  - npm install
+test:
+  - npm run build
+  - npm run lint
+  - npm run test:clean
+  - npm run test
+branches:
+  only:
+    - /^feature\/.*&/
+    - /^release\/.*$/
+    - /^hotfix\/.*$/
+    - master
+    - develop
