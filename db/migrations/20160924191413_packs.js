@@ -8,7 +8,7 @@ exports.up = function (knex) {
         table.integer('position').unsigned().notNullable();
         table.enu('type', ['public', 'semipublic', 'private']).notNullable().defaultTo('private');
         table.boolean('is_disabled').notNullable().defaultTo(true);
-        table.string('discord_invite-code', 32).nullable().defaultTo(null);
+        table.string('discord_invite_code', 32).nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.timestamp('updated_at').nullable().defaultTo(null);
         table.timestamp('disabled_at').nullable().defaultTo(null);

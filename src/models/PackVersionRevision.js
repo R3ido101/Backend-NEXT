@@ -6,6 +6,8 @@ import BaseModel from './BaseModel';
 class PackVersionRevision extends BaseModel {
     static tableName = 'pack_version_revisions';
 
+    static jsonAttributes = ['json'];
+
     static jsonSchema = {
         type: 'object',
 
