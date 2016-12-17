@@ -30,6 +30,18 @@ describe('Model: Pack', function () {
 
     describe('findById', function () {
         it('should return the data for the given pack', async function () {
+            const expectedOutput = {
+                id: 1,
+                name: 'Test Pack',
+                safe_name: 'TestPack',
+                description: 'This is a test pack',
+                position: 1,
+                type: 'public',
+                is_disabled: false,
+                updated_at: null,
+                disabled_at: null
+            };
+
             await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack',
@@ -39,28 +51,8 @@ describe('Model: Pack', function () {
             const pack = await Pack.query().findById(1);
 
             expect(pack).to.be.an('object');
-
-            expect(pack).to.have.property('id').that.is.a('number');
-            expect(pack).to.have.property('id').that.equals(1);
-
-            expect(pack).to.have.property('name').that.is.a('string');
-            expect(pack).to.have.property('name').that.equals('Test Pack');
-
-            expect(pack).to.have.property('safe_name').that.is.a('string');
-            expect(pack).to.have.property('safe_name').that.equals('TestPack');
-
-            expect(pack).to.have.property('description').that.is.a('string');
-            expect(pack).to.have.property('description').that.equals('This is a test pack');
-
-            expect(pack).to.have.property('type').that.is.a('string');
-            expect(pack).to.have.property('type').that.equals('public');
-
-            expect(pack).to.have.property('enabled').that.is.a('boolean');
-            expect(pack).to.have.property('enabled').that.equals(true);
-
-            expect(pack).to.have.property('created_at').that.is.a('string');
-            expect(pack).to.have.property('updated_at').that.is.null;
-            expect(pack).to.have.property('disabled_at').that.is.null;
+            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(pack).to.contain.all.keys(['created_at']); // things that return but are variable
         });
 
         it('should return undefined if a pack cannot be found by id', async function () {
@@ -72,6 +64,18 @@ describe('Model: Pack', function () {
 
     describe('insert', function () {
         it('should create a pack', async function () {
+            const expectedOutput = {
+                id: 1,
+                name: 'Test Pack',
+                safe_name: 'TestPack',
+                description: 'This is a test pack',
+                position: 1,
+                type: 'public',
+                is_disabled: false,
+                updated_at: null,
+                disabled_at: null
+            };
+
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack',
@@ -79,35 +83,55 @@ describe('Model: Pack', function () {
             });
 
             expect(pack).to.be.an('object');
+            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(pack).to.contain.all.keys(['created_at']); // things that return but are variable
+        });
 
-            expect(pack).to.have.property('id').that.is.a('number');
-            expect(pack).to.have.property('id').that.equals(1);
+        it('should create a pack with position 2 when a pack already exists', async function () {
+            const expectedOutput = {
+                id: 2,
+                name: 'Test Pack',
+                safe_name: 'TestPack',
+                description: 'This is a test pack',
+                position: 2,
+                type: 'public',
+                is_disabled: false,
+                updated_at: null,
+                disabled_at: null
+            };
 
-            expect(pack).to.have.property('name').that.is.a('string');
-            expect(pack).to.have.property('name').that.equals('Test Pack');
+            await Pack.query().insert({
+                name: 'Test Pack Position 1',
+                description: 'This is a test pack',
+                type: 'public'
+            });
 
-            expect(pack).to.have.property('safe_name').that.is.a('string');
-            expect(pack).to.have.property('safe_name').that.equals('TestPack');
+            const pack = await Pack.query().insert({
+                name: 'Test Pack',
+                description: 'This is a test pack',
+                type: 'public'
+            });
 
-            expect(pack).to.have.property('description').that.is.a('string');
-            expect(pack).to.have.property('description').that.equals('This is a test pack');
-
-            expect(pack).to.have.property('type').that.is.a('string');
-            expect(pack).to.have.property('type').that.equals('public');
-
-            expect(pack).to.have.property('enabled').that.is.a('boolean');
-            expect(pack).to.have.property('enabled').that.equals(true);
-
-            expect(pack).to.have.property('created_at').that.is.a('string');
-
-            expect(pack).to.have.property('updated_at').that.is.null;
-
-            expect(pack).to.have.property('disabled_at').that.is.null;
+            expect(pack).to.be.an('object');
+            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(pack).to.contain.all.keys(['created_at']); // things that return but are variable
         });
     });
 
     describe('launcherTags', function () {
         it('should attach a launcher tag to a pack', async function () {
+            const expectedOutput = {
+                id: 2,
+                name: 'Test Pack',
+                safe_name: 'TestPack',
+                description: 'This is a test pack',
+                position: 2,
+                type: 'public',
+                is_disabled: false,
+                updated_at: null,
+                disabled_at: null
+            };
+
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'

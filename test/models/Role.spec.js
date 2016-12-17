@@ -27,6 +27,13 @@ describe('Model: Role', function () {
 
     describe('findById', function () {
         it('should return the data for the given role', async function () {
+            const expectedOutput = {
+                id: 1,
+                name: 'testrole',
+                description: 'This is a test role',
+                updated_at: null
+            };
+
             await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
@@ -35,19 +42,8 @@ describe('Model: Role', function () {
             const role = await Role.query().findById(1);
 
             expect(role).to.be.an('object');
-
-            expect(role).to.have.property('id').that.is.a('number');
-            expect(role).to.have.property('id').that.equals(1);
-
-            expect(role).to.have.property('name').that.is.a('string');
-            expect(role).to.have.property('name').that.equals('testrole');
-
-            expect(role).to.have.property('description').that.is.a('string');
-            expect(role).to.have.property('description').that.equals('This is a test role');
-
-            expect(role).to.have.property('created_at').that.is.a('string');
-
-            expect(role).to.have.property('updated_at').that.is.null;
+            expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(role).to.contain.all.keys(['created_at']); // things that return but are variable
         });
 
         it('should return undefined if a role cannot be found by id', async function () {
@@ -59,30 +55,32 @@ describe('Model: Role', function () {
 
     describe('insert', function () {
         it('should create a role', async function () {
+            const expectedOutput = {
+                id: 1,
+                name: 'testrole',
+                description: 'This is a test role',
+                updated_at: null
+            };
+
             const role = await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
             });
 
             expect(role).to.be.an('object');
-
-            expect(role).to.have.property('id').that.is.a('number');
-            expect(role).to.have.property('id').that.equals(1);
-
-            expect(role).to.have.property('name').that.is.a('string');
-            expect(role).to.have.property('name').that.equals('testrole');
-
-            expect(role).to.have.property('description').that.is.a('string');
-            expect(role).to.have.property('description').that.equals('This is a test role');
-
-            expect(role).to.have.property('created_at').that.is.a('string');
-
-            expect(role).to.have.property('updated_at').that.is.null;
+            expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(role).to.contain.all.keys(['created_at']); // things that return but are variable
         });
     });
 
     describe('users', function () {
         it('should create a user for a role', async function () {
+            const expectedOutput = {
+                id: 1,
+                username: 'test',
+                email: 'test@example.com'
+            };
+
             const role = await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
@@ -101,10 +99,7 @@ describe('Model: Role', function () {
             const user = roleUsers[0];
 
             expect(user).to.be.an('object');
-
-            expect(user).to.have.property('username').that.equals('test');
-
-            expect(user).to.have.property('email').that.equals('test@example.com');
+            expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
         });
 
         it('should attach a user to a role', async function () {

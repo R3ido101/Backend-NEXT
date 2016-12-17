@@ -7,7 +7,7 @@ import { version } from '../../../package.json';
 
 chai.use(chaiHttp);
 
-describe('/v1', function () {
+describe('Routes: /v1', function () {
     beforeEach(function (done) {
         knex.migrate.rollback()
             .then(function () {

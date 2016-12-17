@@ -4,7 +4,7 @@ exports.up = function (knex) {
         table.increments('id').unsigned().primary();
         table.string('username', 64).notNullable().unique();
         table.string('password', 60).notNullable();
-        table.string('email', 255).notNullable().unique();
+        table.text('email').notNullable().unique();
         table.boolean('must_change_password').notNullable().defaultTo(false);
         table.boolean('is_banned').notNullable().defaultTo(false);
         table.text('ban_reason').nullable().defaultTo(null);

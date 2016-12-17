@@ -6,7 +6,7 @@ import * as usersValidations from '../../src/validation/users';
 import setupCustomValidators from '../../src/validation/custom';
 import * as testUtils from '../utils';
 
-describe('users validations', function () {
+describe('Validation: Users', function () {
     beforeEach(function (done) {
         setupCustomValidators();
 

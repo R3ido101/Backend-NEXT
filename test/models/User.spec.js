@@ -31,6 +31,21 @@ describe('Model: User', function () {
 
     describe('findById', function () {
         it('should return the data for the given user', async function () {
+            const expectedOutput = {
+                id: 1,
+                username: 'test',
+                email: 'test@example.com',
+                must_change_password: false,
+                is_banned: false,
+                ban_reason: null,
+                is_verified: false,
+                verification_code: null,
+                tfa_secret: null,
+                updated_at: null,
+                verified_at: null,
+                banned_at: null
+            };
+
             await User.query().insert({
                 username: 'test',
                 password: 'test',
@@ -40,35 +55,8 @@ describe('Model: User', function () {
             const user = await User.query().findById(1);
 
             expect(user).to.be.an('object');
-
-            expect(user).to.have.property('id').that.is.a('number');
-            expect(user).to.have.property('id').that.equals(1);
-
-            expect(user).to.have.property('username').that.is.a('string');
-            expect(user).to.have.property('username').that.equals('test');
-
-            expect(user).to.have.property('email').that.is.a('string');
-            expect(user).to.have.property('email').that.equals('test@example.com');
-
-            expect(user).to.have.property('must_change_password').that.is.a('boolean');
-            expect(user).to.have.property('must_change_password').that.equals(false);
-
-            expect(user).to.have.property('is_banned').that.is.a('boolean');
-            expect(user).to.have.property('is_banned').that.equals(false);
-
-            expect(user).to.have.property('ban_reason').that.is.null;
-
-            expect(user).to.have.property('is_verified').that.is.a('boolean');
-            expect(user).to.have.property('is_verified').that.equals(false);
-
-            expect(user).to.have.property('verification_code').that.is.null;
-
-            expect(user).to.have.property('tfa_secret').that.is.null;
-
-            expect(user).to.have.property('created_at').that.is.a('string');
-            expect(user).to.have.property('updated_at').that.is.null;
-            expect(user).to.have.property('verified_at').that.is.null;
-            expect(user).to.have.property('banned_at').that.is.null;
+            expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(user).to.contain.all.keys(['password', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a user cannot be found by id', async function () {
@@ -80,6 +68,21 @@ describe('Model: User', function () {
 
     describe('insert', function () {
         it('should create a user', async function () {
+            const expectedOutput = {
+                id: 1,
+                username: 'test',
+                email: 'test@example.com',
+                must_change_password: false,
+                is_banned: false,
+                ban_reason: null,
+                is_verified: false,
+                verification_code: null,
+                tfa_secret: null,
+                updated_at: null,
+                verified_at: null,
+                banned_at: null
+            };
+
             const user = await User.query().insert({
                 username: 'test',
                 password: 'test',
@@ -87,29 +90,8 @@ describe('Model: User', function () {
             });
 
             expect(user).to.be.an('object');
-
-            expect(user).to.have.property('id').that.is.a('number');
-            expect(user).to.have.property('id').that.equals(1);
-
-            expect(user).to.have.property('username').that.is.a('string');
-            expect(user).to.have.property('username').that.equals('test');
-
-            expect(user).to.have.property('email').that.is.a('string');
-            expect(user).to.have.property('email').that.equals('test@example.com');
-
-            expect(user).to.have.property('password').that.is.a('string');
-
-            expect(user).to.have.property('must_change_password').that.is.a('boolean');
-            expect(user).to.have.property('must_change_password').that.equals(false);
-
-            expect(user).to.have.property('is_banned').that.is.a('boolean');
-            expect(user).to.have.property('is_banned').that.equals(false);
-
-            expect(user).to.have.property('ban_reason').that.is.null;
-
-            expect(user).to.have.property('created_at').that.is.a('string');
-
-            expect(user).to.have.property('updated_at').that.is.null;
+            expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(user).to.contain.all.keys(['password', 'created_at']); // things that return but are variable
         });
 
         it('should throw an error if email is invalid format', function () {

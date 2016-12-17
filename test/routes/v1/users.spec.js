@@ -8,7 +8,7 @@ import * as testUtils from '../../utils';
 
 chai.use(chaiHttp);
 
-describe('/v1/users', function () {
+describe('Routes: /v1/users', function () {
     beforeEach(function (done) {
         knex.migrate.rollback()
             .then(function () {

@@ -6,7 +6,6 @@
   "scripts": {
     "clean": "rimraf ./node_modules && npm install",
     "dev": "cross-env NODE_ENV=development nodemon -w src -e js,ejs,json --exec \"babel-node src --presets es2015,stage-0\"",
-    "dev:debug": "cross-env NODE_ENV=development DEBUG=oauth2orize nodemon -w src -e js,ejs,json --exec \"babel-node src --presets es2015,stage-0\"",
     "build": "babel src -D -d dist --presets es2015,stage-0",
     "start": "node dist",
     "prestart": "npm run -s build",
@@ -14,7 +13,7 @@
     "lint:watch": "esw cli src config test migrations knexfile.js --watch",
     "test": "cross-env NODE_ENV=test mocha --opts ./mocha.opts",
     "test:watch": "cross-env NODE_ENV=test mocha --opts ./mocha.opts --watch",
-    "test:clean": "rimraf ./db/test.sqlite3 && cross-env NODE_ENV=test npm run migrate && cross-env NODE_ENV=test npm run seed",
+    "test:clean": "rimraf ./db/test.sqlite3",
     "seed": "knex seed:run",
     "migrate": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",

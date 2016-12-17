@@ -17,8 +17,9 @@ class Pack extends BaseModel {
             name: {type: 'string', minLength: 3, maxLength: 255},
             safe_name: {type: 'string', minLength: 3, maxLength: 255},
             description: {type: ['string', 'null'], minLength: 3, default: null},
+            position: {type: 'integer', minimum: 1},
             type: {type: 'string'},
-            enabled: {type: 'boolean', default: true},
+            is_disabled: {type: 'boolean', default: false},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
             disabled_at: {type: ['string', 'null'], format: 'date-time', default: null}
@@ -74,14 +75,24 @@ class Pack extends BaseModel {
     };
 
     /**
-     * Before inserting make sure we add in the packs safe name.
+     * Before inserting make sure we add in the packs safe name as well as set the position if not set.
      *
      * @param {object} queryContext
      */
-    $beforeInsert(queryContext) {
+    async $beforeInsert(queryContext) {
         super.$beforeInsert(queryContext);
 
         this.safe_name = getSafeString(this.name);
+
+        if (!this.position) {
+            const highestPoisitonPack = await Pack.query().select('position').orderBy('position', 'desc').first();
+
+            if (!highestPoisitonPack) {
+                this.position = 1;
+            } else {
+                this.position = (highestPoisitonPack.position + 1);
+            }
+        }
     }
 
     /**
@@ -101,7 +112,7 @@ class Pack extends BaseModel {
      * @type {object}
      */
     static transforms = {
-        enabled: (input) => (!!input)
+        is_disabled: (input) => (!!input)
     };
 }
 

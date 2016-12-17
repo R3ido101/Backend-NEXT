@@ -35,6 +35,16 @@ class PackVersionRevision extends BaseModel {
     };
 
     /**
+     * Transform the must_change_password field into a boolean.
+     *
+     * @type {object}
+     */
+    static transforms = {
+        is_verified: (input) => (!!input),
+        is_verifying: (input) => (!!input)
+    };
+
+    /**
      * Before inserting make sure we generate the hash.
      *
      * @param {object} queryContext

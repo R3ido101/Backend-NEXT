@@ -15,6 +15,9 @@ This will get all the users in the system.
 ## Scope
 This route requires the `admin:read` [scope](/docs/scope).
 
+## Return type
+This will return a [paginated](/docs/paginated) array of [user models](/docs/models/user).
+
 # GET /v1/users/{id}
 This will get a single user in the system.
 
