@@ -72,7 +72,6 @@ describe('Routes: /v1/users', function () {
                     is_banned: false,
                     ban_reason: null,
                     is_verified: false,
-                    verification_code: null,
                     tfa_secret: null,
                     updated_at: null,
                     verified_at: null,
@@ -93,7 +92,7 @@ describe('Routes: /v1/users', function () {
 
                 expect(user).to.be.an('object');
                 expect(user).to.shallowDeepEqual(expectedOutput);
-                expect(user).to.contain.all.keys(['id', 'created_at']);
+                expect(user).to.contain.all.keys(['id', 'created_at', 'verification_code']);
                 expect(user.password).to.be.undefined;
             });
         });
