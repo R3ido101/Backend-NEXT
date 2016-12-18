@@ -9,7 +9,7 @@ exports.up = function (knex) {
         table.boolean('is_banned').notNullable().defaultTo(false);
         table.text('ban_reason').nullable().defaultTo(null);
         table.boolean('is_verified').notNullable().defaultTo(false);
-        table.string('verification_code', 128).nullable().defaultTo(null);
+        table.string('verification_code', 128).notNullable();
         table.string('tfa_secret', 32).nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.timestamp('updated_at').nullable().defaultTo(null);

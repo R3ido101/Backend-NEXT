@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
+import { generateUID } from '../utils';
 import { getConfig } from '../../config';
 
 const config = getConfig();
@@ -23,7 +24,7 @@ class User extends BaseModel {
             is_banned: {type: 'boolean', default: false},
             ban_reason: {type: ['string', 'null'], default: null},
             is_verified: {type: 'boolean', default: false},
-            verification_code: {type: ['string', 'null'], minLength: 128, maxLength: 128, default: null},
+            verification_code: {type: 'string', minLength: 128, maxLength: 128},
             tfa_secret: {type: ['string', 'null'], minLength: 32, maxLength: 32, default: null},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
@@ -96,7 +97,7 @@ class User extends BaseModel {
     };
 
     /**
-     * Before inserting make sure we hash the password if provided.
+     * Before inserting make sure we hash the password if provided and also add in a verification code.
      *
      * @param {object} queryContext
      */
@@ -105,6 +106,10 @@ class User extends BaseModel {
 
         if (this.hasOwnProperty('password')) {
             this.password = bcrypt.hashSync(this.password, config.bcryptRounds);
+        }
+
+        if (!this.hasOwnProperty('verification_code')) {
+            this.verification_code = generateUID(128);
         }
     }
 

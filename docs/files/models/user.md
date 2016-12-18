@@ -75,7 +75,7 @@ The datetime that the account was verified at (all datetimes are in UTC).
 
 **Type:** string|null
 
-# Exmaple Response
+# Example
 ```json
   {
     "id": 1,

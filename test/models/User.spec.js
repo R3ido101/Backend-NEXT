@@ -39,7 +39,6 @@ describe('Model: User', function () {
                 is_banned: false,
                 ban_reason: null,
                 is_verified: false,
-                verification_code: null,
                 tfa_secret: null,
                 updated_at: null,
                 verified_at: null,
@@ -56,7 +55,7 @@ describe('Model: User', function () {
 
             expect(user).to.be.an('object');
             expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(user).to.contain.all.keys(['password', 'created_at']); // things that return but are variable
+            expect(user).to.contain.all.keys(['password', 'created_at', 'verification_code']); // things that return but are variable
         });
 
         it('should return undefined if a user cannot be found by id', async function () {
@@ -76,7 +75,6 @@ describe('Model: User', function () {
                 is_banned: false,
                 ban_reason: null,
                 is_verified: false,
-                verification_code: null,
                 tfa_secret: null,
                 updated_at: null,
                 verified_at: null,
@@ -91,7 +89,7 @@ describe('Model: User', function () {
 
             expect(user).to.be.an('object');
             expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(user).to.contain.all.keys(['password', 'created_at']); // things that return but are variable
+            expect(user).to.contain.all.keys(['password', 'created_at', 'verification_code']); // things that return but are variable
         });
 
         it('should throw an error if email is invalid format', function () {
