@@ -15,7 +15,7 @@ class Server extends BaseModel {
             name: {type: 'string', minLength: 1, maxLength: 512},
             host: {type: 'string', minLength: 1, maxLength: 255},
             port: {type: 'integer', minimum: 1, maximum: 65535, default: 25565},
-            description: {type: 'string', minLength: 1},
+            description: {type: 'string', minLength: 30},
             pack_id: {type: 'integer', minimum: 1},
             pack_version_id: {type: 'integer', minimum: 1},
             banner_url: {type: ['string', 'null'], default: null, maxLength: 1024},

@@ -5,8 +5,6 @@ import BaseModel from './BaseModel';
 class ServerVote extends BaseModel {
     static tableName = 'server_votes';
 
-    static timestamps = false;
-
     static jsonSchema = {
         type: 'object',
 

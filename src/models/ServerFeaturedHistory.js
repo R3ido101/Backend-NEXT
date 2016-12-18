@@ -5,8 +5,6 @@ import BaseModel from './BaseModel';
 class ServerFeaturedHistory extends BaseModel {
     static tableName = 'server_featured_history';
 
-    static timestamps = false;
-
     static jsonSchema = {
         type: 'object',
 
