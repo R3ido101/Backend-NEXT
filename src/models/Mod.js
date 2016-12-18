@@ -12,8 +12,8 @@ class Mod extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            name: {type: 'string', minLength: 1, maxLength: 255},
-            description: {type: 'string', minLength: 1},
+            name: {type: 'string', maxLength: 255},
+            description: {type: 'string'},
             website_url: {type: ['string', 'null'], default: null},
             donation_url: {type: ['string', 'null'], default: null},
             created_at: {type: 'string', format: 'date-time'},

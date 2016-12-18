@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import chai, { expect } from 'chai';
+import knexCleaner from 'knex-cleaner';
 
 import knex from '../../db';
 
@@ -15,18 +16,14 @@ import PackLeaderboard from '../../src/models/PackLeaderboard';
  * expected
  */
 describe('Model: User', function () {
-    before(() => {
+    before(function (done) {
         Model.knex(knex);
-    });
 
-    beforeEach(function (done) {
-        knex.migrate.rollback().then(function () {
-            knex.migrate.latest().then(() => done());
-        });
+        knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
     afterEach(function (done) {
-        knex.migrate.rollback().then(() => done());
+        knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
     describe('findById', function () {

@@ -18,8 +18,8 @@ class User extends BaseModel {
         properties: {
             id: {type: 'integer', minimum: 1},
             username: {type: 'string', minLength: 3, maxLength: 64},
-            email: {type: 'string', minLength: 1, format: 'email'},
-            password: {type: 'string', minLength: 1, maxLength: 60},
+            email: {type: 'string', format: 'email'},
+            password: {type: 'string', maxLength: 60},
             must_change_password: {type: 'boolean', default: false},
             is_banned: {type: 'boolean', default: false},
             ban_reason: {type: ['string', 'null'], default: null},

@@ -13,7 +13,7 @@ class ServerVote extends BaseModel {
         properties: {
             id: {type: 'integer', minimum: 1},
             server_id: {type: 'integer', minimum: 1},
-            username: {type: 'string', minLength: 1, maxLength: 32},
+            username: {type: 'string', maxLength: 32},
             created_at: {type: 'string', format: 'date-time'}
         }
     };

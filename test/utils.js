@@ -5,33 +5,15 @@ import { generateUID } from '../src/utils';
 import Pack from '../src/models/Pack';
 import Role from '../src/models/Role';
 import User from '../src/models/User';
+
+
 import OAuthScope from '../src/models/oauth/OAuthScope';
 import OAuthClient from '../src/models/oauth/OAuthClient';
 import OAuthAccessToken from '../src/models/oauth/OAuthAccessToken';
 
 import { getSafeString } from '../src/utils';
 
-export async function createUserWithPack(userOverrides = {}, packOverrides = {}, overrides = {}) {
-    const user = createUser(userOverrides);
-    const pack = createPack(packOverrides);
-
-    const createdById = overrides.created_by || createUser().id;
-
-    const defaults = {
-        user_id: user.id,
-        pack_id: pack.id,
-        created_by: createdById
-    };
-
-    return await Pack.$relatedQuery('users').insert({
-        ...defaults,
-        ...overrides
-    });
-}
-
 export async function createPack(overrides = {}) {
-    const createdById = overrides.created_by || (await createUser()).id;
-
     const packName = Faker.random.words(2);
     const safeName = getSafeString(packName);
 
@@ -40,8 +22,7 @@ export async function createPack(overrides = {}) {
         safe_name: safeName,
         position: Faker.random.number({min: 1, max: 500}),
         type: Faker.random.arrayElement(['public', 'semipublic', 'private']),
-        is_disabled: Faker.random.boolean(),
-        created_by: createdById
+        is_disabled: Faker.random.boolean()
     };
 
     return await Pack.query().insert({
@@ -64,33 +45,12 @@ export async function createUser(overrides = {}) {
 }
 
 export async function createRole(overrides = {}) {
-    const createdById = overrides.created_by || (await createUser()).id;
-
     const defaults = {
         name: Faker.random.words(2),
-        description: Faker.random.words(10),
-        created_by: createdById
+        description: Faker.random.words(10)
     };
 
     return await Role.query().insert({
-        ...defaults,
-        ...overrides
-    });
-}
-
-export async function createUserWithRole(userOverrides = {}, roleOverrides = {}, overrides = {}) {
-    const user = createUser(userOverrides);
-    const role = createRole(roleOverrides);
-
-    const createdById = overrides.created_by || createUser().id;
-
-    const defaults = {
-        user_id: user.id,
-        role_id: role.id,
-        created_by: createdById
-    };
-
-    return await Role.$relatedQuery('users').insert({
         ...defaults,
         ...overrides
     });
@@ -110,12 +70,19 @@ export async function createScope(overrides = {}) {
 
 export async function addRoleToUser(role, user) {
     return await user.$relatedQuery('roles').relate({
-        id: role.id,
-        created_by: user.id
+        id: role.id
     });
 }
 
 export async function createAccessToken(overrides = {}) {
+    if (!overrides.user_id) {
+        overrides.user_id = (await createUser()).id;
+    }
+
+    if (!overrides.client_id) {
+        overrides.client_id = (await createOAuthClient()).id;
+    }
+
     const defaults = {
         access_token: generateUID(60),
         expires_at: Faker.date.future()
@@ -128,6 +95,10 @@ export async function createAccessToken(overrides = {}) {
 }
 
 export async function createOAuthClient(overrides = {}) {
+    if (!overrides.user_id) {
+        overrides.user_id = (await createUser()).id;
+    }
+
     const defaults = {
         name: Faker.random.words(2),
         client_id: generateUID(60),

@@ -12,7 +12,7 @@ class File extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            name: {type: 'string', minLength: 1, maxLength: 1024},
+            name: {type: 'string', maxLength: 1024},
             hash: {type: 'string', minLength: 40, maxLength: 40},
             size: {type: 'integer', minimum: 1},
             mod_id: {type: ['integer', 'null'], minimum: 1, default: null},

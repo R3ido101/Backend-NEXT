@@ -13,7 +13,7 @@ class PackDirectory extends BaseModel {
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_id: {type: 'integer', minimum: 1},
-            name: {type: 'string', minLength: 1, maxLength: 32},
+            name: {type: 'string', maxLength: 32},
             parent: {type: ['integer', 'null'], minimum: 1, default: null},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null}

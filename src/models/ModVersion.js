@@ -13,7 +13,7 @@ class ModVersion extends BaseModel {
         properties: {
             id: {type: 'integer', minimum: 1},
             mod_id: {type: 'integer', minimum: 1},
-            version: {type: 'string', minLength: 1, maxLength: 64},
+            version: {type: 'string', maxLength: 64},
             created_at: {type: 'string', format: 'date-time'}
         }
     };

@@ -1,31 +1,22 @@
-import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import chai, { expect } from 'chai';
+import knexCleaner from 'knex-cleaner';
 
 import app from '../../../src/index';
 import knex from '../../../db';
 import { version } from '../../../package.json';
 
+import * as testUtils from '../../utils';
+
 chai.use(chaiHttp);
 
 describe('Routes: /v1', function () {
-    beforeEach(function (done) {
-        knex.migrate.rollback()
-            .then(function () {
-                knex.migrate.latest()
-                    .then(function () {
-                        return knex.seed.run()
-                            .then(function () {
-                                done();
-                            });
-                    });
-            });
+    before(function (done) {
+        knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
     afterEach(function (done) {
-        knex.migrate.rollback()
-            .then(function () {
-                done();
-            });
+        knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
     after(function (done) {

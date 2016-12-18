@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import chai, { expect } from 'chai';
+import knexCleaner from 'knex-cleaner';
 
 import knex from '../../db';
 
@@ -12,18 +13,14 @@ import PackVersionRevision from '../../src/models/PackVersionRevision';
  * expected
  */
 describe('Model: PackVersionRevision', function () {
-    before(() => {
+    before(function (done) {
         Model.knex(knex);
-    });
 
-    beforeEach(function (done) {
-        knex.migrate.rollback().then(function () {
-            knex.migrate.latest().then(() => done());
-        });
+        knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
     afterEach(function (done) {
-        knex.migrate.rollback().then(() => done());
+        knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
     describe('insert', function () {

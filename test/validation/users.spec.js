@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import validate from 'validate.js';
+import knexCleaner from 'knex-cleaner';
 
 import knex from '../../db';
 import * as usersValidations from '../../src/validation/users';
@@ -7,26 +8,14 @@ import setupCustomValidators from '../../src/validation/custom';
 import * as testUtils from '../utils';
 
 describe('Validation: Users', function () {
-    beforeEach(function (done) {
+    before(function (done) {
         setupCustomValidators();
 
-        knex.migrate.rollback()
-            .then(function () {
-                knex.migrate.latest()
-                    .then(function () {
-                        return knex.seed.run()
-                            .then(function () {
-                                done();
-                            });
-                    });
-            });
+        knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
     afterEach(function (done) {
-        knex.migrate.rollback()
-            .then(function () {
-                done();
-            });
+        knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
     describe('VALIDATE_ID', function () {

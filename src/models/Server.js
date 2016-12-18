@@ -12,8 +12,8 @@ class Server extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            name: {type: 'string', minLength: 1, maxLength: 512},
-            host: {type: 'string', minLength: 1, maxLength: 255},
+            name: {type: 'string', maxLength: 512},
+            host: {type: 'string', maxLength: 255},
             port: {type: 'integer', minimum: 1, maximum: 65535, default: 25565},
             description: {type: 'string', minLength: 30},
             pack_id: {type: 'integer', minimum: 1},
@@ -21,7 +21,7 @@ class Server extends BaseModel {
             banner_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             website_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             discord_invite_code: {type: ['string', 'null'], default: null, maxLength: 32},
-            votifier_host: {type: ['string', 'null'], default: null, minLength: 1, maxLength: 255},
+            votifier_host: {type: ['string', 'null'], default: null, maxLength: 255},
             votifier_port: {type: ['string', 'null'], default: null, minimum: 1, maximum: 65535},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null}

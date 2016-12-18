@@ -39,7 +39,6 @@ This will return the current information for the API as well as information abou
         "id": 1,
         "name": "admin",
         "description": "Can administer the system.",
-        "created_by": 1,
         "created_at": "2016-11-27 11:52:24",
         "updated_at": null
       }
