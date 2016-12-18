@@ -62,9 +62,9 @@ class OAuthAccessToken extends BaseModel {
     /**
      * Ran when creating model from Json.
      *
-     * @param {Object} json
-     * @param {Object} opt
-     * @returns {Object}
+     * @param {object} json
+     * @param {object} opt
+     * @returns {object}
      */
     $parseJson(json, opt) {
         json = super.$parseJson(json, opt);

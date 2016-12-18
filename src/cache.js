@@ -4,21 +4,58 @@ import { getConfig, environment } from '../config';
 
 const config = getConfig();
 
-const store = config.cache.type === 'memory' ? 'memory' : require(`cache-manager-${config.cache.type}`);
+/**
+ * Gets the store to use based on the configuration.
+ *
+ * @type {string}
+ */
+export const store = config.cache.type === 'memory' ? 'memory' : require(`cache-manager-${config.cache.type}`);
 
-const cache = cacheManager.caching({
+/**
+ * The cache instance.
+ *
+ * @type {object}
+ */
+export const cache = cacheManager.caching({
     store,
     ...config.cache.options,
     isCacheableValue
 });
 
+/**
+ * Determines if the value can be cached or not.
+ *
+ * Does some basic checking on the value to check it's set and disabled caching for the test environment.
+ *
+ * @param {*} value
+ * @returns {boolean}
+ */
 function isCacheableValue(value) {
     return environment !== 'test' && value !== null && value !== false && value !== undefined;
 }
 
-export default cache;
+/**
+ * This is used to wrap a function up and cache the result based on the set cache rules.
+ *
+ * @param {object} req
+ * @param {function} func
+ */
+export async function cacheWrap(req, func) {
+    const ttl = getTTL(req);
+    const name = `${req.method} ${req.baseUrl}`;
 
-export function getTTL(req) {
+    return await cache.wrap(name, func, {ttl});
+}
+
+/**
+ * This will get the TTL configured based on if the user is logged in and their roles.
+ *
+ * -1 indicated to not cache at all.
+ *
+ * @param {object} req
+ * @returns {number}
+ */
+function getTTL(req) {
     const user = req.user;
 
     if (!user) {
@@ -26,7 +63,7 @@ export function getTTL(req) {
     }
 
     if (user.hasRole('admin')) {
-        return config.cache.ttl.admin;
+        return 10;
     }
 
     return config.cache.ttl.user;

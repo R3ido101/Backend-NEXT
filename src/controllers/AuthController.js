@@ -7,9 +7,9 @@ class AuthController extends BaseController {
     /**
      * This returns the current version of the api as defined in the package.json.
      *
-     * @param {Object} req
-     * @param {Object} res
-     * @returns {Object}
+     * @param {object} req
+     * @param {object} res
+     * @returns {object}
      */
     static login(req, res) {
         return res.render('login', {error: req.flash('error')});
@@ -18,9 +18,9 @@ class AuthController extends BaseController {
     /**
      * This returns the current version of the api as defined in the package.json.
      *
-     * @param {Object} req
-     * @param {Object} res
-     * @returns {Object}
+     * @param {object} req
+     * @param {object} res
+     * @returns {object}
      */
     static logout(req, res) {
         const redirectUrl = req.header('Referer') || '/';

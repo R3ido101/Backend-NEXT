@@ -6,9 +6,9 @@ class RolesController extends BaseController {
     /**
      * This returns all the roles in the system.
      *
-     * @param {Object} req
-     * @param {Object} res
-     * @returns {Object}
+     * @param {object} req
+     * @param {object} res
+     * @returns {object}
      */
     static async index(req, res) {
         const roles = await Role.query();

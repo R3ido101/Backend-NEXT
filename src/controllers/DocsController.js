@@ -19,9 +19,9 @@ class DocsController extends BaseController {
     /**
      * This returns homepage for the documentation.
      *
-     * @param {Object} req
-     * @param {Object} res
-     * @returns {Object}
+     * @param {object} req
+     * @param {object} res
+     * @returns {object}
      */
     static async render(req, res) {
         try {
@@ -132,7 +132,7 @@ class DocsController extends BaseController {
     /**
      * This will parse all opening headings and add in anchor tags for all second level headings.
      *
-     * @param {Object} tokens
+     * @param {object} tokens
      * @param {number} idx
      * @returns {string}
      */
@@ -147,7 +147,7 @@ class DocsController extends BaseController {
     /**
      * This will parse all closing headings to close off a tags.
      *
-     * @param {Object} tokens
+     * @param {object} tokens
      * @param {number} idx
      * @returns {string}
      */

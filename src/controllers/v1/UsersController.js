@@ -5,7 +5,7 @@ import User from '../../models/User';
 import APIError from '../../errors/APIError';
 import BaseController from '../BaseController';
 
-import cache, { getTTL } from '../../cache';
+import { cacheWrap } from '../../cache';
 
 import * as validations from '../../validation/users';
 
@@ -18,7 +18,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async index(req, res) {
-        const users = await cache.wrap('/v1/users', () => (User.query().omit(['password'])), {ttl: getTTL(req)});
+        const users = await cacheWrap(req, () => (User.query().omit(['password'])));
 
         return res.json(users);
     }
@@ -40,7 +40,7 @@ class ScopesController extends BaseController {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
 
-        const user = await cache.wrap(`/v1/users/${userId}`, () => (User.query().findById(userId)), {ttl: getTTL(req)});
+        const user = await cacheWrap(req, () => (User.query().findById(userId)));
 
         if (!user) {
             return next(new APIError(`User with ID of ${userId} not found.`, httpStatusCode.NOT_FOUND));
