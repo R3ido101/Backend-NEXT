@@ -8,7 +8,7 @@ import markdownTOC from 'markdown-toc';
 
 import BaseController from './BaseController';
 
-import { getConfig } from '../../config';
+import { getConfig } from '../config';
 
 const config = getConfig();
 

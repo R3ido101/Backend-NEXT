@@ -16,11 +16,12 @@ import httpStatusCodes from 'http-status';
 import RateLimit from 'express-rate-limit';
 import ConnectSessionKnex from 'connect-session-knex';
 
-import knex from '../db';
+import knex from './db';
 import routes from './routes';
+import { setupAuth } from './auth';
 import middleware from './middleware';
 import errorHandlers from './errorHandlers';
-import { environment, getConfig } from '../config';
+import { environment, getConfig } from './config';
 import setupCustomValidators from './validation/custom';
 import { convertTimeStringToMilliseconds } from './utils';
 
@@ -71,7 +72,7 @@ setupCustomValidators();
 // OAuth
 app.use(passport.initialize());
 app.use(passport.session());
-require('./auth');
+setupAuth();
 
 if (environment === 'development') {
     app.use(logger('dev'));

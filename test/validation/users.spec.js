@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import validate from 'validate.js';
 import knexCleaner from 'knex-cleaner';
 
-import knex from '../../db';
+import knex from '../../src/db';
 import * as usersValidations from '../../src/validation/users';
 import setupCustomValidators from '../../src/validation/custom';
 import * as testUtils from '../utils';

@@ -1,6 +1,6 @@
 import cacheManager from 'cache-manager';
 
-import { getConfig, environment } from '../config';
+import { getConfig, environment } from './config';
 
 const config = getConfig();
 

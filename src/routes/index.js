@@ -1,12 +1,12 @@
 import v1ApiRoutes from './v1';
-import rootRoutes from './root';
 import docsRoutes from './docs';
+import rootRoutes from './root';
 
 export default (app) => {
-    // route routes
+    // login and oauth routes
     app.use('/', rootRoutes());
 
-    // documentation
+    // documentation routes
     app.use('/docs', docsRoutes());
 
     // v1 API routes

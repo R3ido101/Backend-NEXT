@@ -3,7 +3,7 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 import { generateUID } from '../utils';
-import { getConfig } from '../../config';
+import { getConfig } from '../config';
 
 const config = getConfig();
 

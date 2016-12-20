@@ -2,7 +2,7 @@ import { Model } from 'objection';
 import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
-import knex from '../../db';
+import knex from '../../src/db';
 
 import File from '../../src/models/File';
 import Pack from '../../src/models/Pack';

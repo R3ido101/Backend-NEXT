@@ -3,7 +3,7 @@ import oauth2orize from 'oauth2orize';
 import login from 'connect-ensure-login';
 import { isFuture, parse } from 'date-fns';
 
-import { getConfig } from '../config';
+import { getConfig } from './config';
 import { addTimeStringToDate, generateUID } from './utils';
 
 import APIError from './errors/APIError';

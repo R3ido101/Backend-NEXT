@@ -1,7 +1,7 @@
-const base = require('./base.json');
-const test = require('./test.json');
-const production = require('./production.json');
-const development = require('./development.json');
+const base = require('../config/base.json');
+const test = require('../config/test.json');
+const production = require('../config/production.json');
+const development = require('../config/development.json');
 
 const environment = process.env.NODE_ENV || 'development';
 
