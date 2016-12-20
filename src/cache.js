@@ -39,10 +39,15 @@ function isCacheableValue(value) {
  *
  * @param {object} req
  * @param {function} func
+ * @param {string} [postfix]
  */
-export async function cacheWrap(req, func) {
+export async function cacheWrap(req, func, postfix = '') {
+    if (postfix) {
+        postfix = ` - ${postfix}`;
+    }
+
     const ttl = getTTL(req);
-    const name = `${req.method} ${req.baseUrl}`;
+    const name = `${req.method} ${req.baseUrl}${postfix}`;
 
     return await cache.wrap(name, func, {ttl});
 }

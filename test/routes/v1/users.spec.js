@@ -177,7 +177,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('GET /v1/users/{id}', function () {
+    describe('GET /v1/users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -220,85 +220,6 @@ describe('Routes: /v1/users', function () {
                 expect(body.username).to.equal('test');
                 expect(body.password).to.be.undefined;
                 expect(body.email).to.equal('test@example.com');
-            });
-
-            it('should return a 404 error if the given user cannot be found', function (done) {
-                (async() => {
-                    chai.request(app).get(`/v1/users/42`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(404);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(404);
-
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals('User with ID of 42 not found.');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the passed in user id isn\'t an integer', function (done) {
-                (async() => {
-                    chai.request(app).get(`/v1/users/bad`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const error = body.error;
-
-                        expect(error).to.have.property('id').that.is.an('array');
-
-                        expect(error.id[0]).to.be.a('string').that.equals('Id must be a valid number');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the passed in user id is <= 0', function (done) {
-                (async() => {
-                    chai.request(app).get(`/v1/users/-12`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const error = body.error;
-
-                        expect(error).to.have.property('id').that.is.an('array');
-
-                        expect(error.id[0]).to.be.a('string').that.equals('Id must be a valid number');
-
-                        done();
-                    });
-                })();
             });
         });
 
@@ -443,366 +364,6 @@ describe('Routes: /v1/users', function () {
                 expect(body.password).to.be.undefined;
                 expect(body.email).to.equal('testuser@example.com');
             });
-
-            it('should return a 400 error if the username is blank', function (done) {
-                (async() => {
-                    const user = {
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username can\'t be blank');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the password is blank', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'testuser',
-                        email: 'testuser@example.com'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('password').that.is.an('array');
-                        expect(error.password[0]).to.be.a('string').that.equals('Password can\'t be blank');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the email is blank', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'testuser',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('email').that.is.an('array');
-                        expect(error.email[0]).to.be.a('string').that.equals('Email can\'t be blank');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the email is not an email', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'testuser',
-                        email: 'testuser',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('email').that.is.an('array');
-                        expect(error.email[0]).to.be.a('string').that.equals('Email is not a valid email');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is less than 4 characters', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'hi',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username must be at least 4 characters');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is more than 64 characters', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'testusertestusertestusertestusertestusertestusertestusertestuser1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username must be less than 64 characters');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username contains invalid characters', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'test&user',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username can only contain letters, numbers, underscores and dashes');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is atlauncher', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'atlauncher',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is admin', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'admin',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is root', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'root',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the password is less than 6 characters', function (done) {
-                (async() => {
-                    const user = {
-                        username: 'testuser',
-                        email: 'testuser@example.com',
-                        password: 'test'
-                    };
-
-                    chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('password').that.is.an('array');
-                        expect(error.password[0]).to.be.a('string').that.equals('Password must be at least 6 characters');
-
-                        done();
-                    });
-                })();
-            });
         });
 
         describe('When Unauthenticated', function () {
@@ -896,7 +457,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('PUT /v1/users/{id}', function () {
+    describe('PUT /v1/users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -950,347 +511,6 @@ describe('Routes: /v1/users', function () {
                 expect(body.password).to.be.undefined;
                 expect(body.email).to.equal('testuser1@example.com');
             });
-
-            it('should return a 400 error if the email is not an email', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'testuser',
-                        email: 'testuser',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('email').that.is.an('array');
-                        expect(error.email[0]).to.be.a('string').that.equals('Email is not a valid email');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is less than 4 characters', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'hi',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username must be at least 4 characters');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is more than 64 characters', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'testusertestusertestusertestusertestusertestusertestusertestuser1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username must be less than 64 characters');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username contains invalid characters', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'test&user',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username can only contain letters, numbers, underscores and dashes');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is atlauncher', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'atlauncher',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is admin', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'admin',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the username is root', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'root',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('username').that.is.an('array');
-                        expect(error.username[0]).to.be.a('string').that.equals('Username is not allowed');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the password is less than 6 characters', function (done) {
-                (async() => {
-                    const user = await testUtils.createUser({
-                        username: '_test-User1',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    });
-
-                    const updatedData = {
-                        username: 'testuser',
-                        email: 'testuser@example.com',
-                        password: 'test'
-                    };
-
-                    chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const {error} = body;
-
-                        expect(error).to.have.property('password').that.is.an('array');
-                        expect(error.password[0]).to.be.a('string').that.equals('Password must be at least 6 characters');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 404 error if the user doesn\'t exist', function (done) {
-                (async() => {
-                    const updatedData = {
-                        username: 'testuser',
-                        email: 'testuser@example.com',
-                        password: 'testing'
-                    };
-
-                    chai.request(app).put('/v1/users/42').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(404);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(404);
-
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals('User with ID of 42 not found.');
-
-                        done();
-                    });
-                })();
-            });
         });
 
         describe('When Unauthenticated', function () {
@@ -1384,7 +604,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('DELETE /v1/users/{id}', function () {
+    describe('DELETE /v1/users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -1425,85 +645,6 @@ describe('Routes: /v1/users', function () {
 
                 expect(response).to.have.status(204);
             });
-
-            it('should return a 404 error if the given user cannot be found', function (done) {
-                (async() => {
-                    chai.request(app).delete(`/v1/users/42`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(404);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(404);
-
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals('User with ID of 42 not found.');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the passed in user id isn\'t an integer', function (done) {
-                (async() => {
-                    chai.request(app).delete(`/v1/users/bad`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const error = body.error;
-
-                        expect(error).to.have.property('id').that.is.an('array');
-
-                        expect(error.id[0]).to.be.a('string').that.equals('Id must be a valid number');
-
-                        done();
-                    });
-                })();
-            });
-
-            it('should return a 400 error if the passed in user id is <= 0', function (done) {
-                (async() => {
-                    chai.request(app).delete(`/v1/users/-12`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
-                        done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(400);
-                        expect(response).to.be.json;
-
-                        const {body} = response;
-
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(400);
-
-                        expect(body).to.have.property('error').that.is.an('object');
-
-                        const error = body.error;
-
-                        expect(error).to.have.property('id').that.is.an('array');
-
-                        expect(error.id[0]).to.be.a('string').that.equals('Id must be a valid number');
-
-                        done();
-                    });
-                })();
-            });
         });
 
         describe('When Unauthenticated', function () {
@@ -1530,7 +671,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -1574,7 +715,154 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+
+                        done();
+                    });
+                })();
+            });
+        });
+    });
+
+    describe('GET /v1/users/{user_id}/roles', function () {
+        describe('When Authenticated', function () {
+            let created_role;
+            let created_user;
+            let client;
+            let token;
+
+            beforeEach(async() => {
+                created_role = await testUtils.createRole({
+                    name: 'admin'
+                });
+
+                created_user = await testUtils.createUser({
+                    username: 'test',
+                    email: 'test@example.com'
+                });
+
+                await testUtils.addRoleToUser(created_role, created_user);
+
+                client = await testUtils.createOAuthClient({
+                    user_id: created_user.id
+                });
+
+                token = await testUtils.createAccessToken({
+                    user_id: created_user.id,
+                    client_id: client.id,
+                    scope: 'admin:read'
+                });
+            });
+
+            it('should get the roles for the given user by their ID', async function () {
+                const user = await testUtils.createUser();
+
+                const role = await testUtils.createRole({
+                    name: 'test',
+                    description: 'test role'
+                });
+
+                await testUtils.addRoleToUser(role, user);
+
+                const response = await chai.request(app).get(`/v1/users/${user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`);
+
+                expect(response).to.have.status(200);
+                expect(response).to.be.json;
+
+                const body = response.body;
+
+                expect(body).to.be.an('array');
+
+                const firstRole = body[0];
+
+                expect(firstRole.name).to.equal('test');
+                expect(firstRole.description).to.equal('test role');
+            });
+        });
+
+        describe('When Unauthenticated', function () {
+            it('should return an error if user doesn\'t have an admin role', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'user'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'admin:write'
+                    });
+
+                    chai.request(app).get(`/v1/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+
+                        done();
+                    });
+                })();
+            });
+
+            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'admin'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'self:read'
+                    });
+
+                    chai.request(app).get(`/v1/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -1589,6 +877,293 @@ describe('Routes: /v1/users', function () {
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+
+                        done();
+                    });
+                })();
+            });
+        });
+    });
+
+    describe('PUT /v1/users/{user_id}/roles/{role_id}', function () {
+        describe('When Authenticated', function () {
+            let created_role;
+            let created_user;
+            let client;
+            let token;
+
+            beforeEach(async() => {
+                created_role = await testUtils.createRole({
+                    name: 'admin'
+                });
+
+                created_user = await testUtils.createUser({
+                    username: 'test',
+                    email: 'test@example.com'
+                });
+
+                await testUtils.addRoleToUser(created_role, created_user);
+
+                client = await testUtils.createOAuthClient({
+                    user_id: created_user.id
+                });
+
+                token = await testUtils.createAccessToken({
+                    user_id: created_user.id,
+                    client_id: client.id,
+                    scope: 'admin:write'
+                });
+            });
+
+            it('should attach the given role to the user by their ID', async function () {
+                const user = await testUtils.createUser({
+                    username: '_test-User1',
+                    email: 'testuser@example.com',
+                    password: 'testing'
+                });
+
+                const role = await testUtils.createRole({
+                    name: 'test',
+                    description: 'test role'
+                });
+
+                const response = await chai.request(app).put(`/v1/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+
+                expect(response).to.have.status(200);
+                expect(response).to.be.json;
+
+                const body = response.body;
+
+                expect(body).to.be.an('object');
+
+                expect(body.name).to.equal('test');
+                expect(body.description).to.equal('test role');
+            });
+        });
+
+        describe('When Unauthenticated', function () {
+            it('should return an error if user doesn\'t have an admin role', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'user'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'admin:write'
+                    });
+
+                    chai.request(app).put(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+
+                        done();
+                    });
+                })();
+            });
+
+            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'admin'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'self:write'
+                    });
+
+                    chai.request(app).put(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+
+                        done();
+                    });
+                })();
+            });
+        });
+    });
+
+    describe('DELETE /v1/users/{user_id}/roles/{role_id}', function () {
+        describe('When Authenticated', function () {
+            let created_role;
+            let created_user;
+            let client;
+            let token;
+
+            beforeEach(async() => {
+                created_role = await testUtils.createRole({
+                    name: 'admin'
+                });
+
+                created_user = await testUtils.createUser({
+                    username: 'test',
+                    email: 'test@example.com'
+                });
+
+                await testUtils.addRoleToUser(created_role, created_user);
+
+                client = await testUtils.createOAuthClient({
+                    user_id: created_user.id
+                });
+
+                token = await testUtils.createAccessToken({
+                    user_id: created_user.id,
+                    client_id: client.id,
+                    scope: 'admin:write'
+                });
+            });
+
+            it('should delete the given role from the user by their ID', async function () {
+                const user = await testUtils.createUser({
+                    username: '_test-User1',
+                    email: 'testuser@example.com',
+                    password: 'testing'
+                });
+
+                const role = await testUtils.createRole({
+                    name: 'test'
+                });
+
+                await testUtils.addRoleToUser(role, user);
+
+                const response = await chai.request(app).delete(`/v1/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+
+                expect(response).to.have.status(204);
+            });
+        });
+
+        describe('When Unauthenticated', function () {
+            it('should return an error if user doesn\'t have an admin role', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'user'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'admin:write'
+                    });
+
+                    chai.request(app).delete(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+
+                        done();
+                    });
+                })();
+            });
+
+            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
+                (async() => {
+                    const created_role = await testUtils.createRole({
+                        name: 'admin'
+                    });
+
+                    const created_user = await testUtils.createUser({
+                        username: 'test',
+                        email: 'test@example.com'
+                    });
+
+                    await testUtils.addRoleToUser(created_role, created_user);
+
+                    const client = await testUtils.createOAuthClient({
+                        user_id: created_user.id
+                    });
+
+                    const token = await testUtils.createAccessToken({
+                        user_id: created_user.id,
+                        client_id: client.id,
+                        scope: 'self:write'
+                    });
+
+                    chai.request(app).delete(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(500);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(500);
+
+                        expect(body).to.have.property('error').that.is.a('string');
+                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });

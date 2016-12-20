@@ -107,4 +107,8 @@ if (environment !== 'test') {
     console.log(`Started on port ${app.server.address().port}`);
 }
 
+process.on('unhandledRejection', function(reason, p){
+    console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
+});
+
 export default app;

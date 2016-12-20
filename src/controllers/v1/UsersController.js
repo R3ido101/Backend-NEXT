@@ -28,10 +28,9 @@ class ScopesController extends BaseController {
      *
      * @param {object} req
      * @param {object} res
-     * @param {function} next
      * @returns {object}
      */
-    static async get(req, res, next) {
+    static async get(req, res) {
         return res.json(req.user.$omit('password'));
     }
 
@@ -80,11 +79,63 @@ class ScopesController extends BaseController {
      *
      * @param {object} req
      * @param {object} res
+     * @returns {object}
+     */
+    static async delete(req, res) {
+        await req.user.$query().delete();
+
+        return res.status(httpStatusCode.NO_CONTENT).end();
+    }
+
+    /**
+     * This returns the roles for a user.
+     *
+     * @param {object} req
+     * @param {object} res
+     * @returns {object}
+     */
+    static async getRole(req, res) {
+        const roles = await req.user.$relatedQuery('roles');
+
+        return res.json(roles);
+    }
+
+    /**
+     * This adds the given role to the given user.
+     *
+     * @param {object} req
+     * @param {object} res
      * @param {function} next
      * @returns {object}
      */
-    static async delete(req, res, next) {
-        await req.user.$query().delete();
+    static async putRole(req, res, next) {
+        const hasRole = await req.user.$relatedQuery('roles').findById(req.role.id);
+
+        if (hasRole) {
+            return next(new APIError('User already has that role.', httpStatusCode.CONFLICT));
+        }
+
+        const roles = await req.user.$relatedQuery('roles').relate(req.role);
+
+        return res.json(roles);
+    }
+
+    /**
+     * This adds the given role to the given user.
+     *
+     * @param {object} req
+     * @param {object} res
+     * @param {function} next
+     * @returns {object}
+     */
+    static async deleteRole(req, res, next) {
+        const hasRole = await req.user.$relatedQuery('roles').findById(req.role.id);
+
+        if (!hasRole) {
+            return next(new APIError('User doesn\'t have that role.', httpStatusCode.NOT_FOUND));
+        }
+
+        const roles = await req.user.$relatedQuery('roles').unrelate().findById(req.role.id);
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const dateFormat = require('date-fns/format');
 
-const getConfig = require('../../../config').getConfig;
+const getConfig = require('../../../src/config').getConfig;
 
 const config = getConfig();
 
@@ -19,6 +19,7 @@ exports.seed = function (knex, Promise) {
                 username: 'admin',
                 password: bcrypt.hashSync('password', config.bcryptRounds),
                 email: 'admin@example.com',
+                verification_code: 'testing',
                 created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
             }
         ]),
