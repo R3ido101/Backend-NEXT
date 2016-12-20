@@ -13,6 +13,8 @@ class PackVersionRevision extends BaseModel {
 
         required: ['json'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_version_id: {type: 'integer', minimum: 1},

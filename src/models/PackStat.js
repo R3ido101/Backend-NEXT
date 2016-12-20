@@ -12,6 +12,8 @@ class PackStat extends BaseModel {
 
         required: ['date'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_id: {type: 'integer', minimum: 1},

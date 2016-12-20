@@ -12,6 +12,8 @@ class Pack extends BaseModel {
 
         required: ['name'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             name: {type: 'string', minLength: 3, maxLength: 255},

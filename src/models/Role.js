@@ -9,6 +9,8 @@ class Role extends BaseModel {
 
         required: ['name', 'description'],
 
+        uniqueProperties: ['name'],
+
         additionalProperties: false,
 
         properties: {

@@ -1,4 +1,3 @@
-import validate from 'validate.js';
 import * as httpStatusCode from 'http-status';
 
 import User from '../../models/User';
@@ -6,8 +5,6 @@ import APIError from '../../errors/APIError';
 import BaseController from '../BaseController';
 
 import { cacheWrap } from '../../cache';
-
-import * as validations from '../../validation/users';
 
 class ScopesController extends BaseController {
     /**
@@ -44,9 +41,7 @@ class ScopesController extends BaseController {
      */
     static async post(req, res, next) {
         try {
-            const input = await validate.async(req.body, validations.POST);
-
-            const user = await User.query().insert(input);
+            const user = await User.query().insert(req.body);
 
             return res.json(user.$omit('password'));
         } catch (errors) {
@@ -64,14 +59,12 @@ class ScopesController extends BaseController {
      */
     static async put(req, res, next) {
         try {
-            await validate.async(req.body, validations.PUT);
+            const updatedUser = await req.user.$query().patchAndFetch(req.body);
+
+            return res.json(updatedUser.$omit('password'));
         } catch (errors) {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
-
-        const updatedUser = await req.user.$query().patchAndFetch(req.body);
-
-        return res.json(updatedUser.$omit('password'));
     }
 
     /**

@@ -15,6 +15,8 @@ class User extends BaseModel {
 
         required: ['username', 'email', 'password'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             username: {type: 'string', minLength: 3, maxLength: 64},

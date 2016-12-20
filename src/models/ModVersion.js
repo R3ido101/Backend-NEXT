@@ -10,6 +10,8 @@ class ModVersion extends BaseModel {
 
         required: ['version'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             mod_id: {type: 'integer', minimum: 1},

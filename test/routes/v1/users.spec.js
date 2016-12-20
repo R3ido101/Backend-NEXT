@@ -351,7 +351,7 @@ describe('Routes: /v1/users', function () {
                     password: 'testing'
                 };
 
-                const response = await chai.request(app).post('/v1/users/').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
+                const response = await chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;

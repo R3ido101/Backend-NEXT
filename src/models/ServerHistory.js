@@ -10,6 +10,8 @@ class ServerHistory extends BaseModel {
 
         required: ['online', 'players'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             server_id: {type: 'integer', minimum: 1},

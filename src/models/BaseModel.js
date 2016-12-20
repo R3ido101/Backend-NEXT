@@ -1,4 +1,4 @@
-import { Model } from 'objection';
+import { Model, ValidationError } from 'objection';
 
 class BaseModel extends Model {
     /**
@@ -16,14 +16,11 @@ class BaseModel extends Model {
     static transforms = {};
 
     /**
-     * An array of attribute names that will be excluded from being returned.
-     *
-     * @type {array}
-     */
-    static hidden = [];
-
-    /**
      * Ran before inserting into the database.
+     *
+     * It will:
+     *   - add the created_at field if timestamps are enabled
+     *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
      *
      * @param queryContext
      */
@@ -33,10 +30,32 @@ class BaseModel extends Model {
         if (this.constructor.timestamps) {
             this.created_at = new Date().toJSON();
         }
+
+        const uniqueProperties = this.constructor.jsonSchema && this.constructor.jsonSchema.uniqueProperties || [];
+
+        return Promise.all(uniqueProperties.map((property) => {
+            return new Promise((resolve, reject) => {
+                if (this.hasOwnProperty(property)) {
+                    this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
+                        if (row) {
+                            return reject(new ValidationError({
+                                [property]: `${property} is already taken.`
+                            }));
+                        }
+
+                        return resolve();
+                    }).catch(reject);
+                }
+            });
+        }));
     }
 
     /**
      * Ran before updating the database.
+     *
+     * It will:
+     *   - change the updated_at field if timestamps are enabled
+     *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
      *
      * @param queryContext
      */
@@ -46,6 +65,24 @@ class BaseModel extends Model {
         if (this.constructor.timestamps) {
             this.updated_at = new Date().toJSON();
         }
+
+        const uniqueProperties = this.constructor.jsonSchema && this.constructor.jsonSchema.uniqueProperties || [];
+
+        return Promise.all(uniqueProperties.map((property) => {
+            return new Promise((resolve, reject) => {
+                if (this.hasOwnProperty(property)) {
+                    this.constructor.query().select('id').where(property, this[property]).whereNot('id', queryContext.old.id).first().then((row) => {
+                        if (row) {
+                            return reject(new ValidationError({
+                                [property]: `${property} is already taken.`
+                            }));
+                        }
+
+                        return resolve();
+                    }).catch(reject);
+                }
+            });
+        }));
     }
 
     /**
@@ -60,12 +97,6 @@ class BaseModel extends Model {
         Object.keys(this.constructor.transforms).forEach((key) => {
             if (json.hasOwnProperty(key)) {
                 json[key] = this.constructor.transforms[key](json[key]);
-            }
-        });
-
-        this.constructor.hidden.forEach((hidden) => {
-            if (json.hasOwnProperty(hidden)) {
-                delete json[hidden];
             }
         });
 

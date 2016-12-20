@@ -10,6 +10,8 @@ class LauncherTag extends BaseModel {
 
         required: ['tag'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             tag: {type: 'string', minLength: 3, maxLength: 128, pattern: '^[A-Za-z0-9-_:]+$'},

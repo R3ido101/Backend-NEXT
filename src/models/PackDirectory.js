@@ -10,6 +10,8 @@ class PackDirectory extends BaseModel {
 
         required: ['name'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_id: {type: 'integer', minimum: 1},

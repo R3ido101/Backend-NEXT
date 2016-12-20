@@ -10,6 +10,8 @@ class File extends BaseModel {
 
         required: ['name', 'hash', 'size'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             name: {type: 'string', maxLength: 1024},

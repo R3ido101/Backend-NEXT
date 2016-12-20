@@ -10,6 +10,8 @@ class ServerFeaturedHistory extends BaseModel {
 
         required: ['transaction_id', 'days', 'price', 'expires_at'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             server_id: {type: 'integer', minimum: 1},

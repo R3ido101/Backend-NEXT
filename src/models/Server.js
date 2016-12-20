@@ -10,6 +10,8 @@ class Server extends BaseModel {
 
         required: ['name', 'host', 'description', 'pack_id', 'pack_version_id'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             name: {type: 'string', maxLength: 512},

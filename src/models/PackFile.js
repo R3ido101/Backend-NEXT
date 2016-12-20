@@ -8,6 +8,8 @@ class PackFile extends BaseModel {
     static jsonSchema = {
         type: 'object',
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_id: {type: 'integer', minimum: 1},

@@ -10,6 +10,8 @@ class MinecraftVersion extends BaseModel {
 
         required: ['version'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             version: {type: 'string', minLength: 5, maxLength: 16},

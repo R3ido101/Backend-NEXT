@@ -1,4 +1,3 @@
-import validate from 'validate.js';
 import * as httpStatusCode from 'http-status';
 
 import Role from '../../models/Role';
@@ -6,8 +5,6 @@ import APIError from '../../errors/APIError';
 import BaseController from '../BaseController';
 
 import { cacheWrap } from '../../cache';
-
-import * as roleValidations from '../../validation/roles';
 
 class RolesController extends BaseController {
     /**
@@ -44,14 +41,12 @@ class RolesController extends BaseController {
      */
     static async post(req, res, next) {
         try {
-            await validate.async(req.body, roleValidations.POST);
+            const role = await Role.query().insert(req.body);
+
+            return res.json(role);
         } catch (errors) {
-            return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
+            return next(new APIError(errors.data, httpStatusCode.BAD_REQUEST));
         }
-
-        const role = await Role.query().insert(req.body);
-
-        return res.json(role);
     }
 
     /**
@@ -64,14 +59,12 @@ class RolesController extends BaseController {
      */
     static async put(req, res, next) {
         try {
-            await validate.async(req.body, roleValidations.PUT);
+            const updatedRole = await req.role.$query().patchAndFetch(req.body);
+
+            return res.json(updatedRole);
         } catch (errors) {
-            return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
+            return next(new APIError(errors.data || errors, httpStatusCode.BAD_REQUEST));
         }
-
-        const updatedRole = await req.role.$query().patchAndFetch(req.body);
-
-        return res.json(updatedRole);
     }
 
     /**

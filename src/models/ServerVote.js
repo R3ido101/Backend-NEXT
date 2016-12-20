@@ -10,6 +10,8 @@ class ServerVote extends BaseModel {
 
         required: ['username'],
 
+        additionalProperties: false,
+
         properties: {
             id: {type: 'integer', minimum: 1},
             server_id: {type: 'integer', minimum: 1},
