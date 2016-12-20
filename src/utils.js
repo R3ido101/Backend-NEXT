@@ -1,5 +1,11 @@
 import { addSeconds, addMinutes, addHours, addDays, addMonths, addYears } from 'date-fns';
 
+/**
+ * Generates a random unique id.
+ *
+ * @param {number} [len=32]
+ * @returns {string}
+ */
 export function generateUID(len = 32) {
     var buf = []
         , chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -15,10 +21,9 @@ export function generateUID(len = 32) {
 /**
  * Return a random int, used by `utils.uid()`
  *
- * @param {Number} min
- * @param {Number} max
- * @return {Number}
- * @api private
+ * @param {number} min
+ * @param {number} max
+ * @return {number}
  */
 
 function getRandomInt(min, max) {

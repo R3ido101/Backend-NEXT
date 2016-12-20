@@ -1,5 +1,5 @@
-import * as httpStatusCode from 'http-status';
 import validate from 'validate.js';
+import * as httpStatusCode from 'http-status';
 
 import User from '../../models/User';
 import APIError from '../../errors/APIError';
@@ -32,21 +32,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async get(req, res, next) {
-        const userId = req.params.user_id || null;
-
-        try {
-            await validate.async({id: userId}, validations.VALIDATE_ID);
-        } catch (errors) {
-            return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
-        }
-
-        const user = await cacheWrap(req, () => (User.query().findById(userId)));
-
-        if (!user) {
-            return next(new APIError(`User with ID of ${userId} not found.`, httpStatusCode.NOT_FOUND));
-        }
-
-        return res.json(user.$omit('password'));
+        return res.json(req.user.$omit('password'));
     }
 
     /**
@@ -78,23 +64,13 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async put(req, res, next) {
-        const userId = req.params.user_id || null;
-
         try {
-            await validate.async({id: userId}, validations.VALIDATE_ID);
-
-            const user = await User.query().findById(userId);
-
-            if (!user) {
-                return next(new APIError(`User with ID of ${userId} not found.`, httpStatusCode.NOT_FOUND));
-            }
-
             await validate.async(req.body, validations.PUT);
         } catch (errors) {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
 
-        const updatedUser = await User.query().patchAndFetchById(userId, req.body);
+        const updatedUser = await req.user.$query().patchAndFetch(req.body);
 
         return res.json(updatedUser.$omit('password'));
     }
@@ -108,21 +84,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async delete(req, res, next) {
-        const userId = req.params.user_id || null;
-
-        try {
-            await validate.async({id: userId}, validations.VALIDATE_ID);
-        } catch (errors) {
-            return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
-        }
-
-        const user = await User.query().findById(userId);
-
-        if (!user) {
-            return next(new APIError(`User with ID of ${userId} not found.`, httpStatusCode.NOT_FOUND));
-        }
-
-        await User.query().deleteById(userId);
+        await req.user.$query().delete();
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }
