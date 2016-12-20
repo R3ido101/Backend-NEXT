@@ -1,5 +1,6 @@
 import validate from 'validate.js';
 
+import Role from '../../models/Role';
 import User from '../../models/User';
 
 /**
@@ -38,6 +39,27 @@ export default function () {
                 const user = await User.query().where({email: value});
 
                 if (user.length) {
+                    return resolve('is already taken');
+                }
+            } catch (e) {
+                return reject(e);
+            }
+
+            return resolve();
+        });
+    };
+
+    validate.validators.uniqueRoleName = function (value) {
+        return new validate.Promise(async function (resolve, reject) {
+            if (!value) {
+                // we resolve this as passed since it will be catched by other validators anyway
+                return resolve();
+            }
+
+            try {
+                const role = await Role.query().where({name: value});
+
+                if (role.length) {
                     return resolve('is already taken');
                 }
             } catch (e) {

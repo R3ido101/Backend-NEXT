@@ -44,14 +44,14 @@ class ScopesController extends BaseController {
      */
     static async post(req, res, next) {
         try {
-            await validate.async(req.body, validations.POST);
+            const input = await validate.async(req.body, validations.POST);
+
+            const user = await User.query().insert(input);
+
+            return res.json(user.$omit('password'));
         } catch (errors) {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
-
-        const user = await User.query().insert(req.body);
-
-        return res.json(user.$omit('password'));
     }
 
     /**

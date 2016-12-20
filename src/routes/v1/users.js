@@ -25,7 +25,7 @@ export default () => {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
 
-        const user = await cacheWrap(req, () => (User.query().findById(userId)), 'role');
+        const user = await cacheWrap(req, () => (User.query().findById(userId).eager('roles')), 'user');
 
         if (!user) {
             return next(new APIError(`User with ID of ${userId} not found.`, httpStatusCode.NOT_FOUND));
@@ -44,7 +44,7 @@ export default () => {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }
 
-        const role = await cacheWrap(req, () => (Role.query().findById(roleId)), 'user');
+        const role = await cacheWrap(req, () => (Role.query().findById(roleId)), 'role');
 
         if (!role) {
             return next(new APIError(`Role with ID of ${roleId} not found.`, httpStatusCode.NOT_FOUND));

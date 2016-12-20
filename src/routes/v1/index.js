@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import rootRoutes from './root';
 import cacheRoutes from './cache';
+import rolesRoutes from './roles';
 import usersRoutes from './users';
 import scopesRoutes from './scopes';
 
@@ -10,6 +11,7 @@ export default () => {
 
     routes.use('/', rootRoutes());
     routes.use('/cache', cacheRoutes());
+    routes.use('/roles', rolesRoutes());
     routes.use('/scopes', scopesRoutes());
     routes.use('/users', usersRoutes());
 

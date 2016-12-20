@@ -49,6 +49,10 @@ export async function cacheWrap(req, func, postfix = '') {
     const ttl = getTTL(req);
     const name = `${req.method} ${req.baseUrl}${postfix}`;
 
+    if (req.method !== 'GET') {
+        return await func();
+    }
+
     return await cache.wrap(name, func, {ttl});
 }
 
