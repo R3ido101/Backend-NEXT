@@ -135,7 +135,7 @@ class ScopesController extends BaseController {
             return next(new APIError('User doesn\'t have that role.', httpStatusCode.NOT_FOUND));
         }
 
-        const roles = await req.user.$relatedQuery('roles').unrelate().findById(req.role.id);
+        await req.user.$relatedQuery('roles').unrelate().findById(req.role.id);
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }

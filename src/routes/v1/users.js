@@ -34,7 +34,7 @@ export default () => {
         // attach the user to the request
         req.user = user;
 
-        next();
+        return next();
     });
 
     routes.param('role_id', async function (req, res, next, roleId) {
@@ -53,7 +53,7 @@ export default () => {
         // attach the role to the request
         req.role = role;
 
-        next();
+        return next();
     });
 
     routes.get('/', checkScope('admin:read'), UsersController.index);
