@@ -1,6 +1,14 @@
 import { Model } from 'objection';
 import BaseModel from './BaseModel';
 
+/**
+ * A Role is a way to group users into one or more (even none) roles to allow restricting certain actions to certain roles.
+ *
+ * Roles must have unique name.
+ *
+ * @see ../../db/migrations/20160924191309_roles.js
+ * @extends ./BaseModel
+ */
 class Role extends BaseModel {
     static tableName = 'roles';
 

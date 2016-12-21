@@ -2,6 +2,20 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A file is a single file in the file system. Uploaded by users or automatically by the system.
+ *
+ * It can be linked to a Mod and a ModVersion, but doesn't have to be linked explicitly to one or both of those.
+ *
+ * Since all files can hosted externally and not necessarily on the local disk, all file information is cached in the database for speed and for making lookups quicker.
+ *
+ * The hash property is the only property that must be unique and is the sha1 hash of the file.
+ *
+ * @see ./Mod
+ * @see ./ModVersion
+ * @see ../../db/migrations/20161216235950_files.js
+ * @extends ./BaseModel
+ */
 class File extends BaseModel {
     static tableName = 'files';
 
@@ -9,6 +23,8 @@ class File extends BaseModel {
         type: 'object',
 
         required: ['name', 'hash', 'size'],
+
+        uniqueProperties: ['hash'],
 
         additionalProperties: false,
 

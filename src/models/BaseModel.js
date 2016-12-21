@@ -1,5 +1,13 @@
 import { Model, ValidationError } from 'objection';
 
+/**
+ * This BaseModel extends the objection.js Model and adds in some custom things including:
+ *   - Adding automatic timestamps
+ *   - Adding in transformable properties
+ *   - Checking for uniqueness when updating/inserting
+ *
+ * @extends Model
+ */
 class BaseModel extends Model {
     /**
      * If we should update the created_at attribute when inserted and the updated_at attribute when updated.
@@ -22,7 +30,7 @@ class BaseModel extends Model {
      *   - add the created_at field if timestamps are enabled
      *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
      *
-     * @param queryContext
+     * @param {object} queryContext
      */
     $beforeInsert(queryContext) {
         super.$beforeInsert(queryContext);
@@ -35,16 +43,40 @@ class BaseModel extends Model {
 
         return Promise.all(uniqueProperties.map((property) => {
             return new Promise((resolve, reject) => {
-                if (this.hasOwnProperty(property)) {
-                    this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
-                        if (row) {
-                            return reject(new ValidationError({
-                                [property]: `${property} is already taken.`
-                            }));
-                        }
+                if (Array.isArray(property)) {
+                    if (property.every((prop) => (this.hasOwnProperty(prop)))) {
+                        const whereConditions = {};
 
-                        return resolve();
-                    }).catch(reject);
+                        property.forEach((prop) => {
+                            whereConditions[prop] = this[prop];
+                        });
+
+                        this.constructor.query().select('id').where(whereConditions).first().then((row) => {
+                            if (row) {
+                                const errors = {};
+
+                                property.forEach((prop) => {
+                                    errors[prop] = `${prop} is already taken.`;
+                                });
+
+                                return reject(new ValidationError(errors));
+                            }
+
+                            return resolve();
+                        }).catch(reject);
+                    }
+                } else {
+                    if (this.hasOwnProperty(property)) {
+                        this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
+                            if (row) {
+                                return reject(new ValidationError({
+                                    [property]: `${property} is already taken.`
+                                }));
+                            }
+
+                            return resolve();
+                        }).catch(reject);
+                    }
                 }
             });
         }));
@@ -57,7 +89,7 @@ class BaseModel extends Model {
      *   - change the updated_at field if timestamps are enabled
      *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
      *
-     * @param queryContext
+     * @param {object} queryContext
      */
     $beforeUpdate(queryContext) {
         super.$beforeUpdate(queryContext);
@@ -70,16 +102,40 @@ class BaseModel extends Model {
 
         return Promise.all(uniqueProperties.map((property) => {
             return new Promise((resolve, reject) => {
-                if (this.hasOwnProperty(property)) {
-                    this.constructor.query().select('id').where(property, this[property]).whereNot('id', queryContext.old.id).first().then((row) => {
-                        if (row) {
-                            return reject(new ValidationError({
-                                [property]: `${property} is already taken.`
-                            }));
-                        }
+                if (Array.isArray(property)) {
+                    if (property.every((prop) => (this.hasOwnProperty(prop)))) {
+                        const whereConditions = {};
 
-                        return resolve();
-                    }).catch(reject);
+                        property.forEach((prop) => {
+                            whereConditions[prop] = this[prop];
+                        });
+
+                        this.constructor.query().select('id').where(whereConditions).whereNot('id', queryContext.old.id).first().then((row) => {
+                            if (row) {
+                                const errors = {};
+
+                                property.forEach((prop) => {
+                                    errors[prop] = `${prop} is already taken.`;
+                                });
+
+                                return reject(new ValidationError(errors));
+                            }
+
+                            return resolve();
+                        }).catch(reject);
+                    }
+                } else {
+                    if (this.hasOwnProperty(property)) {
+                        this.constructor.query().select('id').where(property, this[property]).whereNot('id', queryContext.old.id).first().then((row) => {
+                            if (row) {
+                                return reject(new ValidationError({
+                                    [property]: `${property} is already taken.`
+                                }));
+                            }
+
+                            return resolve();
+                        }).catch(reject);
+                    }
                 }
             });
         }));

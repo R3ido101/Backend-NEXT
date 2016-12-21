@@ -2,6 +2,21 @@ import { Model } from 'objection';
 
 import BaseModel from '../BaseModel';
 
+/**
+ * PackUser's is a pivot table which connects User's and Pack's.
+ *
+ * PackUser's have 5 different permissions which allow addition of users to packs for certain tasks:
+ *   - can_administrate: Can add and remove users from the pack as well as adjust permissions
+ *   - can_create: Can create new versions
+ *   - can_delete: Can delete versions
+ *   - can_edit: Can edit versions
+ *   - can_publish: Can publish versions
+ *
+ * @see ../Pack
+ * @see ../User
+ * @see ../../../db/migrations/20160924191541_pack_users.js
+ * @extends ./BaseModel
+ */
 class PackUser extends BaseModel {
     static tableName = 'pack_users';
 

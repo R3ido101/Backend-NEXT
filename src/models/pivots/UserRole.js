@@ -2,6 +2,16 @@ import { Model } from 'objection';
 
 import BaseModel from '../BaseModel';
 
+/**
+ * This is the pivot table connecting users to roles.
+ *
+ * Users can only have one of the same role.
+ *
+ * @see ../Role
+ * @see ../User
+ * @see ../../../db/migrations/20160924191402_user_roles.js
+ * @extends ./BaseModel
+ */
 class UserRole extends BaseModel {
     static tableName = 'user_roles';
 
@@ -9,6 +19,10 @@ class UserRole extends BaseModel {
         type: 'object',
 
         required: ['role_id', 'user_id'],
+
+        uniqueProperties: [['role_id', 'user_id']],
+
+        additionalProperties: false,
 
         properties: {
             id: {type: 'integer', minimum: 1},

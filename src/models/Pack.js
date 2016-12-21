@@ -4,6 +4,14 @@ import BaseModel from './BaseModel';
 
 import { getSafeString } from '../utils';
 
+/**
+ * Packs are self explanatory. Packs must have a unique name and a unique safe name (removing all non alphanumeric characters, dashes and underscores).
+ *
+ * Packs can be public (accessible publicly and shown on the launcher), semi public (can be added by anyone with the url) or private (only accessible by certain users who are whitelisted).
+ *
+ * @see ../../db/migrations/20160924191413_packs.js
+ * @extends ./BaseModel
+ */
 class Pack extends BaseModel {
     static tableName = 'packs';
 
@@ -11,6 +19,8 @@ class Pack extends BaseModel {
         type: 'object',
 
         required: ['name'],
+
+        uniqueProperties: ['name', 'safe_name'],
 
         additionalProperties: false,
 
@@ -22,6 +32,7 @@ class Pack extends BaseModel {
             position: {type: 'integer', minimum: 1},
             type: {type: 'string'},
             is_disabled: {type: 'boolean', default: false},
+            discord_invite_code: {type: 'string', minLength: 8, maxLength: 32},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
             disabled_at: {type: ['string', 'null'], format: 'date-time', default: null}

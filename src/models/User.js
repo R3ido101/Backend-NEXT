@@ -7,6 +7,15 @@ import { getConfig } from '../config';
 
 const config = getConfig();
 
+/**
+ * A User represents someone who has signed up for an ATLauncher account. An ATLauncher account is not required to download/install/play packs, but is required to make packs and play some private
+ * packs.
+ *
+ * When users sign up, they will get an email with a link they must click in order to confirm their account and login.
+ *
+ * @see ../../db/migrations/20160917230101_users.js
+ * @extends ./BaseModel
+ */
 class User extends BaseModel {
     static tableName = 'users';
 
@@ -14,6 +23,8 @@ class User extends BaseModel {
         type: 'object',
 
         required: ['username', 'email', 'password'],
+
+        uniqueProperties: ['username', 'email'],
 
         additionalProperties: false,
 
