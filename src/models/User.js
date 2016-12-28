@@ -30,7 +30,7 @@ class User extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            username: {type: 'string', minLength: 3, maxLength: 64},
+            username: {type: 'string', minLength: 3, maxLength: 64, pattern: '^[A-Za-z0-9-_]+$'},
             email: {type: 'string', format: 'email'},
             password: {type: 'string', maxLength: 60},
             must_change_password: {type: 'boolean', default: false},

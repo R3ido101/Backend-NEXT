@@ -25,6 +25,8 @@ class PackUser extends BaseModel {
 
         required: ['pack_id', 'user_id'],
 
+        uniqueProperties: [['pack_id', 'user_id']],
+
         properties: {
             id: {type: 'integer', minimum: 1},
             pack_id: {type: 'integer', minimum: 1},
