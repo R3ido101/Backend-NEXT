@@ -1,4 +1,5 @@
 import Faker from 'faker';
+import { randexp } from 'randexp';
 
 import { generateUID } from '../src/utils';
 
@@ -33,7 +34,7 @@ export async function createPack(overrides = {}) {
 
 export async function createUser(overrides = {}) {
     const defaults = {
-        username: Faker.internet.userName(),
+        username: randexp('[A-Za-z0-9-_]{6,16}'),
         password: Faker.internet.password(),
         email: Faker.internet.email()
     };
