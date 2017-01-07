@@ -14,7 +14,6 @@ import BaseModel from '../BaseModel';
  *
  * @see ../Pack
  * @see ../User
- * @see ../../../db/migrations/20160924191541_pack_users.js
  * @extends ./BaseModel
  */
 class PackUser extends BaseModel {

@@ -27,17 +27,20 @@ describe('Model: ModVersion', function () {
             const expectedOutput = {
                 id: 1,
                 mod_id: 1,
-                version: '1.2.3'
+                version: '1.2.3',
+                changelog: 'Test'
             };
 
             await Mod.query().insert({
                 name: 'Test Mod',
-                description: 'This is a test mod'
+                description: 'This is a test mod',
+                authors: ['test1', 'test2']
             });
 
             await ModVersion.query().insert({
                 mod_id: 1,
-                version: '1.2.3'
+                version: '1.2.3',
+                changelog: 'Test'
             });
 
             const modVersion = await ModVersion.query().findById(1);
@@ -59,17 +62,28 @@ describe('Model: ModVersion', function () {
             const expectedOutput = {
                 id: 1,
                 mod_id: 1,
-                version: '1.2.3'
+                version: '1.2.3',
+                changelog: 'Test',
+                java_versions: [
+                    '1.7',
+                    '1.8'
+                ]
             };
 
             await Mod.query().insert({
                 name: 'Test Mod',
-                description: 'This is a test mod'
+                description: 'This is a test mod',
+                authors: ['test1', 'test2']
             });
 
             const modVersion = await ModVersion.query().insert({
                 mod_id: 1,
-                version: '1.2.3'
+                version: '1.2.3',
+                changelog: 'Test',
+                java_versions: [
+                    '1.7',
+                    '1.8'
+                ]
             });
 
             expect(modVersion).to.be.an('object');

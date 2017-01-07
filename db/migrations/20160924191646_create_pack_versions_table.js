@@ -6,6 +6,7 @@ exports.up = function (knex) {
         table.integer('minecraft_version_id').unsigned().nullable().defaultTo(null);
         table.integer('published_revision_id').unsigned().nullable().defaultTo(null);
         table.string('version', 64).index().notNullable();
+        table.boolean('is_published').notNullable().defaultTo(false);
         table.text('changelog').nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.timestamp('updated_at').nullable().defaultTo(null);

@@ -6,7 +6,6 @@ import BaseModel from './BaseModel';
  *
  * Roles must have unique name.
  *
- * @see ../../db/migrations/20160924191309_roles.js
  * @extends ./BaseModel
  */
 class Role extends BaseModel {

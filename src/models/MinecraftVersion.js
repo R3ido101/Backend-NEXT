@@ -1,10 +1,10 @@
 import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
+
 /**
  * This represents a single version of Minecraft. It includes the JSON for the version as defined by Mojang.
  *
- * @see ../../../db/migrations/20160924191637_minecraft_versions.js
  * @extends ./BaseModel
  */
 class MinecraftVersion extends BaseModel {

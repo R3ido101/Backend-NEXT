@@ -33,7 +33,6 @@ describe('Model: Pack', function () {
                 safe_name: 'TestPack',
                 description: 'This is a test pack',
                 position: 1,
-                type: 'public',
                 is_disabled: false,
                 updated_at: null,
                 disabled_at: null
@@ -41,8 +40,7 @@ describe('Model: Pack', function () {
 
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const pack = await Pack.query().findById(1);
@@ -67,7 +65,6 @@ describe('Model: Pack', function () {
                 safe_name: 'TestPack',
                 description: 'This is a test pack',
                 position: 1,
-                type: 'public',
                 is_disabled: false,
                 updated_at: null,
                 disabled_at: null
@@ -75,8 +72,7 @@ describe('Model: Pack', function () {
 
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             expect(pack).to.be.an('object');
@@ -91,7 +87,6 @@ describe('Model: Pack', function () {
                 safe_name: 'TestPack',
                 description: 'This is a test pack',
                 position: 2,
-                type: 'public',
                 is_disabled: false,
                 updated_at: null,
                 disabled_at: null
@@ -99,14 +94,12 @@ describe('Model: Pack', function () {
 
             await Pack.query().insert({
                 name: 'Test Pack Position 1',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             expect(pack).to.be.an('object');
@@ -123,7 +116,6 @@ describe('Model: Pack', function () {
                 safe_name: 'TestPack',
                 description: 'This is a test pack',
                 position: 2,
-                type: 'public',
                 is_disabled: false,
                 updated_at: null,
                 disabled_at: null
@@ -154,16 +146,9 @@ describe('Model: Pack', function () {
 
     describe('packLeaderboards', function () {
         it('should return the pack leaderboards for a user', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackVersion.query().insert({
@@ -173,7 +158,6 @@ describe('Model: Pack', function () {
 
             await PackLeaderboard.query().insert({
                 pack_id: 1,
-                user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
                 time_played: 44
@@ -197,16 +181,9 @@ describe('Model: Pack', function () {
 
     describe('packLogs', function () {
         it('should return the pack logs for a user', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackVersion.query().insert({
@@ -216,7 +193,6 @@ describe('Model: Pack', function () {
 
             await PackLog.query().insert({
                 pack_id: 1,
-                user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
                 action: 'pack_install'

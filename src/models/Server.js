@@ -2,6 +2,15 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A Server is a single Server on the server list site.
+ *
+ * It must collate with a pack and a pack version. If that pack is deleted then this Server is also deleted. If the PackVersion is deleted then it will be set to null.
+ *
+ * @see ./Pack
+ * @see ./PackVersion
+ * @extends ./BaseModel
+ */
 class Server extends BaseModel {
     static tableName = 'servers';
 
@@ -9,6 +18,8 @@ class Server extends BaseModel {
         type: 'object',
 
         required: ['name', 'host', 'description', 'pack_id', 'pack_version_id'],
+
+        uniqueProperties: [['host', 'port']],
 
         additionalProperties: false,
 
@@ -19,7 +30,7 @@ class Server extends BaseModel {
             port: {type: 'integer', minimum: 1, maximum: 65535, default: 25565},
             description: {type: 'string', minLength: 30},
             pack_id: {type: 'integer', minimum: 1},
-            pack_version_id: {type: 'integer', minimum: 1},
+            pack_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
             banner_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             website_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             discord_invite_code: {type: ['string', 'null'], default: null, maxLength: 32},

@@ -2,6 +2,12 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * This contains all the votes for a Server.
+ *
+ * @see ./Server
+ * @extends ./BaseModel
+ */
 class ServerVote extends BaseModel {
     static tableName = 'server_votes';
 

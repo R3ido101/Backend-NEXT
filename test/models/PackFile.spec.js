@@ -29,24 +29,24 @@ describe('Model: PackFile', function () {
                 id: 1,
                 pack_id: 1,
                 pack_directory_id: null,
-                file_id: 1
+                file_id: 1,
+                name: 'test.zip'
             };
 
             await File.query().insert({
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
 
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackFile.query().insert({
                 pack_id: 1,
-                file_id: 1
+                file_id: 1,
+                name: 'test.zip'
             });
 
             const packFile = await PackFile.query().findById(1);
@@ -69,24 +69,24 @@ describe('Model: PackFile', function () {
                 id: 1,
                 pack_id: 1,
                 pack_directory_id: null,
-                file_id: 1
+                file_id: 1,
+                name: 'test.zip'
             };
 
             await File.query().insert({
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
 
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const packFile = await PackFile.query().insert({
                 pack_id: 1,
-                file_id: 1
+                file_id: 1,
+                name: 'test.zip'
             });
 
             expect(packFile).to.be.an('object');

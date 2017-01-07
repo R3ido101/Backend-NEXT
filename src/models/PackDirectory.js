@@ -1,7 +1,16 @@
-import { Model } from 'objection';
+import { Model, ValidationError } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A Pack Directory is part of a packs virtual directory structure. It is a directory which contains PackFile's.
+ *
+ * A PackDirectory can optionally have a parent. If a parent is not defined then it is virtually in the root directory of the file structure. If it has a parent then it must point to another
+ * PackDirectory within the same pack. There is no limit the the amount of levels of structure.
+ *
+ * @see ./PackFile
+ * @extends ./BaseModel
+ */
 class PackDirectory extends BaseModel {
     static tableName = 'pack_directories';
 
@@ -9,6 +18,8 @@ class PackDirectory extends BaseModel {
         type: 'object',
 
         required: ['name'],
+
+        uniqueProperties: [['pack_id', 'name', 'parent']],
 
         additionalProperties: false,
 
@@ -40,6 +51,23 @@ class PackDirectory extends BaseModel {
             }
         }
     };
+
+    /**
+     * Before inserting make sure if a parent is set that it belongs to the same pack.
+     *
+     * @param {object} queryContext
+     */
+    async $beforeInsert(queryContext) {
+        super.$beforeInsert(queryContext);
+
+        if (this.parent) {
+            const parentDirectory = await PackDirectory.query().select('pack_id').where('id', this.parent).first();
+
+            if (parentDirectory.pack_id !== this.pack_id) {
+                throw new ValidationError('Parent cannot belong to a different pack.');
+            }
+        }
+    }
 }
 
 export default PackDirectory;

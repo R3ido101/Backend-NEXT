@@ -4,6 +4,9 @@ exports.up = function (knex) {
         table.increments('id').unsigned().primary();
         table.integer('mod_id').unsigned().notNullable();
         table.string('version', 64).notNullable();
+        table.text('changelog').notNullable();
+        table.text('java_versions').nullable().defaultTo(null);
+        table.text('minecraft_versions').nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 
         // foreign keys

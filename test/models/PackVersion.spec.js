@@ -27,8 +27,7 @@ describe('Model: PackVersion', function () {
         it('should create a pack version', async function () {
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const packVersion = await PackVersion.query().insert({

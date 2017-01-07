@@ -26,8 +26,7 @@ describe('Model: PackStat', function () {
         it('should create a pack stat', async function () {
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const packStat = await PackStat.query().insert({

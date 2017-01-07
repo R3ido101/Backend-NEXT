@@ -7,7 +7,7 @@ exports.up = function (knex) {
         table.integer('port').notNullable();
         table.text('description').notNullable();
         table.integer('pack_id').unsigned().notNullable();
-        table.integer('pack_version_id').unsigned().notNullable();
+        table.integer('pack_version_id').unsigned().nullable().defaultTo(null);
         table.text('banner_url').nullable().defaultTo(null);
         table.text('website_url').nullable().defaultTo(null);
         table.string('discord_invite_code', 32).nullable().defaultTo(null);
@@ -21,7 +21,7 @@ exports.up = function (knex) {
 
         // foreign keys
         table.foreign('pack_id').references('id').inTable('packs').onDelete('cascade').onUpdate('cascade');
-        table.foreign('pack_version_id').references('id').inTable('pack_versions').onDelete('cascade').onUpdate('cascade');
+        table.foreign('pack_version_id').references('id').inTable('pack_versions').onDelete('SET NULL').onUpdate('cascade');
     });
 };
 

@@ -6,7 +6,6 @@ exports.up = function (knex) {
         table.string('safe_name', 255).notNullable().unique();
         table.text('description').nullable().defaultTo(null);
         table.integer('position').unsigned().notNullable();
-        table.enu('type', ['public', 'semipublic', 'private']).notNullable().defaultTo('private');
         table.boolean('is_disabled').notNullable().defaultTo(true);
         table.string('discord_invite_code', 32).nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
@@ -16,7 +15,6 @@ exports.up = function (knex) {
         // indexes
         table.index('name');
         table.index('safe_name');
-        table.index('type');
     });
 };
 

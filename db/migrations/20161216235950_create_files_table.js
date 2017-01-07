@@ -2,7 +2,6 @@ exports.up = function (knex) {
     return knex.schema.createTable('files', function (table) {
         // table structure
         table.increments('id').unsigned().primary();
-        table.string('name', 1024).unsigned().notNullable();
         table.string('hash', 40).index().notNullable();
         table.integer('size').unsigned().notNullable();
         table.integer('mod_id').unsigned().nullable().defaultTo(null);

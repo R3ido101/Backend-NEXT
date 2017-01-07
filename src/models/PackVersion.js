@@ -2,6 +2,18 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A PackVersion is a single version of a Pack. PackVersion's are considered in development if the is_published field is true. When it's not null then it's considered a published version.
+ *
+ * A PackVersion is linked to a single PackVersionRevision which contains a single revision of the PackVersion's JSON.
+ *
+ * When a pack is published, it makes a clone of the development version and then publishes it. Once a pack is published it's revision cannot be changed.
+ *
+ * @see ./Pack
+ * @see ./PackVersionRevision
+ * @extends ./BaseModel
+ *
+ */
 class PackVersion extends BaseModel {
     static tableName = 'pack_versions';
 
@@ -9,6 +21,8 @@ class PackVersion extends BaseModel {
         type: 'object',
 
         required: ['version'],
+
+        uniqueProperties: [['version', 'is_published']],
 
         additionalProperties: false,
 
@@ -18,6 +32,7 @@ class PackVersion extends BaseModel {
             minecraft_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
             published_revision_id: {type: ['integer', 'null'], minimum: 1, default: null},
             version: {type: 'string', minLength: 3, maxLength: 64},
+            is_published: {type: 'boolean', default: false},
             changelog: {type: ['string', 'null'], default: null},
             created_at: {type: 'string', format: 'date-time'},
             updated_at: {type: ['string', 'null'], format: 'date-time', default: null},

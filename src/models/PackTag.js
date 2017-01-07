@@ -9,7 +9,6 @@ import BaseModel from './BaseModel';
  *
  * Tags can only consist of letters, numbers, dashes, underscores and colons.
  *
- * @see ../../db/migrations/20160924191613_pack_tags.js
  * @extends ./BaseModel
  */
 class PackTag extends BaseModel {

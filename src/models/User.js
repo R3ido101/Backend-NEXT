@@ -1,9 +1,14 @@
 import bcrypt from 'bcryptjs';
 import { Model } from 'objection';
 
+import Pack from './Pack';
+import Role from './Role';
 import BaseModel from './BaseModel';
-import { generateUID } from '../utils';
+import PackUser from './pivots/PackUser';
+import UserRole from './pivots/UserRole';
+
 import { getConfig } from '../config';
+import { generateUID } from '../utils';
 
 const config = getConfig();
 
@@ -13,7 +18,6 @@ const config = getConfig();
  *
  * When users sign up, they will get an email with a link they must click in order to confirm their account and login.
  *
- * @see ../../db/migrations/20160917230101_users.js
  * @extends ./BaseModel
  */
 class User extends BaseModel {
@@ -47,31 +51,15 @@ class User extends BaseModel {
     };
 
     static relationMappings = {
-        packLeaderboards: {
-            relation: Model.HasManyRelation,
-            modelClass: `${__dirname}/PackLeaderboard`,
-            join: {
-                from: 'users.id',
-                to: 'pack_leaderboards.user_id'
-            }
-        },
-        packLogs: {
-            relation: Model.HasManyRelation,
-            modelClass: `${__dirname}/PackLog`,
-            join: {
-                from: 'users.id',
-                to: 'pack_logs.user_id'
-            }
-        },
         packs: {
             relation: Model.ManyToManyRelation,
-            modelClass: `${__dirname}/Pack`,
+            modelClass: Pack,
             join: {
                 from: 'users.id',
                 through: {
                     from: 'pack_users.user_id',
                     to: 'pack_users.pack_id',
-                    modelClass: `${__dirname}/pivots/PackUser`,
+                    modelClass: PackUser,
                     extra: [
                         'can_administrate',
                         'can_create',
@@ -85,13 +73,13 @@ class User extends BaseModel {
         },
         roles: {
             relation: Model.ManyToManyRelation,
-            modelClass: `${__dirname}/Role`,
+            modelClass: Role,
             join: {
                 from: 'users.id',
                 through: {
                     from: 'user_roles.user_id',
                     to: 'user_roles.role_id',
-                    modelClass: `${__dirname}/pivots/UserRole`
+                    modelClass: UserRole
                 },
                 to: 'roles.id'
             }

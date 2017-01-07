@@ -25,7 +25,6 @@ describe('Model: File', function () {
         it('should return the data for the given file', async function () {
             const expectedOutput = {
                 id: 1,
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22,
                 mod_id: null,
@@ -33,7 +32,6 @@ describe('Model: File', function () {
             };
 
             await File.query().insert({
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
@@ -56,7 +54,6 @@ describe('Model: File', function () {
         it('should create a file', async function () {
             const expectedOutput = {
                 id: 1,
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22,
                 mod_id: null,
@@ -64,7 +61,6 @@ describe('Model: File', function () {
             };
 
             const file = await File.query().insert({
-                name: 'test.zip',
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });

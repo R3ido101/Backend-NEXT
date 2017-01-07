@@ -34,8 +34,7 @@ describe('Model: PackDirectory', function () {
 
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackDirectory.query().insert({
@@ -69,8 +68,7 @@ describe('Model: PackDirectory', function () {
 
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const packDirectory = await PackDirectory.query().insert({

@@ -2,6 +2,12 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * This contains the history for a Server.
+ *
+ * @see ./Server
+ * @extends ./BaseModel
+ */
 class ServerHistory extends BaseModel {
     static tableName = 'server_history';
 

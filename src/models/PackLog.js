@@ -2,6 +2,15 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A PackLog contains actions done by an individual user on a pack. For instance installing the pack, updating it etc.
+ *
+ * It logs the Pack actioned against as well as the PackVersion. If either of those are deleted, then it will set them to null, keeping the action still logged in the database.
+ *
+ * @see ./Pack
+ * @see ./PackVersion
+ * @extends ./BaseModel
+ */
 class PackLog extends BaseModel {
     static tableName = 'pack_logs';
 
@@ -14,24 +23,15 @@ class PackLog extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            pack_id: {type: 'integer', minimum: 1},
-            pack_version_id: {type: 'integer', minimum: 1},
-            user_id: {type: 'integer', minimum: 1, default: null},
-            username: {type: 'string', maxLength: 64},
+            pack_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            pack_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            username: {type: 'string', minLength: 1, maxLength: 16, pattern: '^[a-zA-Z0-9_]{1,16}$'},
             action: {type: 'string', maxLength: 64},
             created_at: {type: 'string', format: 'date-time'}
         }
     };
 
     static relationMappings = {
-        user: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: `${__dirname}/User`,
-            join: {
-                from: 'pack_logs.user_id',
-                to: 'users.id'
-            }
-        },
         pack: {
             relation: Model.BelongsToOneRelation,
             modelClass: `${__dirname}/Pack`,

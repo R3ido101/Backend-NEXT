@@ -3,7 +3,10 @@
 # Backend-NEXT
 Backend API server for ATLauncher NEXT.
 
-## Installation
+## Development
+If you wish to develop with this repository, please read the following sub sections.
+
+### Installation
 Before you begin you need to make sure you have the latest LTS version of NodeJS (6.*) installed on your computer.
 
 **NOTE:** This repository is **NOT** compatible with Yarn. Please don't attempt to use Yarn as there are some issues. Support will not be given with Yarn.
@@ -47,6 +50,27 @@ To run the linter:
 ```shell
 npm run lint
 ```
+
+### Database changes
+When making any changes that require database schema changes, these must be done through the use of migrations.
+
+Migrations are meant to be run only once, and make the changes needed to the database while also providing a way to rollback those changes.
+
+To create a new migration, run the following:
+
+```shell
+node ./node_modules/knex/bin/cli.js migrate:make name_of_migration
+```
+
+The name of your migration should describe what it does. For instance when adding a new table called 'messages' it should be `create_messages_table`. And when changing a table it should be something
+like `change_type_of_name_field_in_messages_table`.
+
+All migrations should correctly roll back tables to their original state or remove tables/fields added.
+
+Once a migration is written, it should **NEVER** be modified. Any modifications to migrations can cause data issues.
+
+**NOTE**: Migration files will constantly be changing during initial development, so do not rely on them functioning as proper migrations until the **feature/initial-code** branch has been merged into
+the **develop** branch.
 
 ## Configuration
 All configuration files can be found in the `/config` folder.

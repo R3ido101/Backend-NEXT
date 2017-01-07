@@ -9,7 +9,6 @@ import BaseModel from '../BaseModel';
  *
  * @see ../Role
  * @see ../User
- * @see ../../../db/migrations/20160924191402_user_roles.js
  * @extends ./BaseModel
  */
 class UserRole extends BaseModel {

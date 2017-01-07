@@ -9,7 +9,6 @@ import BaseModel from './BaseModel';
  *
  * Tags can only consist of letters, numbers, dashes, underscores and colons.
  *
- * @see ../../db/migrations/20160924191618_launcher_tags.js
  * @extends ./BaseModel
  */
 class LauncherTag extends BaseModel {

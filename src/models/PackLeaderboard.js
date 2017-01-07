@@ -2,6 +2,15 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A PackLeaderboard contains the time played by an individual user on a pack.
+ *
+ * It logs the Pack played as well as the PackVersion that was played. If either of those are deleted, then it will set them to null, keeping the time played still in the database.
+ *
+ * @see ./Pack
+ * @see ./PackVersion
+ * @extends ./BaseModel
+ */
 class PackLeaderboard extends BaseModel {
     static tableName = 'pack_leaderboards';
 
@@ -14,24 +23,15 @@ class PackLeaderboard extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            pack_id: {type: 'integer', minimum: 1},
-            pack_version_id: {type: 'integer', minimum: 1},
-            user_id: {type: 'integer', minimum: 1, default: null},
-            username: {type: 'string', maxLength: 64},
+            pack_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            pack_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            username: {type: 'string', minLength: 1, maxLength: 16, pattern: '^[a-zA-Z0-9_]{1,16}$'},
             time_played: {type: 'integer', minimum: 1, default: 1},
             created_at: {type: 'string', format: 'date-time'}
         }
     };
 
     static relationMappings = {
-        user: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: `${__dirname}/User`,
-            join: {
-                from: 'pack_leaderboards.user_id',
-                to: 'users.id'
-            }
-        },
         pack: {
             relation: Model.BelongsToOneRelation,
             modelClass: `${__dirname}/Pack`,

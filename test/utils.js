@@ -22,7 +22,6 @@ export async function createPack(overrides = {}) {
         name: packName,
         safe_name: safeName,
         position: Faker.random.number({min: 1, max: 500}),
-        type: Faker.random.arrayElement(['public', 'semipublic', 'private']),
         is_disabled: Faker.random.boolean()
     };
 

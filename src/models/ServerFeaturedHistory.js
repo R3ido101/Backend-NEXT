@@ -2,6 +2,12 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * This contains all the purchases of a featured slot on the servers list.
+ *
+ * @see ./Server
+ * @extends ./BaseModel
+ */
 class ServerFeaturedHistory extends BaseModel {
     static tableName = 'server_featured_history';
 

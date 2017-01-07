@@ -26,16 +26,9 @@ describe('Model: PackLeaderboard', function () {
 
     describe('insert', function () {
         it('should create a pack leaderboard', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackVersion.query().insert({
@@ -45,7 +38,6 @@ describe('Model: PackLeaderboard', function () {
 
             const packLeaderboard = await PackLeaderboard.query().insert({
                 pack_id: 1,
-                user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
                 time_played: 44
@@ -62,9 +54,6 @@ describe('Model: PackLeaderboard', function () {
             expect(packLeaderboard).to.have.property('pack_version_id').that.is.a('number');
             expect(packLeaderboard).to.have.property('pack_version_id').that.equals(1);
 
-            expect(packLeaderboard).to.have.property('user_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('user_id').that.equals(1);
-
             expect(packLeaderboard).to.have.property('username').that.is.a('string');
             expect(packLeaderboard).to.have.property('username').that.equals('test');
 
@@ -75,16 +64,9 @@ describe('Model: PackLeaderboard', function () {
 
     describe('pack', function () {
         it('should return the pack for a pack leaderboard', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackVersion.query().insert({
@@ -94,7 +76,6 @@ describe('Model: PackLeaderboard', function () {
 
             const packLeaderboard = await PackLeaderboard.query().insert({
                 pack_id: 1,
-                user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
                 time_played: 44
@@ -118,16 +99,9 @@ describe('Model: PackLeaderboard', function () {
 
     describe('packVersion', function () {
         it('should return the pack version for a pack leaderboard', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             await PackVersion.query().insert({
@@ -137,7 +111,6 @@ describe('Model: PackLeaderboard', function () {
 
             const packLeaderboard = await PackLeaderboard.query().insert({
                 pack_id: 1,
-                user_id: 1,
                 pack_version_id: 1,
                 username: 'test',
                 time_played: 44
@@ -154,49 +127,6 @@ describe('Model: PackLeaderboard', function () {
             expect(packVersion).to.have.property('id').that.equals(1);
 
             expect(packVersion).to.have.property('version').that.equals('1.2.3');
-        });
-    });
-
-    describe('user', function () {
-        it('should return the user for a pack leaderboard', async function () {
-            await User.query().insert({
-                username: 'test',
-                password: 'testing',
-                email: 'test@example.com'
-            });
-
-            await Pack.query().insert({
-                name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
-            });
-
-            await PackVersion.query().insert({
-                version: '1.2.3',
-                pack_id: 1
-            });
-
-            const packLeaderboard = await PackLeaderboard.query().insert({
-                pack_id: 1,
-                user_id: 1,
-                pack_version_id: 1,
-                username: 'test',
-                time_played: 44
-            });
-
-            const users = await packLeaderboard.$relatedQuery('user');
-
-            expect(users).to.be.an('array').with.length(1);
-
-            const user = users[0];
-
-            expect(user).to.be.an('object');
-
-            expect(user).to.have.property('id').that.equals(1);
-
-            expect(user).to.have.property('username').that.equals('test');
-
-            expect(user).to.have.property('email').that.equals('test@example.com');
         });
     });
 });

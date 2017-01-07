@@ -7,9 +7,9 @@ import { getSafeString } from '../utils';
 /**
  * Packs are self explanatory. Packs must have a unique name and a unique safe name (removing all non alphanumeric characters, dashes and underscores).
  *
- * Packs can be public (accessible publicly and shown on the launcher), semi public (can be added by anyone with the url) or private (only accessible by certain users who are whitelisted).
+ * All packs are public and rely on launcher tags to distinguish packs on the launcher.
  *
- * @see ../../db/migrations/20160924191413_packs.js
+ * @see ./LauncherTag
  * @extends ./BaseModel
  */
 class Pack extends BaseModel {
@@ -30,7 +30,6 @@ class Pack extends BaseModel {
             safe_name: {type: 'string', minLength: 3, maxLength: 255},
             description: {type: ['string', 'null'], minLength: 3, default: null},
             position: {type: 'integer', minimum: 1},
-            type: {type: 'string'},
             is_disabled: {type: 'boolean', default: false},
             discord_invite_code: {type: 'string', minLength: 8, maxLength: 32},
             created_at: {type: 'string', format: 'date-time'},

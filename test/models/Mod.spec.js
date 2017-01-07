@@ -27,6 +27,7 @@ describe('Model: Mod', function () {
                 id: 1,
                 name: 'Test Mod',
                 description: 'This is a test mod',
+                authors: ['test1', 'test2'],
                 website_url: null,
                 donation_url: null,
                 updated_at: null
@@ -34,7 +35,8 @@ describe('Model: Mod', function () {
 
             await Mod.query().insert({
                 name: 'Test Mod',
-                description: 'This is a test mod'
+                description: 'This is a test mod',
+                authors: ['test1', 'test2']
             });
 
             const mod = await Mod.query().findById(1);
@@ -57,6 +59,7 @@ describe('Model: Mod', function () {
                 id: 1,
                 name: 'Test Mod',
                 description: 'This is a test mod',
+                authors: ['test1', 'test2'],
                 website_url: null,
                 donation_url: null,
                 updated_at: null
@@ -64,7 +67,8 @@ describe('Model: Mod', function () {
 
             const mod = await Mod.query().insert({
                 name: 'Test Mod',
-                description: 'This is a test mod'
+                description: 'This is a test mod',
+                authors: ['test1', 'test2']
             });
 
             expect(mod).to.be.an('object');
@@ -78,10 +82,12 @@ describe('Model: Mod', function () {
             const mod = await Mod.query().insert({
                 name: 'Test Mod',
                 description: 'This is a test mod',
+                authors: ['test1', 'test2']
             });
 
             await mod.$relatedQuery('versions').insert({
-                version: '1.2.3'
+                version: '1.2.3',
+                changelog: 'Test'
             });
 
             const versions = await mod.$relatedQuery('versions');
@@ -93,6 +99,7 @@ describe('Model: Mod', function () {
             expect(modVersion).to.be.an('object');
 
             expect(modVersion).to.have.property('version').that.equals('1.2.3');
+            expect(modVersion).to.have.property('changelog').that.equals('Test');
 
             expect(modVersion).to.have.property('mod_id').that.equals(1);
         });

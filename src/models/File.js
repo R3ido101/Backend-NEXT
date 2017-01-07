@@ -13,7 +13,6 @@ import BaseModel from './BaseModel';
  *
  * @see ./Mod
  * @see ./ModVersion
- * @see ../../db/migrations/20161216235950_files.js
  * @extends ./BaseModel
  */
 class File extends BaseModel {
@@ -22,7 +21,7 @@ class File extends BaseModel {
     static jsonSchema = {
         type: 'object',
 
-        required: ['name', 'hash', 'size'],
+        required: ['hash', 'size'],
 
         uniqueProperties: ['hash'],
 
@@ -30,7 +29,6 @@ class File extends BaseModel {
 
         properties: {
             id: {type: 'integer', minimum: 1},
-            name: {type: 'string', maxLength: 1024},
             hash: {type: 'string', minLength: 40, maxLength: 40},
             size: {type: 'integer', minimum: 1},
             mod_id: {type: ['integer', 'null'], minimum: 1, default: null},

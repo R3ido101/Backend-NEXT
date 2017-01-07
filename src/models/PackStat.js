@@ -2,6 +2,12 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A PackStat is a summary of the stats for a Pack for a date.
+ *
+ * @see ./Pack
+ * @extends ./BaseModel
+ */
 class PackStat extends BaseModel {
     static tableName = 'pack_stats';
 
@@ -11,6 +17,8 @@ class PackStat extends BaseModel {
         type: 'object',
 
         required: ['date'],
+
+        uniqueProperties: [['pack_id', 'date']],
 
         additionalProperties: false,
 

@@ -3,6 +3,17 @@ import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
 
+/**
+ * A PackVersionRevision is a single revision of a PackVersion's JSON.
+ *
+ * When a new PackVersionRevision is made for a PackVersion, it must be verified before it can be used as the revision to publish. This process is automatic.
+ *
+ * Each PackVersionRevision contains the JSON as well as a hash of that JSON.
+ *
+ * @see ./Pack
+ * @see ./PackVersion
+ * @extends ./BaseModel
+ */
 class PackVersionRevision extends BaseModel {
     static tableName = 'pack_version_revisions';
 
@@ -12,6 +23,8 @@ class PackVersionRevision extends BaseModel {
         type: 'object',
 
         required: ['json'],
+
+        uniqueProperties: [['pack_version_id', 'hash']],
 
         additionalProperties: false,
 

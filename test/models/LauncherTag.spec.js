@@ -26,8 +26,7 @@ describe('Model: LauncherTag', function () {
         it('should create a launcher tag', async function () {
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const packTag = await LauncherTag.query().insert({
@@ -52,8 +51,7 @@ describe('Model: LauncherTag', function () {
         it('should not allow invalid characters when creating a tag', async function () {
             await Pack.query().insert({
                 name: 'Test Pack',
-                description: 'This is a test pack',
-                type: 'public'
+                description: 'This is a test pack'
             });
 
             const input = {
