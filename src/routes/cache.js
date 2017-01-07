@@ -1,8 +1,8 @@
 import passport from 'passport';
 import { Router } from 'express';
 
-import { checkRole, checkScope } from '../../middleware';
-import CacheController from '../../controllers/v1/CacheController';
+import { checkRole, checkScope } from '../middleware';
+import CacheController from '../controllers/CacheController';
 
 export default () => {
     const routes = Router();

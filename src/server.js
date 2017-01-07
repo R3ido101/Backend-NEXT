@@ -15,6 +15,7 @@ import responseTime from 'response-time';
 import httpStatusCodes from 'http-status';
 import RateLimit from 'express-rate-limit';
 import ConnectSessionKnex from 'connect-session-knex';
+import { setByAccept, validateVersion } from 'express-request-version';
 
 import knex from './db';
 import routes from './routes';
@@ -74,11 +75,26 @@ if (environment === 'development') {
     app.use(logger('dev'));
 }
 
+// provide req.version for the version in each request
+app.use(setByAccept('vnd.atlauncher', '.', '+json'));
+
+// if no version provided, assume v1
+app.use(function (req, res, next) {
+    if (!req.version) {
+        req.version = 'v1';
+    }
+
+    next();
+});
+
+// only allow v1 accept header
+app.use(validateVersion(['v1']));
+
 // internal middleware
 app.use(middleware());
 
 // rate limiting
-app.use('/v1', new RateLimit({
+app.use('/', new RateLimit({
     windowMs: convertTimeStringToMilliseconds(config.ratelimit.default.time),
     max: config.ratelimit.default.requests,
     delayMs: 0,
@@ -103,7 +119,7 @@ if (environment !== 'test') {
     console.log(`Started on port ${app.server.address().port}`);
 }
 
-process.on('unhandledRejection', function(reason, p){
+process.on('unhandledRejection', function (reason, p) {
     console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
 });
 

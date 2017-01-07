@@ -1,5 +1,5 @@
 ---
-title: /v1
+pretitle: v1
 ---
 
 This is the documentation for version 1 of the api.
@@ -8,12 +8,12 @@ This is the documentation for version 1 of the api.
  - [Scopes](/docs/v1/scopes)
  - [Users](/docs/v1/users)
  
-# /v1
+# /
 This will return the current information for the API as well as information about if your request is authenticated and if so, the details about the user/token.
 
 ```json
 {
-  "version": "0.1.0-alpha.1",
+  "version": "v1",
   "authenticated": true,
   "token": {
     "scopes": [

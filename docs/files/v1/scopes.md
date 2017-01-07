@@ -1,5 +1,6 @@
 ---
-title: /v1/scopes
+pretitle: v1
+title: /scopes
 ---
 
 These routes interact with scopes in the system.
@@ -7,7 +8,7 @@ These routes interact with scopes in the system.
 # Contents
 <!-- toc -->
 
-# GET /v1/scopes
+# GET /scopes
 This will get all the scopes available in the system.
 
 ## Authentication

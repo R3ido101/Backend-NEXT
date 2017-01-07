@@ -2,15 +2,12 @@ import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
-import app from '../../../src/server';
 import knex from '../../../src/db';
-import { version } from '../../../package.json';
-
-import * as testUtils from '../../utils';
+import app from '../../../src/server';
 
 chai.use(chaiHttp);
 
-describe('Routes: /v1', function () {
+describe('Routes: /', function () {
     before(function (done) {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
@@ -24,9 +21,9 @@ describe('Routes: /v1', function () {
         done();
     });
 
-    describe('GET /v1', function () {
+    describe('GET /', function () {
         it('should return the version', async function () {
-            const response = await chai.request(app).get('/v1');
+            const response = await chai.request(app).get('/');
 
             expect(response).to.have.status(200);
             expect(response).to.be.json;
@@ -35,7 +32,7 @@ describe('Routes: /v1', function () {
 
             expect(body).to.be.a('object');
             expect(body).to.have.property('version').that.is.a('string');
-            expect(body).to.have.property('version').that.equals(version);
+            expect(body).to.have.property('version').that.equals('v1');
         });
     });
 });

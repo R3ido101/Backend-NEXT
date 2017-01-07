@@ -1,6 +1,4 @@
-import BaseController from '../BaseController';
-
-import { version } from '../../../package.json';
+import BaseController from './BaseController';
 
 /**
  * The RootController controls the routes for the root of the API.
@@ -24,7 +22,7 @@ class RootController extends BaseController {
         };
 
         return res.json({
-            version,
+            version: req.version,
             authenticated: req.isAuthenticated(),
             ...extraForSpread
         });

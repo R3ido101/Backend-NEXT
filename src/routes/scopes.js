@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import ScopesController from '../../controllers/v1/ScopesController';
+import ScopesController from '../controllers/ScopesController';
 
 export default () => {
     const routes = Router();

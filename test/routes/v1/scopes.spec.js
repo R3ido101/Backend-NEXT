@@ -9,7 +9,7 @@ import * as testUtils from '../../utils';
 
 chai.use(chaiHttp);
 
-describe('Routes: /v1/scopes', function () {
+describe('Routes: /scopes', function () {
     before(function (done) {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
@@ -23,14 +23,14 @@ describe('Routes: /v1/scopes', function () {
         done();
     });
 
-    describe('GET /v1/scopes', function () {
+    describe('GET /scopes', function () {
         it('should return all the scopes in the system', async function () {
             await testUtils.createScope({
                 name: 'test',
                 description: 'This is a test scope.'
             });
 
-            const response = await chai.request(app).get('/v1/scopes');
+            const response = await chai.request(app).get('/scopes');
 
             expect(response).to.have.status(200);
             expect(response).to.be.json;

@@ -1,10 +1,10 @@
 import * as httpStatusCode from 'http-status';
 
-import Role from '../../models/Role';
-import APIError from '../../errors/APIError';
-import BaseController from '../BaseController';
+import Role from '../models/Role';
+import APIError from '../errors/APIError';
+import BaseController from './BaseController';
 
-import { cacheWrap } from '../../cache';
+import { cacheWrap } from '../cache';
 
 class RolesController extends BaseController {
     /**

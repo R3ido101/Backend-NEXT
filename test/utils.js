@@ -7,7 +7,6 @@ import Pack from '../src/models/Pack';
 import Role from '../src/models/Role';
 import User from '../src/models/User';
 
-
 import OAuthScope from '../src/models/oauth/OAuthScope';
 import OAuthClient from '../src/models/oauth/OAuthClient';
 import OAuthAccessToken from '../src/models/oauth/OAuthAccessToken';
@@ -20,9 +19,7 @@ export async function createPack(overrides = {}) {
 
     const defaults = {
         name: packName,
-        safe_name: safeName,
-        position: Faker.random.number({min: 1, max: 500}),
-        is_disabled: Faker.random.boolean()
+        safe_name: safeName
     };
 
     return await Pack.query().insert({

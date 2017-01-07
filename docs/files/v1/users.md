@@ -1,5 +1,6 @@
 ---
-title: /v1/users
+pretitle: v1
+title: /users
 ---
 
 These routes interact with users on the system.
@@ -7,7 +8,7 @@ These routes interact with users on the system.
 # Contents
 <!-- toc -->
 
-# GET /v1/users
+# GET /users
 This will get all the users in the system.
 
 ## Authentication
@@ -18,7 +19,7 @@ This will get all the users in the system.
 ## Responses
 This will return a [paginated](/docs/paginated) array of [user](/docs/models/user) models.
 
-# GET /v1/users/{id}
+# GET /users/{id}
 This will get a single user in the system.
 
 ## Authentication
@@ -29,7 +30,7 @@ This will get a single user in the system.
 ## Responses
 This will return a [user](/docs/models/user) model.
 
-# POST /v1/users
+# POST /users
 This will create a new user in the system.
 
 ## Authentication
@@ -40,7 +41,7 @@ This will create a new user in the system.
 ## Responses
 This will return a [user](/docs/models/user) model for the newly created user.
 
-# PUT /v1/users/{id}
+# PUT /users/{id}
 This will update the information for a user in the system.
 
 ## Authentication
@@ -51,7 +52,7 @@ This will update the information for a user in the system.
 ## Responses
 This will return the [user](/docs/models/user) model of the updated user.
 
-# DELETE /v1/users/{id}
+# DELETE /users/{id}
 This will delete a user in the system.
 
 ## Authentication

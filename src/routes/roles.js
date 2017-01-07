@@ -2,11 +2,11 @@ import passport from 'passport';
 import { Router } from 'express';
 import * as httpStatusCode from 'http-status';
 
-import Role from '../../models/Role';
-import { cacheWrap } from '../../cache';
-import APIError from '../../errors/APIError';
-import { checkRole, checkScope } from '../../middleware';
-import RolesController from '../../controllers/v1/RolesController';
+import Role from '../models/Role';
+import { cacheWrap } from '../cache';
+import APIError from '../errors/APIError';
+import { checkRole, checkScope } from '../middleware';
+import RolesController from '../controllers/RolesController';
 
 export default () => {
     const routes = Router();

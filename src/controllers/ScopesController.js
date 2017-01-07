@@ -1,8 +1,8 @@
-import BaseController from '../BaseController';
+import BaseController from './BaseController';
 
-import { cacheWrap } from '../../cache';
+import { cacheWrap } from '../cache';
 
-import OAuthScope from '../../models/oauth/OAuthScope';
+import OAuthScope from '../models/oauth/OAuthScope';
 
 class ScopesController extends BaseController {
     /**

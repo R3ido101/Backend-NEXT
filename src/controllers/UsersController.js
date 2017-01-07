@@ -1,10 +1,10 @@
 import * as httpStatusCode from 'http-status';
 
-import User from '../../models/User';
-import APIError from '../../errors/APIError';
-import BaseController from '../BaseController';
+import User from '../models/User';
+import APIError from '../errors/APIError';
+import BaseController from './BaseController';
 
-import { cacheWrap } from '../../cache';
+import { cacheWrap } from '../cache';
 
 class ScopesController extends BaseController {
     /**

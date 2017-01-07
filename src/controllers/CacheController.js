@@ -1,6 +1,6 @@
-import BaseController from '../BaseController';
+import BaseController from './BaseController';
 
-import { cache } from '../../cache';
+import { cache } from '../cache';
 
 /**
  * The CacheController controls the cache for the system.

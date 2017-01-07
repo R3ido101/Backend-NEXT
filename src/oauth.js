@@ -257,7 +257,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
 }));
 
 export const authorization = [
-    login.ensureLoggedIn(),
+    login.ensureLoggedIn('/auth/login'),
     server.authorization(async function (clientID, redirectURI, done) {
         try {
             const client = await OAuthClient.query().where({
@@ -294,7 +294,7 @@ export const authorization = [
 ];
 
 export const decision = [
-    login.ensureLoggedIn(),
+    login.ensureLoggedIn('/auth/login'),
     server.decision((req, done) => {
         done(null, {scope: req.body.scope});
     })

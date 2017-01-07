@@ -9,7 +9,7 @@ import * as testUtils from '../../utils';
 
 chai.use(chaiHttp);
 
-describe('Routes: /v1/users', function () {
+describe('Routes: /users', function () {
     before(function (done) {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
@@ -23,7 +23,7 @@ describe('Routes: /v1/users', function () {
         done();
     });
 
-    describe('GET /v1/users', function () {
+    describe('GET /users', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -67,7 +67,7 @@ describe('Routes: /v1/users', function () {
                     banned_at: null
                 };
 
-                const response = await chai.request(app).get('/v1/users').set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).get('/users').set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -110,7 +110,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -154,7 +154,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -177,7 +177,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('GET /v1/users/{user_id}', function () {
+    describe('GET /users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -208,7 +208,7 @@ describe('Routes: /v1/users', function () {
             });
 
             it('should return the information for for the given user by their ID', async function () {
-                const response = await chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -247,7 +247,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -291,7 +291,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -314,7 +314,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('POST /v1/users', function () {
+    describe('POST /users', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -351,7 +351,7 @@ describe('Routes: /v1/users', function () {
                     password: 'testing'
                 };
 
-                const response = await chai.request(app).post('/v1/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
+                const response = await chai.request(app).post('/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -390,7 +390,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).post('/v1/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -434,7 +434,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).post('/v1/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -457,7 +457,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('PUT /v1/users/{user_id}', function () {
+    describe('PUT /users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -498,7 +498,7 @@ describe('Routes: /v1/users', function () {
                     email: 'testuser1@example.com'
                 };
 
-                const response = await chai.request(app).put(`/v1/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData);
+                const response = await chai.request(app).put(`/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -537,7 +537,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).post('/v1/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -581,7 +581,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).post('/v1/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -604,7 +604,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('DELETE /v1/users/{user_id}', function () {
+    describe('DELETE /users/{user_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -641,7 +641,7 @@ describe('Routes: /v1/users', function () {
                     password: 'testing'
                 });
 
-                const response = await chai.request(app).delete(`/v1/users/${user.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).delete(`/users/${user.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(204);
             });
@@ -671,7 +671,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).delete(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -715,7 +715,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).delete(`/v1/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -738,7 +738,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('GET /v1/users/{user_id}/roles', function () {
+    describe('GET /users/{user_id}/roles', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -778,7 +778,7 @@ describe('Routes: /v1/users', function () {
 
                 await testUtils.addRoleToUser(role, user);
 
-                const response = await chai.request(app).get(`/v1/users/${user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).get(`/users/${user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -818,7 +818,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -862,7 +862,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/v1/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -885,7 +885,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('PUT /v1/users/{user_id}/roles/{role_id}', function () {
+    describe('PUT /users/{user_id}/roles/{role_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -927,7 +927,7 @@ describe('Routes: /v1/users', function () {
                     description: 'test role'
                 });
 
-                const response = await chai.request(app).put(`/v1/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).put(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(200);
                 expect(response).to.be.json;
@@ -965,7 +965,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).put(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -1009,7 +1009,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).put(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -1032,7 +1032,7 @@ describe('Routes: /v1/users', function () {
         });
     });
 
-    describe('DELETE /v1/users/{user_id}/roles/{role_id}', function () {
+    describe('DELETE /users/{user_id}/roles/{role_id}', function () {
         describe('When Authenticated', function () {
             let created_role;
             let created_user;
@@ -1075,7 +1075,7 @@ describe('Routes: /v1/users', function () {
 
                 await testUtils.addRoleToUser(role, user);
 
-                const response = await chai.request(app).delete(`/v1/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await chai.request(app).delete(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
                 expect(response).to.have.status(204);
             });
@@ -1105,7 +1105,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).delete(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
@@ -1149,7 +1149,7 @@ describe('Routes: /v1/users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).delete(`/v1/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(500);
