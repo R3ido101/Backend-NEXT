@@ -1,7 +1,7 @@
 exports.up = function (knex) {
     return knex.schema.createTable('roles', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('name', 255).notNullable().unique();
         table.text('description').notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());

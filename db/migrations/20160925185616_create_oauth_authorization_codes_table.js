@@ -1,9 +1,9 @@
 exports.up = function (knex) {
     return knex.schema.createTable('oauth_authorization_codes', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('user_id').unsigned().notNullable();
-        table.integer('client_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('user_id', 36).notNullable();
+        table.string('client_id', 36).notNullable();
         table.string('authorization_code', 60).index().unique().notNullable();
         table.text('redirect_uri').notNullable();
         table.text('scope').notNullable();

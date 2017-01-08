@@ -1,10 +1,10 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_versions', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('pack_id').unsigned().notNullable();
-        table.integer('minecraft_version_id').unsigned().nullable().defaultTo(null);
-        table.integer('published_revision_id').unsigned().nullable().defaultTo(null);
+        table.string('id', 36).primary();
+        table.string('pack_id', 36).unsigned().notNullable();
+        table.string('minecraft_version_id', 36).nullable().defaultTo(null);
+        table.string('published_revision_id', 36).nullable().defaultTo(null);
         table.string('version', 64).index().notNullable();
         table.boolean('is_published').notNullable().defaultTo(false);
         table.text('changelog').nullable().defaultTo(null);

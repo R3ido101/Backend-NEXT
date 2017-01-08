@@ -25,14 +25,23 @@ describe('Model: Server', function () {
 
     describe('findById', function () {
         it('should return the data for the given server', async function () {
+            const pack = await Pack.query().insert({
+                name: 'Test Pack',
+                description: 'Test Pack Description'
+            });
+
+            const packVersion = await PackVersion.query().insert({
+                version: '1.2.3',
+                pack_id: pack.id
+            });
+
             const expectedOutput = {
-                id: 1,
                 name: 'Test Server',
                 host: '127.0.0.1',
                 port: 25565,
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: packVersion.id,
                 banner_url: null,
                 website_url: null,
                 discord_invite_code: null,
@@ -41,42 +50,41 @@ describe('Model: Server', function () {
                 updated_at: null
             };
 
-            await Pack.query().insert({
-                name: 'Test Pack',
-                description: 'Test Pack Description'
-            });
-
-            await PackVersion.query().insert({
-                version: '1.2.3',
-                pack_id: 1
-            });
-
-            await Server.query().insert({
+            const created = await Server.query().insert({
                 name: 'Test Server',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
-            const server = await Server.query().findById(1);
+            const server = await Server.query().findById(created.id);
 
             expect(server).to.be.an('object');
             expect(server).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(server).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(server).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 
     describe('insert', function () {
         it('should create a server', async function () {
+            const pack = await Pack.query().insert({
+                name: 'Test Pack',
+                description: 'Test Pack Description'
+            });
+
+            const packVersion = await PackVersion.query().insert({
+                version: '1.2.3',
+                pack_id: pack.id
+            });
+
             const expectedOutput = {
-                id: 1,
                 name: 'Test Server',
                 host: '127.0.0.1',
                 port: 25565,
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: packVersion.id,
                 banner_url: null,
                 website_url: null,
                 discord_invite_code: null,
@@ -85,27 +93,17 @@ describe('Model: Server', function () {
                 updated_at: null
             };
 
-            await Pack.query().insert({
-                name: 'Test Pack',
-                description: 'Test Pack Description'
-            });
-
-            await PackVersion.query().insert({
-                version: '1.2.3',
-                pack_id: 1
-            });
-
             const server = await Server.query().insert({
                 name: 'Test Server',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
             expect(server).to.be.an('object');
             expect(server).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(server).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(server).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

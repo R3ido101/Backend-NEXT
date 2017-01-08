@@ -24,39 +24,38 @@ describe('Model: PackTag', function () {
 
     describe('insert', function () {
         it('should create a pack tag', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
             const packTag = await PackTag.query().insert({
                 tag: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             expect(packTag).to.be.an('object');
 
-            expect(packTag).to.have.property('id').that.is.a('number');
-            expect(packTag).to.have.property('id').that.equals(1);
+            expect(packTag).to.have.property('id').that.is.a('string');
 
             expect(packTag).to.have.property('tag').that.is.a('string');
             expect(packTag).to.have.property('tag').that.equals('test');
 
-            expect(packTag).to.have.property('pack_id').that.is.a('number');
-            expect(packTag).to.have.property('pack_id').that.equals(1);
+            expect(packTag).to.have.property('pack_id').that.is.a('string');
+            expect(packTag).to.have.property('pack_id').that.equals(pack.id);
 
             expect(packTag).to.have.property('created_at').that.is.a('string');
         });
 
         it('should not allow invalid characters when creating a tag', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
             const input = {
                 tag: 'test*',
-                pack_id: 1
+                pack_id: pack.id
             };
 
             const expectedError = '"tag": "should match pattern \\"^[A-Za-z0-9-_:]+$\\"';
@@ -86,7 +85,7 @@ describe('Model: PackTag', function () {
 
             expect(packTag).to.have.property('tag').that.equals('test');
 
-            expect(packTag).to.have.property('pack_id').that.equals(1);
+            expect(packTag).to.have.property('pack_id').that.equals(pack.id);
         });
     });
 });

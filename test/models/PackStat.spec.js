@@ -24,24 +24,23 @@ describe('Model: PackStat', function () {
 
     describe('insert', function () {
         it('should create a pack stat', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
             const packStat = await PackStat.query().insert({
                 date: '2016-07-07',
-                pack_id: 1,
+                pack_id: pack.id,
                 pack_installs: 1234
             });
 
             expect(packStat).to.be.an('object');
 
-            expect(packStat).to.have.property('id').that.is.a('number');
-            expect(packStat).to.have.property('id').that.equals(1);
+            expect(packStat).to.have.property('id').that.is.a('string');
 
-            expect(packStat).to.have.property('pack_id').that.is.a('number');
-            expect(packStat).to.have.property('pack_id').that.equals(1);
+            expect(packStat).to.have.property('pack_id').that.is.a('string');
+            expect(packStat).to.have.property('pack_id').that.equals(pack.id);
 
             expect(packStat).to.have.property('date').that.is.a('string');
             expect(packStat).to.have.property('date').that.equals('2016-07-07');
@@ -65,13 +64,13 @@ describe('Model: PackStat', function () {
 
     describe('pack', function () {
         it('should return the pack for a pack stat', async function () {
-            await Pack.query().insert({
+            const createdPack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
             const packStat = await PackStat.query().insert({
-                pack_id: 1,
+                pack_id: createdPack.id,
                 date: '2016-07-07'
             });
 
@@ -83,7 +82,7 @@ describe('Model: PackStat', function () {
 
             expect(pack).to.be.an('object');
 
-            expect(pack).to.have.property('id').that.equals(1);
+            expect(pack).to.have.property('id').that.is.a('string');
 
             expect(pack).to.have.property('name').that.equals('Test Pack');
 

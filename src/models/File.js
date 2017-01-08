@@ -28,11 +28,11 @@ class File extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             hash: {type: 'string', minLength: 40, maxLength: 40},
             size: {type: 'integer', minimum: 1},
-            mod_id: {type: ['integer', 'null'], minimum: 1, default: null},
-            mod_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            mod_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
+            mod_version_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
             created_at: {type: 'string', format: 'date-time'}
         }
     };

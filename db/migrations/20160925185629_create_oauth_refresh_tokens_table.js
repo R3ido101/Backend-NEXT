@@ -1,8 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable('oauth_refresh_tokens', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('access_token_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('access_token_id', 36).notNullable();
         table.string('refresh_token', 60).index().unique().notNullable();
         table.text('scope').notNullable();
         table.boolean('revoked').notNullable().defaultTo(false);

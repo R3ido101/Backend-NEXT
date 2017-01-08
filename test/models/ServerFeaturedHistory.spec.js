@@ -27,94 +27,92 @@ describe('Model: ServerFeaturedHistory', function () {
 
     describe('findById', function () {
         it('should return the data for the given server feature history', async function () {
-            const expectedOutput = {
-                id: 1,
-                server_id: 1,
-                user_id: 1,
-                price: 5.55,
-                transaction_id: 'asldhjaslkdjlkas1234',
-                days: 14
-            };
-
-            await User.query().insert({
+            const user = await User.query().insert({
                 username: 'Test',
                 email: 'test@example.com',
                 password: 'test'
             });
 
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
-            await Server.query().insert({
+            const server = await Server.query().insert({
                 name: 'Test ServerFeaturedHistory',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
-            await ServerFeaturedHistory.query().insert({
-                server_id: 1,
-                user_id: 1,
+            const expectedOutput = {
+                server_id: server.id,
+                user_id: user.id,
+                price: 5.55,
+                transaction_id: 'asldhjaslkdjlkas1234',
+                days: 14
+            };
+
+            const serverFeaturedHistory = await ServerFeaturedHistory.query().insert({
+                server_id: server.id,
+                user_id: user.id,
                 price: 5.55,
                 transaction_id: 'asldhjaslkdjlkas1234',
                 days: 14,
                 expires_at: new Date().toJSON()
             });
 
-            const serverHistory = await ServerFeaturedHistory.query().findById(1);
+            const serverHistory = await ServerFeaturedHistory.query().findById(serverFeaturedHistory.id);
 
             expect(serverHistory).to.be.an('object');
             expect(serverHistory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverHistory).to.contain.all.keys(['created_at', 'expires_at']); // things that return but are variable
+            expect(serverHistory).to.contain.all.keys(['id', 'created_at', 'expires_at']); // things that return but are variable
         });
     });
 
     describe('insert', function () {
         it('should create a server feature history', async function () {
-            const expectedOutput = {
-                id: 1,
-                server_id: 1,
-                user_id: 1,
-                price: 5.55,
-                transaction_id: 'asldhjaslkdjlkas1234',
-                days: 14
-            };
-
-            await User.query().insert({
+            const user = await User.query().insert({
                 username: 'Test',
                 email: 'test@example.com',
                 password: 'test'
             });
 
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
-            await Server.query().insert({
+            const server = await Server.query().insert({
                 name: 'Test ServerFeaturedHistory',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
+            const expectedOutput = {
+                server_id: server.id,
+                user_id: user.id,
+                price: 5.55,
+                transaction_id: 'asldhjaslkdjlkas1234',
+                days: 14
+            };
+
             const serverHistory = await ServerFeaturedHistory.query().insert({
-                server_id: 1,
-                user_id: 1,
+                server_id: server.id,
+                user_id: user.id,
                 price: 5.55,
                 transaction_id: 'asldhjaslkdjlkas1234',
                 days: 14,
@@ -123,7 +121,7 @@ describe('Model: ServerFeaturedHistory', function () {
 
             expect(serverHistory).to.be.an('object');
             expect(serverHistory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverHistory).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(serverHistory).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

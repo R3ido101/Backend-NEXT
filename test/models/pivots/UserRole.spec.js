@@ -24,39 +24,38 @@ describe('Model: UserRole', function () {
 
     describe('insert', function () {
         it('should create a user role', async function () {
+            const user = await testUtils.createUser();
+            const role = await testUtils.createRole();
+
             const expectedOutput = {
-                id: 1,
-                user_id: 1,
-                role_id: 1
+                user_id: user.id,
+                role_id: role.id
             };
 
-            await testUtils.createUser();
-            await testUtils.createRole();
-
             const userRole = await UserRole.query().insert({
-                user_id: 1,
-                role_id: 1
+                user_id: user.id,
+                role_id: role.id
             });
 
             expect(userRole).to.be.an('object');
             expect(userRole).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(userRole).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(userRole).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should not create a user role when it already exists', async function () {
+            const user = await testUtils.createUser();
+            const role = await testUtils.createRole();
+            await testUtils.addRoleToUser(role, user);
+
             const expectedOutput = {
                 role_id: 'role_id is already taken.',
                 user_id: 'user_id is already taken.'
             };
 
-            const user = await testUtils.createUser();
-            const role = await testUtils.createRole();
-            await testUtils.addRoleToUser(role, user);
-
             try {
                 await UserRole.query().insert({
-                    user_id: 1,
-                    role_id: 1
+                    user_id: user.id,
+                    role_id: role.id
                 });
             } catch (error) {
                 expect(error.data).to.deep.equal(expectedOutput);

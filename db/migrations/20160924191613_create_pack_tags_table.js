@@ -1,9 +1,9 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_tags', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('tag', 128).index().notNullable();
-        table.integer('pack_id').unsigned().notNullable();
+        table.string('pack_id', 36).notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 
         // indexes

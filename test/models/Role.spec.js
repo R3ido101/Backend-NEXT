@@ -25,22 +25,21 @@ describe('Model: Role', function () {
     describe('findById', function () {
         it('should return the data for the given role', async function () {
             const expectedOutput = {
-                id: 1,
                 name: 'testrole',
                 description: 'This is a test role',
                 updated_at: null
             };
 
-            await Role.query().insert({
+            const created = await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
             });
 
-            const role = await Role.query().findById(1);
+            const role = await Role.query().findById(created.id);
 
             expect(role).to.be.an('object');
             expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(role).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(role).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a role cannot be found by id', async function () {
@@ -53,7 +52,6 @@ describe('Model: Role', function () {
     describe('insert', function () {
         it('should create a role', async function () {
             const expectedOutput = {
-                id: 1,
                 name: 'testrole',
                 description: 'This is a test role',
                 updated_at: null
@@ -66,14 +64,13 @@ describe('Model: Role', function () {
 
             expect(role).to.be.an('object');
             expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(role).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(role).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 
     describe('users', function () {
         it('should create a user for a role', async function () {
             const expectedOutput = {
-                id: 1,
                 username: 'test',
                 email: 'test@example.com'
             };
@@ -105,13 +102,13 @@ describe('Model: Role', function () {
                 description: 'This is a test role'
             });
 
-            await User.query().insert({
+            const createdUser = await User.query().insert({
                 username: 'test',
                 password: 'test',
                 email: 'test@example.com'
             });
 
-            await role.$relatedQuery('users').relate(1);
+            await role.$relatedQuery('users').relate(createdUser.id);
 
             const roleUsers = await role.$relatedQuery('users');
 

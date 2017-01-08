@@ -1,9 +1,9 @@
 exports.up = function (knex) {
     return knex.schema.createTable('user_roles', function (table) {
         // table structure
-        table.increments('id').primary();
-        table.integer('role_id').unsigned().notNullable();
-        table.integer('user_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('role_id', 36).notNullable();
+        table.string('user_id', 36).notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 
         // indexes

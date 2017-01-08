@@ -22,9 +22,9 @@ class PackLeaderboard extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            pack_id: {type: ['integer', 'null'], minimum: 1, default: null},
-            pack_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            pack_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
+            pack_version_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
             username: {type: 'string', minLength: 1, maxLength: 16, pattern: '^[a-zA-Z0-9_]{1,16}$'},
             time_played: {type: 'integer', minimum: 1, default: 1},
             created_at: {type: 'string', format: 'date-time'}

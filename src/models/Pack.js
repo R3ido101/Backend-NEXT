@@ -25,7 +25,7 @@ class Pack extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             name: {type: 'string', minLength: 3, maxLength: 255},
             safe_name: {type: 'string', minLength: 3, maxLength: 255},
             description: {type: ['string', 'null'], minLength: 3, default: null},

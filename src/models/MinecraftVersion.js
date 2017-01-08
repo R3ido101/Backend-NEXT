@@ -22,7 +22,7 @@ class MinecraftVersion extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             version: {type: 'string', minLength: 5, maxLength: 16},
             json: {type: ['string', 'null'], default: null},
             created_at: {type: 'string', format: 'date-time'},

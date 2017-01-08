@@ -29,8 +29,8 @@ class PackVersionRevision extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            pack_version_id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            pack_version_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             hash: {type: 'string', minLength: 40, maxLength: 40},
             json: {type: 'string'},
             is_verified: {type: 'boolean', default: false},

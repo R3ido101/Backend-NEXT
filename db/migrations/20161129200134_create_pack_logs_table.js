@@ -1,9 +1,9 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_logs', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('pack_id').unsigned().nullable().defaultTo(null);
-        table.integer('pack_version_id').unsigned().nullable().defaultTo(null);
+        table.string('id', 36).primary();
+        table.string('pack_id', 36).nullable().defaultTo(null);
+        table.string('pack_version_id', 36).nullable().defaultTo(null);
         table.string('username', 16).index().notNullable();
         table.string('action', 32).index().notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());

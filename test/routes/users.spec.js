@@ -966,7 +966,7 @@ describe('Routes: /users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(403);
@@ -1010,7 +1010,7 @@ describe('Routes: /users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(403);
@@ -1106,7 +1106,7 @@ describe('Routes: /users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(403);
@@ -1150,7 +1150,7 @@ describe('Routes: /users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    chai.request(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
                         expect(response).to.have.status(403);

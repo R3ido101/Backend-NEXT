@@ -24,7 +24,6 @@ describe('Model: Mod', function () {
     describe('findById', function () {
         it('should return the data for the given mod', async function () {
             const expectedOutput = {
-                id: 1,
                 name: 'Test Mod',
                 description: 'This is a test mod',
                 authors: ['test1', 'test2'],
@@ -33,17 +32,17 @@ describe('Model: Mod', function () {
                 updated_at: null
             };
 
-            await Mod.query().insert({
+            const created = await Mod.query().insert({
                 name: 'Test Mod',
                 description: 'This is a test mod',
                 authors: ['test1', 'test2']
             });
 
-            const mod = await Mod.query().findById(1);
+            const mod = await Mod.query().findById(created.id);
 
             expect(mod).to.be.an('object');
             expect(mod).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(mod).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(mod).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a mod cannot be found by id', async function () {
@@ -56,7 +55,6 @@ describe('Model: Mod', function () {
     describe('insert', function () {
         it('should create a mod', async function () {
             const expectedOutput = {
-                id: 1,
                 name: 'Test Mod',
                 description: 'This is a test mod',
                 authors: ['test1', 'test2'],
@@ -73,7 +71,7 @@ describe('Model: Mod', function () {
 
             expect(mod).to.be.an('object');
             expect(mod).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(mod).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(mod).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 
@@ -101,7 +99,7 @@ describe('Model: Mod', function () {
             expect(modVersion).to.have.property('version').that.equals('1.2.3');
             expect(modVersion).to.have.property('changelog').that.equals('Test');
 
-            expect(modVersion).to.have.property('mod_id').that.equals(1);
+            expect(modVersion).to.have.property('mod_id').that.equals(mod.id);
         });
     });
 });

@@ -10,9 +10,9 @@ class OAuthAccessToken extends BaseModel {
         required: ['user_id', 'client_id', 'access_token', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            user_id: {type: 'integer', minimum: 1},
-            client_id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            user_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            client_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             access_token: {type: 'string', minLength: 60, maxLength: 60},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},

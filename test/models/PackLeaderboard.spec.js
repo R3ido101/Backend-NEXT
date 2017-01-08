@@ -5,7 +5,6 @@ import knexCleaner from 'knex-cleaner';
 import knex from '../../src/db';
 
 import Pack from '../../src/models/Pack';
-import User from '../../src/models/User';
 import PackVersion from '../../src/models/PackVersion';
 import PackLeaderboard from '../../src/models/PackLeaderboard';
 
@@ -26,33 +25,32 @@ describe('Model: PackLeaderboard', function () {
 
     describe('insert', function () {
         it('should create a pack leaderboard', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packLeaderboard = await PackLeaderboard.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: packVersion.id,
                 username: 'test',
                 time_played: 44
             });
 
             expect(packLeaderboard).to.be.an('object');
 
-            expect(packLeaderboard).to.have.property('id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('id').that.equals(1);
+            expect(packLeaderboard).to.have.property('id').that.is.a('string');
 
-            expect(packLeaderboard).to.have.property('pack_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('pack_id').that.equals(1);
+            expect(packLeaderboard).to.have.property('pack_id').that.is.a('string');
+            expect(packLeaderboard).to.have.property('pack_id').that.equals(pack.id);
 
-            expect(packLeaderboard).to.have.property('pack_version_id').that.is.a('number');
-            expect(packLeaderboard).to.have.property('pack_version_id').that.equals(1);
+            expect(packLeaderboard).to.have.property('pack_version_id').that.is.a('string');
+            expect(packLeaderboard).to.have.property('pack_version_id').that.equals(packVersion.id);
 
             expect(packLeaderboard).to.have.property('username').that.is.a('string');
             expect(packLeaderboard).to.have.property('username').that.equals('test');
@@ -64,19 +62,19 @@ describe('Model: PackLeaderboard', function () {
 
     describe('pack', function () {
         it('should return the pack for a pack leaderboard', async function () {
-            await Pack.query().insert({
+            const createdPack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: createdPack.id
             });
 
             const packLeaderboard = await PackLeaderboard.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: createdPack.id,
+                pack_version_id: packVersion.id,
                 username: 'test',
                 time_played: 44
             });
@@ -89,7 +87,7 @@ describe('Model: PackLeaderboard', function () {
 
             expect(pack).to.be.an('object');
 
-            expect(pack).to.have.property('id').that.equals(1);
+            expect(pack).to.have.property('id').that.is.a('string');
 
             expect(pack).to.have.property('name').that.equals('Test Pack');
 
@@ -99,19 +97,19 @@ describe('Model: PackLeaderboard', function () {
 
     describe('packVersion', function () {
         it('should return the pack version for a pack leaderboard', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const createdPackVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packLeaderboard = await PackLeaderboard.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: createdPackVersion.id,
                 username: 'test',
                 time_played: 44
             });
@@ -124,7 +122,7 @@ describe('Model: PackLeaderboard', function () {
 
             expect(packVersion).to.be.an('object');
 
-            expect(packVersion).to.have.property('id').that.equals(1);
+            expect(packVersion).to.have.property('id').that.is.a('string');
 
             expect(packVersion).to.have.property('version').that.equals('1.2.3');
         });

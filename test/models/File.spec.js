@@ -24,23 +24,22 @@ describe('Model: File', function () {
     describe('findById', function () {
         it('should return the data for the given file', async function () {
             const expectedOutput = {
-                id: 1,
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22,
                 mod_id: null,
                 mod_version_id: null
             };
 
-            await File.query().insert({
+            const created = await File.query().insert({
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
 
-            const packFile = await File.query().findById(1);
+            const packFile = await File.query().findById(created.id);
 
             expect(packFile).to.be.an('object');
             expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(packFile).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a file cannot be found by id', async function () {
@@ -53,7 +52,6 @@ describe('Model: File', function () {
     describe('insert', function () {
         it('should create a file', async function () {
             const expectedOutput = {
-                id: 1,
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22,
                 mod_id: null,
@@ -67,7 +65,7 @@ describe('Model: File', function () {
 
             expect(file).to.be.an('object');
             expect(file).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(file).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(file).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

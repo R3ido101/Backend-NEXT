@@ -1,8 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_version_revisions', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('pack_version_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('pack_version_id', 36).notNullable();
         table.string('hash', 40).notNullable();
         table.jsonb('json').notNullable();
         table.boolean('is_verified').notNullable().defaultTo(false);

@@ -1,7 +1,7 @@
 exports.up = function (knex) {
     return knex.schema.createTable('packs', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('name', 255).notNullable().unique();
         table.string('safe_name', 255).notNullable().unique();
         table.text('description').nullable().defaultTo(null);

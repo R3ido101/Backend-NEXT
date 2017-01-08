@@ -20,11 +20,11 @@ class PackFile extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             name: {type: 'string', maxLength: 1024},
-            pack_id: {type: 'integer', minimum: 1},
-            pack_directory_id: {type: ['integer', 'null'], minimum: 1, default: null},
-            file_id: {type: 'integer', minimum: 1},
+            pack_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            pack_directory_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
+            file_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             created_at: {type: 'string', format: 'date-time'}
         }
     };

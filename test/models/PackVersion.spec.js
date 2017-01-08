@@ -25,7 +25,7 @@ describe('Model: PackVersion', function () {
 
     describe('insert', function () {
         it('should create a pack version', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
@@ -33,16 +33,15 @@ describe('Model: PackVersion', function () {
             const packVersion = await PackVersion.query().insert({
                 version: 'test',
                 changelog: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             expect(packVersion).to.be.an('object');
 
-            expect(packVersion).to.have.property('id').that.is.a('number');
-            expect(packVersion).to.have.property('id').that.equals(1);
+            expect(packVersion).to.have.property('id').that.is.a('string');
 
-            expect(packVersion).to.have.property('pack_id').that.is.a('number');
-            expect(packVersion).to.have.property('pack_id').that.equals(1);
+            expect(packVersion).to.have.property('pack_id').that.is.a('string');
+            expect(packVersion).to.have.property('pack_id').that.equals(pack.id);
 
             expect(packVersion).to.have.property('minecraft_version_id').that.is.null;
 
@@ -64,20 +63,20 @@ describe('Model: PackVersion', function () {
 
     describe('minecraftVersion', function () {
         it('should get the Minecraft version for a pack version', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await MinecraftVersion.query().insert({
+            const createdMinecraftVersion = await MinecraftVersion.query().insert({
                 version: '1.2.3'
             });
 
             const packVersion = await PackVersion.query().insert({
                 version: 'test',
-                minecraft_version_id: 1,
+                minecraft_version_id: createdMinecraftVersion.id,
                 changelog: ' test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const minecraftVersions = await packVersion.$relatedQuery('minecraftVersion');

@@ -1,3 +1,4 @@
+import uuidV4 from 'uuid/v4';
 import { Model, ValidationError } from 'objection';
 
 /**
@@ -34,6 +35,10 @@ class BaseModel extends Model {
      */
     $beforeInsert(queryContext) {
         super.$beforeInsert(queryContext);
+
+        if (!this.id) {
+            this.id = uuidV4();
+        }
 
         if (this.constructor.timestamps) {
             this.created_at = new Date().toJSON();

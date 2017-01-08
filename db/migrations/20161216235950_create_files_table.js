@@ -1,11 +1,11 @@
 exports.up = function (knex) {
     return knex.schema.createTable('files', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('hash', 40).index().notNullable();
         table.integer('size').unsigned().notNullable();
-        table.integer('mod_id').unsigned().nullable().defaultTo(null);
-        table.integer('mod_version_id').unsigned().nullable().defaultTo(null);
+        table.string('mod_id', 36).nullable().defaultTo(null);
+        table.string('mod_version_id', 36).nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 
         // indexes

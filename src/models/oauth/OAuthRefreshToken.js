@@ -10,8 +10,8 @@ class OAuthRefreshToken extends BaseModel {
         required: ['access_token_id', 'refresh_token', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            access_token_id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            access_token_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             refresh_token: {type: 'string', minLength: 60, maxLength: 60},
             scope: {type: 'string'},
             revoked: {type: 'boolean', default: false},

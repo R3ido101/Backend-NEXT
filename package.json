@@ -84,6 +84,7 @@
     "response-time": "~2.3.2",
     "sha1": "~1.1.1",
     "sqlite3": "~3.1.8",
+    "uuid": "^3.0.1",
     "vantage": "~1.7.0"
   },
   "devDependencies": {

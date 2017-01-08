@@ -1,9 +1,9 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_users', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('user_id').unsigned().notNullable();
-        table.integer('pack_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('user_id', 36).notNullable();
+        table.string('pack_id', 36).notNullable();
         table.boolean('can_administrate').notNullable().defaultTo(true);
         table.boolean('can_create').notNullable().defaultTo(true);
         table.boolean('can_delete').notNullable().defaultTo(true);

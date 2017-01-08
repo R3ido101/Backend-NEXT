@@ -7,9 +7,6 @@ import knex from '../../src/db';
 import Pack from '../../src/models/Pack';
 import Role from '../../src/models/Role';
 import User from '../../src/models/User';
-import PackLog from '../../src/models/PackLog';
-import PackVersion from '../../src/models/PackVersion';
-import PackLeaderboard from '../../src/models/PackLeaderboard';
 
 /**
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
@@ -29,7 +26,6 @@ describe('Model: User', function () {
     describe('findById', function () {
         it('should return the data for the given user', async function () {
             const expectedOutput = {
-                id: 1,
                 username: 'test',
                 email: 'test@example.com',
                 must_change_password: false,
@@ -42,17 +38,17 @@ describe('Model: User', function () {
                 banned_at: null
             };
 
-            await User.query().insert({
+            const created = await User.query().insert({
                 username: 'test',
                 password: 'test',
                 email: 'test@example.com'
             });
 
-            const user = await User.query().findById(1);
+            const user = await User.query().findById(created.id);
 
             expect(user).to.be.an('object');
             expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(user).to.contain.all.keys(['password', 'created_at', 'verification_code']); // things that return but are variable
+            expect(user).to.contain.all.keys(['id', 'password', 'created_at', 'verification_code']); // things that return but are variable
         });
 
         it('should return undefined if a user cannot be found by id', async function () {
@@ -65,7 +61,6 @@ describe('Model: User', function () {
     describe('insert', function () {
         it('should create a user', async function () {
             const expectedOutput = {
-                id: 1,
                 username: 'test',
                 email: 'test@example.com',
                 must_change_password: false,
@@ -86,7 +81,7 @@ describe('Model: User', function () {
 
             expect(user).to.be.an('object');
             expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(user).to.contain.all.keys(['password', 'created_at', 'verification_code']); // things that return but are variable
+            expect(user).to.contain.all.keys(['id', 'password', 'created_at', 'verification_code']); // things that return but are variable
         });
 
         it('should throw an error if email is invalid format', function () {
@@ -147,12 +142,12 @@ describe('Model: User', function () {
                 email: 'test@example.com'
             });
 
-            await Role.query().insert({
+            const created = await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
             });
 
-            await user.$relatedQuery('roles').relate(1);
+            await user.$relatedQuery('roles').relate(created.id);
 
             const usersRoles = await user.$relatedQuery('roles');
 
@@ -203,12 +198,12 @@ describe('Model: User', function () {
                 email: 'test@example.com'
             });
 
-            await Pack.query().insert({
+            const created = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await user.$relatedQuery('packs').relate(1);
+            await user.$relatedQuery('packs').relate(created.id);
 
             const usersPacks = await user.$relatedQuery('packs');
 

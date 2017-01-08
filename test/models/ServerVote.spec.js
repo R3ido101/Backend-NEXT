@@ -26,77 +26,75 @@ describe('Model: ServerVote', function () {
 
     describe('findById', function () {
         it('should return the data for the given server vote', async function () {
-            const expectedOutput = {
-                id: 1,
-                server_id: 1,
-                username: 'Test'
-            };
-
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
-            await Server.query().insert({
-                name: 'Test ServerVote',
+            const server = await Server.query().insert({
+                name: 'Test ServerHistory',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
-            await ServerVote.query().insert({
-                server_id: 1,
+            const expectedOutput = {
+                server_id: server.id,
+                username: 'Test'
+            };
+
+            const created = await ServerVote.query().insert({
+                server_id: server.id,
                 username: 'Test'
             });
 
-            const serverVote = await ServerVote.query().findById(1);
+            const serverVote = await ServerVote.query().findById(created.id);
 
             expect(serverVote).to.be.an('object');
             expect(serverVote).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverVote).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(serverVote).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 
     describe('insert', function () {
         it('should create a server vote', async function () {
-            const expectedOutput = {
-                id: 1,
-                server_id: 1,
-                username: 'Test'
-            };
-
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
-            await Server.query().insert({
-                name: 'Test ServerVote',
+            const server = await Server.query().insert({
+                name: 'Test ServerHistory',
                 host: '127.0.0.1',
                 description: 'This is a test pack and it is for a test pack',
-                pack_id: 1,
-                pack_version_id: 1
+                pack_id: pack.id,
+                pack_version_id: packVersion.id
             });
 
+            const expectedOutput = {
+                server_id: server.id,
+                username: 'Test'
+            };
+
             const serverVote = await ServerVote.query().insert({
-                server_id: 1,
+                server_id: server.id,
                 username: 'Test'
             });
 
             expect(serverVote).to.be.an('object');
             expect(serverVote).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverVote).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(serverVote).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

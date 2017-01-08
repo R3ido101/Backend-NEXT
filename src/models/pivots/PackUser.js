@@ -27,9 +27,9 @@ class PackUser extends BaseModel {
         uniqueProperties: [['pack_id', 'user_id']],
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            pack_id: {type: 'integer', minimum: 1},
-            user_id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            pack_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            user_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             can_administrate: {type: 'boolean', default: true},
             can_create: {type: 'boolean', default: true},
             can_delete: {type: 'boolean', default: true},

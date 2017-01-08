@@ -22,8 +22,8 @@ class ModVersion extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
-            mod_id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            mod_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             version: {type: 'string', maxLength: 64},
             java_versions: {type: ['array', 'null'], items: {type: 'string'}, default: null},
             minecraft_versions: {type: ['array', 'null'], items: {type: 'string'}, default: null},

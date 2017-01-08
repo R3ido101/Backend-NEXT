@@ -24,13 +24,13 @@ class Server extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'integer', minimum: 1},
+            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             name: {type: 'string', maxLength: 512},
             host: {type: 'string', maxLength: 255},
             port: {type: 'integer', minimum: 1, maximum: 65535, default: 25565},
             description: {type: 'string', minLength: 30},
-            pack_id: {type: 'integer', minimum: 1},
-            pack_version_id: {type: ['integer', 'null'], minimum: 1, default: null},
+            pack_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
+            pack_version_id: {type: ['string', 'null'], minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', default: null},
             banner_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             website_url: {type: ['string', 'null'], default: null, maxLength: 1024},
             discord_invite_code: {type: ['string', 'null'], default: null, maxLength: 32},

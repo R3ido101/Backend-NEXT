@@ -5,7 +5,6 @@ import knexCleaner from 'knex-cleaner';
 import knex from '../../src/db';
 
 import Pack from '../../src/models/Pack';
-import User from '../../src/models/User';
 import PackLog from '../../src/models/PackLog';
 import PackVersion from '../../src/models/PackVersion';
 
@@ -26,33 +25,32 @@ describe('Model: PackLog', function () {
 
     describe('insert', function () {
         it('should create a pack log', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packLog = await PackLog.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: packVersion.id,
                 username: 'test',
                 action: 'pack_install'
             });
 
             expect(packLog).to.be.an('object');
 
-            expect(packLog).to.have.property('id').that.is.a('number');
-            expect(packLog).to.have.property('id').that.equals(1);
+            expect(packLog).to.have.property('id').that.is.a('string');
 
-            expect(packLog).to.have.property('pack_id').that.is.a('number');
-            expect(packLog).to.have.property('pack_id').that.equals(1);
+            expect(packLog).to.have.property('pack_id').that.is.a('string');
+            expect(packLog).to.have.property('pack_id').that.equals(pack.id);
 
-            expect(packLog).to.have.property('pack_version_id').that.is.a('number');
-            expect(packLog).to.have.property('pack_version_id').that.equals(1);
+            expect(packLog).to.have.property('pack_version_id').that.is.a('string');
+            expect(packLog).to.have.property('pack_version_id').that.equals(packVersion.id);
 
             expect(packLog).to.have.property('username').that.is.a('string');
             expect(packLog).to.have.property('username').that.equals('test');
@@ -64,19 +62,19 @@ describe('Model: PackLog', function () {
 
     describe('pack', function () {
         it('should return the pack for a pack log', async function () {
-            await Pack.query().insert({
+            const createdPack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: createdPack.id
             });
 
             const packLog = await PackLog.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: createdPack.id,
+                pack_version_id: packVersion.id,
                 username: 'test',
                 action: 'pack_install'
             });
@@ -89,7 +87,7 @@ describe('Model: PackLog', function () {
 
             expect(pack).to.be.an('object');
 
-            expect(pack).to.have.property('id').that.equals(1);
+            expect(pack).to.have.property('id').that.is.a('string');
 
             expect(pack).to.have.property('name').that.equals('Test Pack');
 
@@ -99,19 +97,19 @@ describe('Model: PackLog', function () {
 
     describe('packVersion', function () {
         it('should return the pack version for a pack log', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const createdPackVersion = await PackVersion.query().insert({
                 version: '1.2.3',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packLog = await PackLog.query().insert({
-                pack_id: 1,
-                pack_version_id: 1,
+                pack_id: pack.id,
+                pack_version_id: createdPackVersion.id,
                 username: 'test',
                 action: 'pack_install'
             });
@@ -124,7 +122,7 @@ describe('Model: PackLog', function () {
 
             expect(packVersion).to.be.an('object');
 
-            expect(packVersion).to.have.property('id').that.equals(1);
+            expect(packVersion).to.have.property('id').that.is.a('string');
 
             expect(packVersion).to.have.property('version').that.equals('1.2.3');
         });

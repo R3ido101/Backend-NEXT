@@ -1,7 +1,7 @@
 exports.up = function (knex) {
     return knex.schema.createTable('minecraft_versions', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('version', 16).index().unique().notNullable();
         table.jsonb('json').nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());

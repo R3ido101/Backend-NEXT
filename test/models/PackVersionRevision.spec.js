@@ -25,29 +25,28 @@ describe('Model: PackVersionRevision', function () {
 
     describe('insert', function () {
         it('should create a pack version revision', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const packVersion = await PackVersion.query().insert({
                 version: 'test',
                 changelog: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packVersionRevision = await PackVersionRevision.query().insert({
                 json: '{"test": true}',
-                pack_version_id: 1
+                pack_version_id: packVersion.id
             });
 
             expect(packVersionRevision).to.be.an('object');
 
-            expect(packVersionRevision).to.have.property('id').that.is.a('number');
-            expect(packVersionRevision).to.have.property('id').that.equals(1);
+            expect(packVersionRevision).to.have.property('id').that.is.a('string');
 
-            expect(packVersionRevision).to.have.property('pack_version_id').that.is.a('number');
-            expect(packVersionRevision).to.have.property('pack_version_id').that.equals(1);
+            expect(packVersionRevision).to.have.property('pack_version_id').that.is.a('string');
+            expect(packVersionRevision).to.have.property('pack_version_id').that.equals(packVersion.id);
 
             expect(packVersionRevision).to.have.property('hash').that.is.a('string');
             expect(packVersionRevision).to.have.property('hash').that.equals('b20c815bebe41c4773500b3b4688770672454b9b');
@@ -68,20 +67,20 @@ describe('Model: PackVersionRevision', function () {
 
     describe('packVersion', function () {
         it('should get the Minecraft version for a pack version', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackVersion.query().insert({
+            const createdPackVersion = await PackVersion.query().insert({
                 version: 'test',
                 changelog: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             const packVersionRevision = await PackVersionRevision.query().insert({
                 json: '{"test": true}',
-                pack_version_id: 1
+                pack_version_id: createdPackVersion.id
             });
 
             const packVersions = await packVersionRevision.$relatedQuery('packVersion');

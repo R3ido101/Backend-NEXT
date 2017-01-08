@@ -1,6 +1,6 @@
 exports.up = function (knex) {
     return knex.schema.createTable('launcher_versions', function (table) {
-        table.increments('id').primary();
+        table.string('id', 36).primary();
         table.string('version', 16).index().unique().notNullable();
         table.text('changelog').notNullable();
 

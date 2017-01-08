@@ -25,35 +25,34 @@ describe('Model: PackFile', function () {
 
     describe('findById', function () {
         it('should return the data for the given pack file', async function () {
-            const expectedOutput = {
-                id: 1,
-                pack_id: 1,
-                pack_directory_id: null,
-                file_id: 1,
-                name: 'test.zip'
-            };
-
-            await File.query().insert({
+            const file = await File.query().insert({
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
 
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackFile.query().insert({
-                pack_id: 1,
-                file_id: 1,
+            const expectedOutput = {
+                pack_id: pack.id,
+                pack_directory_id: null,
+                file_id: file.id,
+                name: 'test.zip'
+            };
+
+            const created = await PackFile.query().insert({
+                pack_id: pack.id,
+                file_id: file.id,
                 name: 'test.zip'
             });
 
-            const packFile = await PackFile.query().findById(1);
+            const packFile = await PackFile.query().findById(created.id);
 
             expect(packFile).to.be.an('object');
             expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(packFile).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a pack file cannot be found by id', async function () {
@@ -65,33 +64,32 @@ describe('Model: PackFile', function () {
 
     describe('insert', function () {
         it('should create a pack file', async function () {
-            const expectedOutput = {
-                id: 1,
-                pack_id: 1,
-                pack_directory_id: null,
-                file_id: 1,
-                name: 'test.zip'
-            };
-
-            await File.query().insert({
+            const file = await File.query().insert({
                 hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
                 size: 22
             });
 
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
+            const expectedOutput = {
+                pack_id: pack.id,
+                pack_directory_id: null,
+                file_id: file.id,
+                name: 'test.zip'
+            };
+
             const packFile = await PackFile.query().insert({
-                pack_id: 1,
-                file_id: 1,
+                pack_id: pack.id,
+                file_id: file.id,
                 name: 'test.zip'
             });
 
             expect(packFile).to.be.an('object');
             expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(packFile).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

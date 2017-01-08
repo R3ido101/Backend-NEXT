@@ -1,13 +1,13 @@
 exports.up = function (knex) {
     return knex.schema.createTable('servers', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('name', 512).notNullable();
         table.string('host', 255).notNullable();
         table.integer('port').notNullable();
         table.text('description').notNullable();
-        table.integer('pack_id').unsigned().notNullable();
-        table.integer('pack_version_id').unsigned().nullable().defaultTo(null);
+        table.string('pack_id', 36).notNullable();
+        table.string('pack_version_id', 36).nullable().defaultTo(null);
         table.text('banner_url').nullable().defaultTo(null);
         table.text('website_url').nullable().defaultTo(null);
         table.string('discord_invite_code', 32).nullable().defaultTo(null);

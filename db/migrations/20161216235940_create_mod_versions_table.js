@@ -1,8 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable('mod_versions', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('mod_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('mod_id', 36).notNullable();
         table.string('version', 64).notNullable();
         table.text('changelog').notNullable();
         table.text('java_versions').nullable().defaultTo(null);

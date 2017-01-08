@@ -1,8 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable('server_votes', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('server_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('server_id', 36).notNullable();
         table.string('username', 32).unsigned().notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 

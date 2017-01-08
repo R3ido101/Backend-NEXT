@@ -25,29 +25,25 @@ describe('Model: MinecraftVersion', function () {
 
     describe('insert', function () {
         it('should create a Minecraft version', async function () {
+            const expectedOutput = {
+                version: '1.7.10',
+                json: null,
+                updated_at: null
+            };
+
             const minecraftVersion = await MinecraftVersion.query().insert({
                 version: '1.7.10'
             });
 
             expect(minecraftVersion).to.be.an('object');
-
-            expect(minecraftVersion).to.have.property('id').that.is.a('number');
-            expect(minecraftVersion).to.have.property('id').that.equals(1);
-
-            expect(minecraftVersion).to.have.property('version').that.is.a('string');
-            expect(minecraftVersion).to.have.property('version').that.equals('1.7.10');
-
-            expect(minecraftVersion).to.have.property('json').that.is.null;
-
-            expect(minecraftVersion).to.have.property('created_at').that.is.a('string');
-
-            expect(minecraftVersion).to.have.property('updated_at').that.is.null;
+            expect(minecraftVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(minecraftVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 
     describe('packVersions', function () {
         it('should list the pack versions for a Minecraft version', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
@@ -59,9 +55,17 @@ describe('Model: MinecraftVersion', function () {
             await PackVersion.query().insert({
                 version: 'test',
                 changelog: 'test',
-                pack_id: 1,
-                minecraft_version_id: 1
+                pack_id: pack.id,
+                minecraft_version_id: minecraftVersion.id
             });
+
+            const expectedOutput = {
+                version: 'test',
+                changelog: 'test',
+                pack_id: pack.id,
+                minecraft_version_id: minecraftVersion.id,
+                updated_at: null
+            };
 
             const packVersions = await minecraftVersion.$relatedQuery('packVersions');
 
@@ -70,10 +74,8 @@ describe('Model: MinecraftVersion', function () {
             const packVersion = packVersions[0];
 
             expect(packVersion).to.be.an('object');
-
-            expect(packVersion).to.have.property('version').that.equals('test');
-
-            expect(packVersion).to.have.property('changelog').that.equals('test');
+            expect(packVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(packVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

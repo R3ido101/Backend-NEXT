@@ -24,30 +24,29 @@ describe('Model: ModVersion', function () {
 
     describe('findById', function () {
         it('should return the data for the given mod version', async function () {
-            const expectedOutput = {
-                id: 1,
-                mod_id: 1,
-                version: '1.2.3',
-                changelog: 'Test'
-            };
-
-            await Mod.query().insert({
+            const mod = await Mod.query().insert({
                 name: 'Test Mod',
                 description: 'This is a test mod',
                 authors: ['test1', 'test2']
             });
 
-            await ModVersion.query().insert({
-                mod_id: 1,
+            const expectedOutput = {
+                mod_id: mod.id,
+                version: '1.2.3',
+                changelog: 'Test'
+            };
+
+            const created = await ModVersion.query().insert({
+                mod_id: mod.id,
                 version: '1.2.3',
                 changelog: 'Test'
             });
 
-            const modVersion = await ModVersion.query().findById(1);
+            const modVersion = await ModVersion.query().findById(created.id);
 
             expect(modVersion).to.be.an('object');
             expect(modVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(modVersion).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(modVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a mod cannot be found by id', async function () {
@@ -59,9 +58,13 @@ describe('Model: ModVersion', function () {
 
     describe('insert', function () {
         it('should create a mod version', async function () {
+            const mod = await Mod.query().insert({
+                name: 'Test Mod',
+                description: 'This is a test mod',
+                authors: ['test1', 'test2']
+            });
             const expectedOutput = {
-                id: 1,
-                mod_id: 1,
+                mod_id: mod.id,
                 version: '1.2.3',
                 changelog: 'Test',
                 java_versions: [
@@ -70,14 +73,9 @@ describe('Model: ModVersion', function () {
                 ]
             };
 
-            await Mod.query().insert({
-                name: 'Test Mod',
-                description: 'This is a test mod',
-                authors: ['test1', 'test2']
-            });
 
             const modVersion = await ModVersion.query().insert({
-                mod_id: 1,
+                mod_id: mod.id,
                 version: '1.2.3',
                 changelog: 'Test',
                 java_versions: [
@@ -88,7 +86,7 @@ describe('Model: ModVersion', function () {
 
             expect(modVersion).to.be.an('object');
             expect(modVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(modVersion).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(modVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

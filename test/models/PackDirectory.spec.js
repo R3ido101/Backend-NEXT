@@ -24,29 +24,28 @@ describe('Model: PackDirectory', function () {
 
     describe('findById', function () {
         it('should return the data for the given pack directory', async function () {
-            const expectedOutput = {
-                id: 1,
-                name: 'test',
-                pack_id: 1,
-                parent: null,
-                updated_at: null
-            };
-
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
-            await PackDirectory.query().insert({
+            const expectedOutput = {
                 name: 'test',
-                pack_id: 1
+                pack_id: pack.id,
+                parent: null,
+                updated_at: null
+            };
+
+            const created = await PackDirectory.query().insert({
+                name: 'test',
+                pack_id: pack.id
             });
 
-            const packFile = await PackDirectory.query().findById(1);
+            const packDirectory = await PackDirectory.query().findById(created.id);
 
-            expect(packFile).to.be.an('object');
-            expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(packDirectory).to.be.an('object');
+            expect(packDirectory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(packDirectory).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should return undefined if a pack directory cannot be found by id', async function () {
@@ -58,27 +57,26 @@ describe('Model: PackDirectory', function () {
 
     describe('insert', function () {
         it('should create a pack directory', async function () {
-            const expectedOutput = {
-                id: 1,
-                name: 'test',
-                pack_id: 1,
-                parent: null,
-                updated_at: null
-            };
-
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
+            const expectedOutput = {
+                name: 'test',
+                pack_id: pack.id,
+                parent: null,
+                updated_at: null
+            };
+
             const packDirectory = await PackDirectory.query().insert({
                 name: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             expect(packDirectory).to.be.an('object');
             expect(packDirectory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packDirectory).to.contain.all.keys(['created_at']); // things that return but are variable
+            expect(packDirectory).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
     });
 });

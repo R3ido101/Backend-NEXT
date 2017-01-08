@@ -1,11 +1,11 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_files', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
+        table.string('id', 36).primary();
         table.string('name', 1024).unsigned().notNullable();
-        table.integer('pack_id').unsigned().notNullable();
-        table.integer('pack_directory_id').unsigned().nullable().defaultTo(null);
-        table.integer('file_id').unsigned().notNullable();
+        table.string('pack_id', 36).notNullable();
+        table.string('pack_directory_id', 36).nullable().defaultTo(null);
+        table.string('file_id', 36).notNullable();
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
 
         // indexes

@@ -1,8 +1,8 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pack_directories', function (table) {
         // table structure
-        table.increments('id').unsigned().primary();
-        table.integer('pack_id').unsigned().notNullable();
+        table.string('id', 36).primary();
+        table.string('pack_id', 36).notNullable();
         table.string('name', 32).notNullable();
         table.integer('parent').unsigned().nullable().defaultTo(null);
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());

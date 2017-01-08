@@ -24,28 +24,24 @@ describe('Model: LauncherTag', function () {
 
     describe('insert', function () {
         it('should create a launcher tag', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
+            const expectedOutput = {
+                tag: 'test',
+                pack_id: pack.id
+            };
+
             const packTag = await LauncherTag.query().insert({
                 tag: 'test',
-                pack_id: 1
+                pack_id: pack.id
             });
 
             expect(packTag).to.be.an('object');
-
-            expect(packTag).to.have.property('id').that.is.a('number');
-            expect(packTag).to.have.property('id').that.equals(1);
-
-            expect(packTag).to.have.property('tag').that.is.a('string');
-            expect(packTag).to.have.property('tag').that.equals('test');
-
-            expect(packTag).to.have.property('pack_id').that.is.a('number');
-            expect(packTag).to.have.property('pack_id').that.equals(1);
-
-            expect(packTag).to.have.property('created_at').that.is.a('string');
+            expect(packTag).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(packTag).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
         });
 
         it('should not allow invalid characters when creating a tag', async function () {
@@ -86,7 +82,7 @@ describe('Model: LauncherTag', function () {
 
             expect(packTag).to.have.property('tag').that.equals('test');
 
-            expect(packTag).to.have.property('pack_id').that.equals(1);
+            expect(packTag).to.have.property('pack_id').that.equals(pack.id);
         });
     });
 });
