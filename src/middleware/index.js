@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import * as httpStatusCodes from 'http-status';
 
 import APIError from '../errors/APIError';
 
@@ -15,11 +16,11 @@ export function checkPermissions({scope = null, role = null}) {
         const {token} = req.authInfo;
 
         if (scope && !hasScope(token, scope)) {
-            return next(new APIError(`Invalid scope on token. Scope '${scope}' is needed.`));
+            return next(new APIError(`Invalid scope on token. Scope '${scope}' is needed.`, httpStatusCodes.FORBIDDEN));
         }
 
         if (role && !hasRole(user, role)) {
-            return next(new APIError(`User doesn\'t have required role. '${role}' role is needed.`));
+            return next(new APIError(`User doesn\'t have required role. '${role}' role is needed.`, httpStatusCodes.FORBIDDEN));
         }
 
         return next();
@@ -37,7 +38,7 @@ export function checkRole(role = null) {
         const user = req.user;
 
         if (!hasRole(user, role)) {
-            return next(new APIError(`User doesn\'t have required role. '${role}' role is needed.`));
+            return next(new APIError(`User doesn\'t have required role. '${role}' role is needed.`, httpStatusCodes.FORBIDDEN));
         }
 
         return next();
@@ -55,7 +56,7 @@ export function checkScope(scope = null) {
         const {token} = req.authInfo;
 
         if (!hasScope(token, scope)) {
-            return next(new APIError(`Invalid scope on token. Scope '${scope}' is needed.`));
+            return next(new APIError(`Invalid scope on token. Scope '${scope}' is needed.`, httpStatusCodes.FORBIDDEN));
         }
 
         return next();

@@ -113,7 +113,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -121,7 +121,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -157,7 +157,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -165,7 +165,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
@@ -250,7 +250,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -258,7 +258,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -294,7 +294,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -302,7 +302,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
@@ -394,7 +394,7 @@ describe('Routes: /users', function () {
                     chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -402,7 +402,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -438,7 +438,7 @@ describe('Routes: /users', function () {
                     chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -446,7 +446,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
@@ -541,7 +541,7 @@ describe('Routes: /users', function () {
                     chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -549,7 +549,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -585,7 +585,7 @@ describe('Routes: /users', function () {
                     chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -593,7 +593,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
@@ -675,7 +675,7 @@ describe('Routes: /users', function () {
                     chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -683,7 +683,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -719,7 +719,7 @@ describe('Routes: /users', function () {
                     chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -727,7 +727,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
@@ -822,7 +822,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -830,7 +830,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -866,7 +866,7 @@ describe('Routes: /users', function () {
                     chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -874,7 +874,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
@@ -969,7 +969,7 @@ describe('Routes: /users', function () {
                     chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -977,7 +977,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -1013,7 +1013,7 @@ describe('Routes: /users', function () {
                     chai.request(app).put(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -1021,7 +1021,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
@@ -1109,7 +1109,7 @@ describe('Routes: /users', function () {
                     chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -1117,7 +1117,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
@@ -1153,7 +1153,7 @@ describe('Routes: /users', function () {
                     chai.request(app).delete(`/users/${created_user.id}/roles/1`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
                     }).catch(({response}) => {
-                        expect(response).to.have.status(500);
+                        expect(response).to.have.status(403);
                         expect(response).to.be.json;
 
                         const {body} = response;
@@ -1161,7 +1161,7 @@ describe('Routes: /users', function () {
                         expect(body).to.be.an('object');
 
                         expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(500);
+                        expect(body).to.have.property('status').that.equals(403);
 
                         expect(body).to.have.property('error').that.is.a('string');
                         expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
