@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const dateFormat = require('date-fns/format');
 
 const getConfig = require('../../../src/config').getConfig;
 
@@ -20,18 +19,18 @@ exports.seed = function (knex, Promise) {
                 password: bcrypt.hashSync('password', config.bcryptRounds),
                 email: 'admin@example.com',
                 verification_code: 'testing',
-                created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+                created_at: new Date().toJSON()
             }
         ]),
         knex('roles').insert({
             name: 'admin',
             description: 'Can administer the system.',
-            created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+            created_at: new Date().toJSON()
         }),
         knex('user_roles').insert({
             role_id: 1,
             user_id: 1,
-            created_at: dateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+            created_at: new Date().toJSON()
         }),
         knex('oauth_clients').insert([
             {

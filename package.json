@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf ./node_modules && npm install",
     "dev": "cross-env NODE_ENV=development nodemon -w src -e js,ejs,json --exec \"babel-node src/server.js --presets es2015,stage-0\"",
+    "dev:debug": "cross-env NODE_ENV=development DEBUG=* nodemon -w src -e js,ejs,json --exec \"babel-node src/server.js --presets es2015,stage-0\"",
     "build": "babel src -D -d dist --presets es2015,stage-0",
     "start": "node dist/server.js",
     "prestart": "npm run -s build",
