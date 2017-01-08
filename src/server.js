@@ -14,6 +14,7 @@ import cookieParser from 'cookie-parser';
 import responseTime from 'response-time';
 import httpStatusCodes from 'http-status';
 import RateLimit from 'express-rate-limit';
+import addRequestId from 'express-request-id';
 import ConnectSessionKnex from 'connect-session-knex';
 import { setByAccept, validateVersion } from 'express-request-version';
 
@@ -89,6 +90,9 @@ app.use(function (req, res, next) {
 
 // only allow v1 accept header
 app.use(validateVersion(['v1']));
+
+// add a X-Request-Id header to all responses
+app.use(addRequestId());
 
 // internal middleware
 app.use(middleware());

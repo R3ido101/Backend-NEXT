@@ -8,7 +8,7 @@ All of ATLaunchers API endpoints are rate limited. This means that you can only 
 <!-- toc -->
 
 # Limit
-The current limit is 60 requests per 60 seconds.
+The current limit is 60 requests per 60 seconds. This limit is imposed on all calls made including OAuth and Login/Logout calls.
 
 # Headers
 You can view the current number of requests you've used as well as the limit by checking the headers sent back from each API call.
