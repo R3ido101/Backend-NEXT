@@ -2,10 +2,10 @@ import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
-import app from '../../../src/server';
-import knex from '../../../src/db';
+import app from '../../src/server';
+import knex from '../../src/db';
 
-import * as testUtils from '../../utils';
+import * as testUtils from '../utils';
 
 chai.use(chaiHttp);
 

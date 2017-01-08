@@ -41,6 +41,8 @@ This will create a new user in the system.
 ## Responses
 This will return a [user](/docs/models/user) model for the newly created user.
 
+The response will also contain a `Location` header to the location of the newly created resource.
+
 # PUT /users/{id}
 This will update the information for a user in the system.
 

@@ -1,10 +1,14 @@
 import * as httpStatusCode from 'http-status';
 
+import { getConfig } from '../config';
+
 import User from '../models/User';
 import APIError from '../errors/APIError';
 import BaseController from './BaseController';
 
 import { cacheWrap } from '../cache';
+
+const config = getConfig();
 
 class ScopesController extends BaseController {
     /**
@@ -43,7 +47,9 @@ class ScopesController extends BaseController {
         try {
             const user = await User.query().insert(req.body);
 
-            return res.json(user.$omit('password'));
+            const createdResourceUrl = `${config.baseUrl}/users/${user.id}`;
+
+            return res.status(httpStatusCode.CREATED).set('Location', createdResourceUrl).json(user.$omit('password'));
         } catch (errors) {
             return next(new APIError(errors, httpStatusCode.BAD_REQUEST));
         }

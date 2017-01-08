@@ -2,10 +2,10 @@ import chaiHttp from 'chai-http';
 import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
-import app from '../../../src/server';
-import knex from '../../../src/db';
+import app from '../../src/server';
+import knex from '../../src/db';
 
-import * as testUtils from '../../utils';
+import * as testUtils from '../utils';
 
 chai.use(chaiHttp);
 
@@ -353,7 +353,8 @@ describe('Routes: /users', function () {
 
                 const response = await chai.request(app).post('/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
 
-                expect(response).to.have.status(200);
+                expect(response).to.have.status(201);
+                expect(response).to.have.header('Location');
                 expect(response).to.be.json;
 
                 const body = response.body;
