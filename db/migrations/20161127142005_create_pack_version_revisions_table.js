@@ -3,7 +3,7 @@ exports.up = function (knex) {
         // table structure
         table.string('id', 36).primary();
         table.string('pack_version_id', 36).notNullable();
-        table.string('hash', 40).notNullable();
+        table.string('hash', 64).notNullable();
         table.jsonb('json').notNullable();
         table.boolean('is_verified').notNullable().defaultTo(false);
         table.boolean('is_verifying').notNullable().defaultTo(false);

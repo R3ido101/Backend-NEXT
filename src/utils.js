@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 import { addSeconds, addMinutes, addHours, addDays, addMonths, addYears } from 'date-fns';
 
 /**
@@ -177,4 +179,27 @@ export function isValidTimeString(string) {
     }
 
     return minus1 === 'S' || minus1 === 'H' || minus1 === 'D' || minus1 === 'Y';
+}
+
+/**
+ * This will take the message and hash it with SHA256.
+ *
+ * @param {Buffer|String[]|String} message
+ */
+export function sha256(message) {
+    const c = crypto.createHash('sha256');
+
+    if (Buffer.isBuffer(message)) {
+        c.update(message);
+    } else if (Array.isArray(message)) {
+        // Array of byte values
+        c.update(new Buffer(message));
+    } else {
+        // Otherwise, treat as a binary string
+        c.update(new Buffer(message, 'binary'));
+    }
+
+    const buf = c.digest();
+
+    return buf.toString('hex');
 }

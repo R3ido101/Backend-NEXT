@@ -24,14 +24,14 @@ describe('Model: File', function () {
     describe('findById', function () {
         it('should return the data for the given file', async function () {
             const expectedOutput = {
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22,
                 mod_id: null,
                 mod_version_id: null
             };
 
             const created = await File.query().insert({
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
             });
 
@@ -52,14 +52,14 @@ describe('Model: File', function () {
     describe('insert', function () {
         it('should create a file', async function () {
             const expectedOutput = {
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22,
                 mod_id: null,
                 mod_version_id: null
             };
 
             const file = await File.query().insert({
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
             });
 

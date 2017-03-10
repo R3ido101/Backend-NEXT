@@ -1,7 +1,8 @@
-import sha1 from 'sha1';
 import { Model } from 'objection';
 
 import BaseModel from './BaseModel';
+
+import { sha256 } from '../utils';
 
 /**
  * A PackVersionRevision is a single revision of a PackVersion's JSON.
@@ -31,7 +32,7 @@ class PackVersionRevision extends BaseModel {
         properties: {
             id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
             pack_version_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            hash: {type: 'string', minLength: 40, maxLength: 40},
+            hash: {type: 'string', minLength: 64, maxLength: 64},
             json: {type: 'string'},
             is_verified: {type: 'boolean', default: false},
             is_verifying: {type: 'boolean', default: false},
@@ -69,7 +70,7 @@ class PackVersionRevision extends BaseModel {
     $beforeInsert(queryContext) {
         super.$beforeInsert(queryContext);
 
-        this.hash = sha1(this.json);
+        this.hash = sha256(this.json);
     }
 
     /**
@@ -80,7 +81,7 @@ class PackVersionRevision extends BaseModel {
     $beforeUpdate(queryContext) {
         super.$beforeUpdate(queryContext);
 
-        this.hash = sha1(this.json);
+        this.hash = sha256(this.json);
     }
 }
 

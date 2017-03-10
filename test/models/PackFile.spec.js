@@ -26,7 +26,7 @@ describe('Model: PackFile', function () {
     describe('findById', function () {
         it('should return the data for the given pack file', async function () {
             const file = await File.query().insert({
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
             });
 
@@ -65,7 +65,7 @@ describe('Model: PackFile', function () {
     describe('insert', function () {
         it('should create a pack file', async function () {
             const file = await File.query().insert({
-                hash: 'dc724af18fbdd4e59189f5fe768a5f8311527050',
+                hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
             });
 

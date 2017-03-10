@@ -2,7 +2,7 @@ exports.up = function (knex) {
     return knex.schema.createTable('files', function (table) {
         // table structure
         table.string('id', 36).primary();
-        table.string('hash', 40).index().notNullable();
+        table.string('hash', 64).index().notNullable();
         table.integer('size').unsigned().notNullable();
         table.string('mod_id', 36).nullable().defaultTo(null);
         table.string('mod_version_id', 36).nullable().defaultTo(null);

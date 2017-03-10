@@ -49,7 +49,7 @@ describe('Model: PackVersionRevision', function () {
             expect(packVersionRevision).to.have.property('pack_version_id').that.equals(packVersion.id);
 
             expect(packVersionRevision).to.have.property('hash').that.is.a('string');
-            expect(packVersionRevision).to.have.property('hash').that.equals('b20c815bebe41c4773500b3b4688770672454b9b');
+            expect(packVersionRevision).to.have.property('hash').that.equals('80f65706d935d3b928d95207937dd81bad43ab56cd4d3b7ed41772318e734168');
 
             expect(packVersionRevision).to.have.property('json').that.equals('{"test": true}');
 
