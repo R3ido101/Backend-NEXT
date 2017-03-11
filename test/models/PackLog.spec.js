@@ -79,11 +79,7 @@ describe('Model: PackLog', function () {
                 action: 'pack_install'
             });
 
-            const packs = await packLog.$relatedQuery('pack');
-
-            expect(packs).to.be.an('array').with.length(1);
-
-            const pack = packs[0];
+            const pack = await packLog.$relatedQuery('pack');
 
             expect(pack).to.be.an('object');
 
@@ -114,11 +110,7 @@ describe('Model: PackLog', function () {
                 action: 'pack_install'
             });
 
-            const packVersions = await packLog.$relatedQuery('packVersion');
-
-            expect(packVersions).to.be.an('array').with.length(1);
-
-            const packVersion = packVersions[0];
+            const packVersion = await packLog.$relatedQuery('packVersion');
 
             expect(packVersion).to.be.an('object');
 

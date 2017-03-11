@@ -58,7 +58,17 @@ describe('Model: PackTag', function () {
                 pack_id: pack.id
             };
 
-            const expectedError = '"tag": "should match pattern \\"^[A-Za-z0-9-_:]+$\\"';
+            const expectedError = {
+                tag: [
+                    {
+                        message: 'should match pattern "^[A-Za-z0-9-_:]+$"',
+                        keyword: 'pattern',
+                        params: {
+                            pattern: '^[A-Za-z0-9-_:]+$'
+                        }
+                    }
+                ]
+            };
 
             return expect(PackTag.query().insert(input)).to.be.rejectedWith(expectedError);
         });

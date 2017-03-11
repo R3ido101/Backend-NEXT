@@ -83,11 +83,7 @@ describe('Model: PackVersionRevision', function () {
                 pack_version_id: createdPackVersion.id
             });
 
-            const packVersions = await packVersionRevision.$relatedQuery('packVersion');
-
-            expect(packVersions).to.be.an('array').with.length(1);
-
-            const packVersion = packVersions[0];
+            const packVersion = await packVersionRevision.$relatedQuery('packVersion');
 
             expect(packVersion).to.be.an('object');
 

@@ -74,11 +74,7 @@ describe('Model: PackStat', function () {
                 date: '2016-07-07'
             });
 
-            const packs = await packStat.$relatedQuery('pack');
-
-            expect(packs).to.be.an('array').with.length(1);
-
-            const pack = packs[0];
+            const pack = await packStat.$relatedQuery('pack');
 
             expect(pack).to.be.an('object');
 

@@ -45,17 +45,27 @@ describe('Model: LauncherTag', function () {
         });
 
         it('should not allow invalid characters when creating a tag', async function () {
-            await Pack.query().insert({
+            const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
             });
 
             const input = {
                 tag: 'test*',
-                pack_id: 1
+                pack_id: pack.id
             };
 
-            const expectedError = '"tag": "should match pattern \\"^[A-Za-z0-9-_:]+$\\"';
+            const expectedError = {
+                tag: [
+                    {
+                        message: 'should match pattern "^[A-Za-z0-9-_:]+$"',
+                        keyword: 'pattern',
+                        params: {
+                            pattern: '^[A-Za-z0-9-_:]+$'
+                        }
+                    }
+                ]
+            };
 
             return expect(LauncherTag.query().insert(input)).to.be.rejectedWith(expectedError);
         });

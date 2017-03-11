@@ -91,7 +91,17 @@ describe('Model: User', function () {
                 email: 'error'
             };
 
-            const expectedError = '"email": "should match format \\"email\\"';
+            const expectedError = {
+                email: [
+                    {
+                        message: 'should match format "email"',
+                        keyword: 'format',
+                        params: {
+                            format: 'email'
+                        }
+                    }
+                ]
+            };
 
             return expect(User.query().insert(input)).to.be.rejectedWith(expectedError);
         });
@@ -103,7 +113,17 @@ describe('Model: User', function () {
                 email: 'test@example.com'
             };
 
-            const expectedError = '"username": "should NOT be shorter than 3 characters"';
+            const expectedError = {
+                username: [
+                    {
+                        message: 'should NOT be shorter than 3 characters',
+                        keyword: 'minLength',
+                        params: {
+                            limit: 3
+                        }
+                    }
+                ]
+            };
 
             return expect(User.query().insert(input)).to.be.rejectedWith(expectedError);
         });

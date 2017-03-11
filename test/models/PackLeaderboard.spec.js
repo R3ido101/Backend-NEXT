@@ -79,11 +79,7 @@ describe('Model: PackLeaderboard', function () {
                 time_played: 44
             });
 
-            const packs = await packLeaderboard.$relatedQuery('pack');
-
-            expect(packs).to.be.an('array').with.length(1);
-
-            const pack = packs[0];
+            const pack = await packLeaderboard.$relatedQuery('pack');
 
             expect(pack).to.be.an('object');
 
@@ -114,11 +110,7 @@ describe('Model: PackLeaderboard', function () {
                 time_played: 44
             });
 
-            const packVersions = await packLeaderboard.$relatedQuery('packVersion');
-
-            expect(packVersions).to.be.an('array').with.length(1);
-
-            const packVersion = packVersions[0];
+            const packVersion = await packLeaderboard.$relatedQuery('packVersion');
 
             expect(packVersion).to.be.an('object');
 

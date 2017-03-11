@@ -79,11 +79,7 @@ describe('Model: PackVersion', function () {
                 pack_id: pack.id
             });
 
-            const minecraftVersions = await packVersion.$relatedQuery('minecraftVersion');
-
-            expect(minecraftVersions).to.be.an('array').with.length(1);
-
-            const minecraftVersion = minecraftVersions[0];
+            const minecraftVersion = await packVersion.$relatedQuery('minecraftVersion');
 
             expect(minecraftVersion).to.be.an('object');
 
