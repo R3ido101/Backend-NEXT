@@ -42,6 +42,8 @@ app.use(responseTime({
     suffix: false
 }));
 
+console.log(config.session);
+
 // setup sessions
 app.use(session({
     ...config.session,

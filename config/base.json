@@ -7,7 +7,7 @@
         "name": "atlauncher-backend",
         "resave": false,
         "saveUninitialized": false,
-        "secret": "6mVi37A8m0W0A2B3D19RbseKIHepy866",
+        "secret": "change in secret.json",
         "secure": false
     },
     "cache": {

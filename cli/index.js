@@ -1,8 +1,8 @@
 import Vantage from 'vantage';
 import { Model } from 'objection';
 
-import knex from '../db';
-import { getConfig } from '../config';
+import knex from '../src/db';
+import { getConfig } from '../src/config';
 
 const config = getConfig();
 
