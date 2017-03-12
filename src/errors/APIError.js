@@ -24,7 +24,6 @@ class APIError extends ExtendableError {
      *
      * @param {string} error - Error.
      * @param {number} status - HTTP status code of error.
-     * @param {boolean} isPublic - Whether the error should be visible to user or not.
      */
     constructor(error, status = httpStatus.INTERNAL_SERVER_ERROR) {
         super(error, status);

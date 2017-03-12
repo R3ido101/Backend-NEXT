@@ -61,7 +61,11 @@ class BaseModel extends Model {
                                 const errors = {};
 
                                 property.forEach((prop) => {
-                                    errors[prop] = `${prop} is already taken.`;
+                                    errors[prop] = [
+                                        {
+                                            message: `${prop} is already taken.`
+                                        }
+                                    ];
                                 });
 
                                 return reject(new ValidationError(errors));
@@ -75,7 +79,11 @@ class BaseModel extends Model {
                         this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
                             if (row) {
                                 return reject(new ValidationError({
-                                    [property]: `${property} is already taken.`
+                                    [property]: [
+                                        {
+                                            message: `${property} is already taken.`
+                                        }
+                                    ]
                                 }));
                             }
 
@@ -94,10 +102,11 @@ class BaseModel extends Model {
      *   - change the updated_at field if timestamps are enabled
      *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
      *
-     * @param {object} queryContext
+     * @param {ModelOptions} opt
+     * @param {QueryBuilderContext} queryContext
      */
-    $beforeUpdate(queryContext) {
-        super.$beforeUpdate(queryContext);
+    $beforeUpdate(opt, queryContext) {
+        super.$beforeUpdate(opt, queryContext);
 
         if (this.constructor.timestamps) {
             this.updated_at = new Date().toJSON();
@@ -120,7 +129,11 @@ class BaseModel extends Model {
                                 const errors = {};
 
                                 property.forEach((prop) => {
-                                    errors[prop] = `${prop} is already taken.`;
+                                    errors[prop] = [
+                                        {
+                                            message: `${prop} is already taken.`
+                                        }
+                                    ];
                                 });
 
                                 return reject(new ValidationError(errors));
@@ -134,7 +147,11 @@ class BaseModel extends Model {
                         this.constructor.query().select('id').where(property, this[property]).whereNot('id', queryContext.old.id).first().then((row) => {
                             if (row) {
                                 return reject(new ValidationError({
-                                    [property]: `${property} is already taken.`
+                                    [property]: [
+                                        {
+                                            message: `${property} is already taken.`
+                                        }
+                                    ]
                                 }));
                             }
 

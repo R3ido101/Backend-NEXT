@@ -28,7 +28,7 @@ class RolesController extends BaseController {
      * @returns {object}
      */
     static async get(req, res) {
-        return res.json(req.role);
+        return res.json(req.data.role);
     }
 
     /**
@@ -59,7 +59,7 @@ class RolesController extends BaseController {
      */
     static async put(req, res, next) {
         try {
-            const updatedRole = await req.role.$query().patchAndFetch(req.body);
+            const updatedRole = await req.data.role.$query().patchAndFetch(req.body);
 
             return res.json(updatedRole);
         } catch (errors) {
@@ -75,7 +75,7 @@ class RolesController extends BaseController {
      * @returns {object}
      */
     static async delete(req, res) {
-        await req.role.$query().delete();
+        await req.data.role.$query().delete();
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }

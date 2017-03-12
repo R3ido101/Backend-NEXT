@@ -110,10 +110,11 @@ class Pack extends BaseModel {
     /**
      * Before updating make sure we add in the packs safe name.
      *
-     * @param {object} queryContext
+     * @param {ModelOptions} opt
+     * @param {QueryBuilderContext} queryContext
      */
-    $beforeUpdate(queryContext) {
-        super.$beforeUpdate(queryContext);
+    $beforeUpdate(opt, queryContext) {
+        super.$beforeUpdate(opt, queryContext);
 
         this.safe_name = getSafeString(this.name);
     }

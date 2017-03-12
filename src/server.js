@@ -124,7 +124,7 @@ if (environment !== 'test') {
 }
 
 process.on('unhandledRejection', function (reason, p) {
-    console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
+    console.log(`Possibly Unhandled Rejection at: ${p} reason: ${reason}`);
 });
 
 export default app;

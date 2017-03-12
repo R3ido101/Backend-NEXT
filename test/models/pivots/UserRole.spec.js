@@ -48,8 +48,16 @@ describe('Model: UserRole', function () {
             await testUtils.addRoleToUser(role, user);
 
             const expectedOutput = {
-                role_id: 'role_id is already taken.',
-                user_id: 'user_id is already taken.'
+                role_id: [
+                    {
+                        message: 'role_id is already taken.'
+                    }
+                ],
+                user_id: [
+                    {
+                        message: 'user_id is already taken.'
+                    }
+                ]
             };
 
             try {

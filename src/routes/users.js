@@ -23,7 +23,8 @@ export default () => {
         }
 
         // attach the user to the request
-        req.user = user;
+        req.data = req.data || {};
+        req.data.user = user;
 
         return next();
     });
@@ -36,7 +37,8 @@ export default () => {
         }
 
         // attach the role to the request
-        req.role = role;
+        req.data = req.data || {};
+        req.data.role = role;
 
         return next();
     });

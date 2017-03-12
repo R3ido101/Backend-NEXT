@@ -10,7 +10,7 @@ import { cacheWrap } from '../cache';
 
 const config = getConfig();
 
-class ScopesController extends BaseController {
+class UsersController extends BaseController {
     /**
      * This returns all the users for the system.
      *
@@ -32,7 +32,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async get(req, res) {
-        return res.json(req.user.$omit('password'));
+        return res.json(req.data.user.$omit('password'));
     }
 
     /**
@@ -65,7 +65,7 @@ class ScopesController extends BaseController {
      */
     static async put(req, res, next) {
         try {
-            const updatedUser = await req.user.$query().patchAndFetch(req.body);
+            const updatedUser = await req.data.user.$query().patchAndFetch(req.body);
 
             return res.json(updatedUser.$omit('password'));
         } catch (errors) {
@@ -81,7 +81,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async delete(req, res) {
-        await req.user.$query().delete();
+        await req.data.user.$query().delete();
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }
@@ -94,7 +94,7 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async getRole(req, res) {
-        const roles = await req.user.$relatedQuery('roles');
+        const roles = await req.data.user.$relatedQuery('roles');
 
         return res.json(roles);
     }
@@ -108,13 +108,13 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async putRole(req, res, next) {
-        const hasRole = await req.user.$relatedQuery('roles').findById(req.role.id);
+        const hasRole = await req.data.user.$relatedQuery('roles').findById(req.data.role.id);
 
         if (hasRole) {
             return next(new APIError('User already has that role.', httpStatusCode.CONFLICT));
         }
 
-        const roles = await req.user.$relatedQuery('roles').relate(req.role);
+        const roles = await req.data.user.$relatedQuery('roles').relate(req.data.role);
 
         return res.json(roles);
     }
@@ -128,16 +128,16 @@ class ScopesController extends BaseController {
      * @returns {object}
      */
     static async deleteRole(req, res, next) {
-        const hasRole = await req.user.$relatedQuery('roles').findById(req.role.id);
+        const hasRole = await req.data.user.$relatedQuery('roles').findById(req.data.role.id);
 
         if (!hasRole) {
             return next(new APIError('User doesn\'t have that role.', httpStatusCode.NOT_FOUND));
         }
 
-        await req.user.$relatedQuery('roles').unrelate().findById(req.role.id);
+        await req.data.user.$relatedQuery('roles').unrelate().findById(req.data.role.id);
 
         return res.status(httpStatusCode.NO_CONTENT).end();
     }
 }
 
-export default ScopesController;
+export default UsersController;

@@ -103,8 +103,6 @@ class User extends BaseModel {
      * @param {object} queryContext
      */
     $beforeInsert(queryContext) {
-        super.$beforeInsert(queryContext);
-
         if (this.hasOwnProperty('password')) {
             this.password = bcrypt.hashSync(this.password, config.bcryptRounds);
         }
@@ -112,15 +110,18 @@ class User extends BaseModel {
         if (!this.hasOwnProperty('verification_code')) {
             this.verification_code = generateUID(128);
         }
+
+        return super.$beforeInsert(queryContext);
     }
 
     /**
      * Before updating make sure we hash the password if provided.
      *
-     * @param {object} queryContext
+     * @param {ModelOptions} opt
+     * @param {QueryBuilderContext} queryContext
      */
-    $beforeUpdate(queryContext) {
-        super.$beforeUpdate(queryContext);
+    $beforeUpdate(opt, queryContext) {
+        super.$beforeUpdate(opt, queryContext);
 
         if (this.hasOwnProperty('password')) {
             this.password = bcrypt.hashSync(this.password, config.bcryptRounds);

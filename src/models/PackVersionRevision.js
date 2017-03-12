@@ -76,10 +76,11 @@ class PackVersionRevision extends BaseModel {
     /**
      * Before updating make sure we generate the hash.
      *
-     * @param {object} queryContext
+     * @param {ModelOptions} opt
+     * @param {QueryBuilderContext} queryContext
      */
-    $beforeUpdate(queryContext) {
-        super.$beforeUpdate(queryContext);
+    $beforeUpdate(opt, queryContext) {
+        super.$beforeUpdate(opt, queryContext);
 
         this.hash = sha256(this.json);
     }

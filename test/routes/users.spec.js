@@ -123,8 +123,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -167,8 +167,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -221,6 +221,52 @@ describe('Routes: /users', function () {
                 expect(body.password).to.be.undefined;
                 expect(body.email).to.equal('test@example.com');
             });
+
+            it('should return an error when the user cannot be found by their id', function (done) {
+                (async() => {
+                    chai.request(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(404);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(404);
+
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals('User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
+
+                        done();
+                    });
+                })();
+            });
+
+            it('should return an error when the user id is too long', function (done) {
+                (async() => {
+                    chai.request(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                        done(new Error('Response was not an error.'));
+                    }).catch(({response}) => {
+                        expect(response).to.have.status(404);
+                        expect(response).to.be.json;
+
+                        const {body} = response;
+
+                        expect(body).to.be.an('object');
+
+                        expect(body).to.have.property('status').that.is.a('number');
+                        expect(body).to.have.property('status').that.equals(404);
+
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals('User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
+
+                        done();
+                    });
+                })();
+            });
         });
 
         describe('When Unauthenticated', function () {
@@ -260,8 +306,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -304,8 +350,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -404,8 +450,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -448,8 +494,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -551,8 +597,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -595,8 +641,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -685,8 +731,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -729,8 +775,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -832,8 +878,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -876,8 +922,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -979,8 +1025,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -1023,8 +1069,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -1119,8 +1165,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
@@ -1163,8 +1209,8 @@ describe('Routes: /users', function () {
                         expect(body).to.have.property('status').that.is.a('number');
                         expect(body).to.have.property('status').that.equals(403);
 
-                        expect(body).to.have.property('error').that.is.a('string');
-                        expect(body).to.have.property('error').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).to.have.property('message').that.is.a('string');
+                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
