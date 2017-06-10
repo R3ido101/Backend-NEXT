@@ -8,4 +8,4 @@ export default () => {
     routes.get('/*', DocsController.render);
 
     return routes;
-}
+};

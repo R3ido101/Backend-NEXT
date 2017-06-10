@@ -9,4 +9,4 @@ export default () => {
     routes.get('/', passport.authenticate(['bearer', 'anonymous'], {session: false}), RootController.index);
 
     return routes;
-}
+};

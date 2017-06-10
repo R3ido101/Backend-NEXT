@@ -10,4 +10,4 @@ export default () => {
     routes.post('/token', token);
 
     return routes;
-}
+};

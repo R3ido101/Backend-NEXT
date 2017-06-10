@@ -54,4 +54,4 @@ export default () => {
     routes.delete('/:user_id/roles/:role_id', checkScope('admin:write'), UsersController.deleteRole);
 
     return routes;
-}
+};

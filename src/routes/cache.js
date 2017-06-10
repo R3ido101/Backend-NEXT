@@ -13,4 +13,4 @@ export default () => {
     routes.get('/', checkScope('admin:read'), CacheController.index);
 
     return routes;
-}
+};

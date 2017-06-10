@@ -16,15 +16,15 @@ class RootController extends BaseController {
             token: {
                 scopes: req.authInfo.token.scope,
                 created_at: req.authInfo.token.created_at,
-                expires_at: req.authInfo.token.expires_at
+                expires_at: req.authInfo.token.expires_at,
             },
-            user: req.user
+            user: req.user,
         };
 
         return res.json({
             version: req.version,
             authenticated: req.isAuthenticated(),
-            ...extraForSpread
+            ...extraForSpread,
         });
     }
 }

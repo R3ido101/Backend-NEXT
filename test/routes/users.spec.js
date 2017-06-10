@@ -983,8 +983,8 @@ describe('Routes: /users', function () {
 
                 expect(body).to.be.an('object');
 
-                expect(body.name).to.equal('test');
-                expect(body.description).to.equal('test role');
+                expect(body.role_id).to.equal(role.id);
+                expect(body.user_id).to.equal(user.id);
             });
         });
 

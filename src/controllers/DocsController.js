@@ -32,7 +32,9 @@ class DocsController extends BaseController {
                     return res.redirect('/docs/');
                 }
 
-                return res.status(200).send(await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/files/index.md`)));
+                return res.status(200).send(
+                    await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/files/index.md`)),
+                );
             }
 
             if (url.substr(-1) === '/') {
@@ -45,7 +47,9 @@ class DocsController extends BaseController {
                 const indexFile = path.resolve(`${process.cwd()}/docs/files/${url}/index.md`);
 
                 if (!fs.existsSync(indexFile)) {
-                    return res.status(404).send(await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/errors/404.md`)));
+                    return res.status(404).send(
+                        await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/errors/404.md`)),
+                    );
                 }
 
                 return res.redirect(`/docs${req.url}/`);
@@ -53,7 +57,9 @@ class DocsController extends BaseController {
 
             return res.status(200).send(await DocsController.renderMarkdown(file));
         } catch (e) {
-            return res.status(500).send(await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/errors/500.md`)));
+            return res.status(500).send(
+                await DocsController.renderMarkdown(path.resolve(`${process.cwd()}/docs/errors/500.md`)),
+            );
         }
     }
 
@@ -84,7 +90,7 @@ class DocsController extends BaseController {
                 }
 
                 return '';
-            }
+            },
         });
 
         markdown.use(meta);
@@ -95,13 +101,17 @@ class DocsController extends BaseController {
             remarkable.renderer.rules.heading_close = DocsController.headingsCloseParser;
         });
 
-        const contentWithTOC = markdownTOC.insert(content, {open: '', close: '', maxdepth: 3});
+        const contentWithTOC = markdownTOC.insert(content, {
+            open: '',
+            close: '',
+            maxdepth: 3,
+        });
 
         const finalContent = DocsController.replaceVariables(contentWithTOC);
 
         const options = {
-            'content': markdown.render(finalContent),
-            'meta': markdown.meta
+            content: markdown.render(finalContent),
+            meta: markdown.meta,
         };
 
         return await new Promise((resolve, reject) => {
@@ -123,7 +133,7 @@ class DocsController extends BaseController {
      */
     static replaceVariables(content) {
         if (content.indexOf('{{{OAUTH_BASE_URL}}}') !== -1) {
-            content = content.replace(/{{{OAUTH_BASE_URL}}}/g, `${config.baseUrl}/oauth`);
+            return content.replace(/{{{OAUTH_BASE_URL}}}/g, `${config.baseUrl}/oauth`);
         }
 
         return content;
@@ -138,10 +148,12 @@ class DocsController extends BaseController {
      */
     static headingsOpenParser(tokens, idx) {
         if (tokens[idx].hLevel <= 3) {
-            return `<h${tokens[idx].hLevel} id="${DocsController.slugify(tokens[idx + 1].content)}"><a class="heading-anchor" href="#${DocsController.slugify(tokens[idx + 1].content)}">`;
-        } else {
-            return `<h${tokens[idx].hLevel}>`;
+            const slugifiedId = DocsController.slugify(tokens[idx + 1].content);
+
+            return `<h${tokens[idx].hLevel} id="${slugifiedId}"><a class="heading-anchor" href="#${slugifiedId}">`;
         }
+
+        return `<h${tokens[idx].hLevel}>`;
     }
 
     /**
@@ -154,9 +166,9 @@ class DocsController extends BaseController {
     static headingsCloseParser(tokens, idx) {
         if (tokens[idx].hLevel <= 3) {
             return `</a></h${tokens[idx].hLevel}>`;
-        } else {
-            return `</h${tokens[idx].hLevel}>`;
         }
+
+        return `</h${tokens[idx].hLevel}>`;
     }
 
     /**
@@ -166,13 +178,16 @@ class DocsController extends BaseController {
      * @returns {string}
      */
     static slugify(str) {
-        str = DocsController.getTitle(str);
-        str = str.toLowerCase();
-        str = str.split(/ /).join('-');
-        str = str.split(/\t/).join('--');
-        str = str.split(/[|$&`~=\\\/@+*!?({[\]})<>=.,;:'"^]/).join('');
-        str = str.split(/[。？！，、；：“”【】（）〔〕［］﹃﹄“ ”‘’﹁﹂—…－～《》〈〉「」]/).join('');
-        return str;
+        let transformedString = str;
+
+        transformedString = DocsController.getTitle(transformedString);
+        transformedString = transformedString.toLowerCase();
+        transformedString = transformedString.split(/ /).join('-');
+        transformedString = transformedString.split(/\t/).join('--');
+        transformedString = transformedString.split(/[|$&`~=\\/@+*!?({[\]})<>.,;:'"^]/).join('');
+        transformedString = transformedString.split(/[。？！，、；：“”【】（）〔〕［］﹃﹄‘’﹁﹂—…－～《》〈〉「」]/).join('');
+
+        return transformedString;
     }
 
     /**
@@ -183,8 +198,10 @@ class DocsController extends BaseController {
      */
     static getTitle(str) {
         if (/^\[[^\]]+\]\(/.test(str)) {
-            var m = /^\[([^\]]+)\]/.exec(str);
-            if (m) return m[1];
+            const m = /^\[([^\]]+)\]/.exec(str);
+            if (m) {
+                return m[1];
+            }
         }
 
         return str;

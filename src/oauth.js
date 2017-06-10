@@ -41,7 +41,7 @@ server.grant(oauth2orize.grant.code({scopeSeparator: ','}, async function (clien
         user_id: user.id,
         redirect_uri: redirectURI,
         scope: ares.scope,
-        expires_at: addTimeStringToDate(config.oauth.validity.authorization_code)
+        expires_at: addTimeStringToDate(config.oauth.validity.authorization_code),
     };
 
     try {
@@ -64,7 +64,7 @@ server.grant(oauth2orize.grant.token({scopeSeparator: ','}, async function (clie
             client_id: client.id,
             scope: ares.scope,
             access_token: generateUID(60),
-            expires_at: addTimeStringToDate(config.oauth.validity.access_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.access_token),
         });
 
         if (!accessToken) {
@@ -75,7 +75,7 @@ server.grant(oauth2orize.grant.token({scopeSeparator: ','}, async function (clie
             access_token_id: accessToken.id,
             refresh_token: generateUID(60),
             scope: accessToken.scope,
-            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token),
         });
 
         if (!refreshToken) {
@@ -86,7 +86,7 @@ server.grant(oauth2orize.grant.token({scopeSeparator: ','}, async function (clie
             scope: accessToken.scope,
             expires_at: accessToken.expires_at,
             refresh_token: refreshToken.refresh_token,
-            refresh_token_expires_at: refreshToken.expires_at
+            refresh_token_expires_at: refreshToken.expires_at,
         });
     } catch (err) {
         return done(err);
@@ -104,7 +104,7 @@ server.exchange(oauth2orize.exchange.clientCredentials({scopeSeparator: ','}, as
             client_id: client.id,
             scope: scope.join(','),
             access_token: generateUID(60),
-            expires_at: addTimeStringToDate(config.oauth.validity.access_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.access_token),
         });
 
         if (!accessToken) {
@@ -115,7 +115,7 @@ server.exchange(oauth2orize.exchange.clientCredentials({scopeSeparator: ','}, as
             access_token_id: accessToken.id,
             refresh_token: generateUID(60),
             scope: accessToken.scope,
-            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token),
         });
 
         if (!refreshToken) {
@@ -125,70 +125,74 @@ server.exchange(oauth2orize.exchange.clientCredentials({scopeSeparator: ','}, as
         return done(null, accessToken.access_token, refreshToken.refresh_token, {
             scope: accessToken.scope,
             expires_at: accessToken.expires_at,
-            refresh_token_expires_at: refreshToken.expires_at
+            refresh_token_expires_at: refreshToken.expires_at,
         });
     } catch (err) {
         return done(err);
     }
 }));
 
-server.exchange(oauth2orize.exchange.authorizationCode({scopeSeparator: ','}, async function (client, code, redirectURI, done) {
-    try {
-        const authorizationCode = await OAuthAuthorizationCode.query().where({authorization_code: code}).first();
+server.exchange(oauth2orize.exchange.authorizationCode(
+    {scopeSeparator: ','},
+    async function (client, code, redirectURI, done) {
+        try {
+            const authorizationCode = await OAuthAuthorizationCode.query().where({authorization_code: code}).first();
 
-        if (!authorizationCode) {
-            return done(null, false);
-        }
+            if (!authorizationCode) {
+                return done(null, false);
+            }
 
-        if (client.id !== authorizationCode.client_id) {
-            return done(null, false);
-        }
+            if (client.id !== authorizationCode.client_id) {
+                return done(null, false);
+            }
 
-        if (redirectURI !== authorizationCode.redirect_uri) {
-            return done(null, false);
-        }
+            if (redirectURI !== authorizationCode.redirect_uri) {
+                return done(null, false);
+            }
 
-        const expiresAt = parse(authorizationCode.expires_at);
+            const expiresAt = parse(authorizationCode.expires_at);
 
-        if (authorizationCode.revoked || !isFuture(expiresAt)) {
+            if (authorizationCode.revoked || !isFuture(expiresAt)) {
+                await OAuthAuthorizationCode.query().deleteById(authorizationCode.id);
+
+                return done(null, false);
+            }
+
             await OAuthAuthorizationCode.query().deleteById(authorizationCode.id);
-            return done(null, false);
+
+            const accessToken = await OAuthAccessToken.query().insert({
+                user_id: authorizationCode.user_id,
+                client_id: authorizationCode.client_id,
+                scope: authorizationCode.scope,
+                access_token: generateUID(60),
+                expires_at: addTimeStringToDate(config.oauth.validity.access_token),
+            });
+
+            if (!accessToken) {
+                return done(new APIError('Error creating access token.'));
+            }
+
+            const refreshToken = await OAuthRefreshToken.query().insert({
+                access_token_id: accessToken.id,
+                refresh_token: generateUID(60),
+                scope: accessToken.scope,
+                expires_at: addTimeStringToDate(config.oauth.validity.refresh_token),
+            });
+
+            if (!refreshToken) {
+                return done(new APIError('Error creating refresh token.'));
+            }
+
+            return done(null, accessToken.access_token, refreshToken.refresh_token, {
+                scope: accessToken.scope,
+                expires_at: accessToken.expires_at,
+                refresh_token_expires_at: refreshToken.expires_at,
+            });
+        } catch (err) {
+            return done(err);
         }
-
-        await OAuthAuthorizationCode.query().deleteById(authorizationCode.id);
-
-        const accessToken = await OAuthAccessToken.query().insert({
-            user_id: authorizationCode.user_id,
-            client_id: authorizationCode.client_id,
-            scope: authorizationCode.scope,
-            access_token: generateUID(60),
-            expires_at: addTimeStringToDate(config.oauth.validity.access_token)
-        });
-
-        if (!accessToken) {
-            return done(new APIError('Error creating access token.'));
-        }
-
-        const refreshToken = await OAuthRefreshToken.query().insert({
-            access_token_id: accessToken.id,
-            refresh_token: generateUID(60),
-            scope: accessToken.scope,
-            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
-        });
-
-        if (!refreshToken) {
-            return done(new APIError('Error creating refresh token.'));
-        }
-
-        return done(null, accessToken.access_token, refreshToken.refresh_token, {
-            scope: accessToken.scope,
-            expires_at: accessToken.expires_at,
-            refresh_token_expires_at: refreshToken.expires_at
-        });
-    } catch (err) {
-        return done(err);
-    }
-}));
+    },
+));
 
 server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async function (client, code, scope, done) {
     try {
@@ -210,11 +214,13 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
 
         if (oldRefreshToken.revoked) {
             await OAuthRefreshToken.query().deleteById(oldRefreshToken.id);
+
             return done(new APIError('Refresh token has been revoked.'));
         }
 
         if (!isFuture(expiresAt)) {
             await OAuthRefreshToken.query().deleteById(oldRefreshToken.id);
+
             return done(new APIError('Refresh token has expired.'));
         }
 
@@ -228,7 +234,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
             client_id: oldAccessToken.client_id,
             scope: oldAccessToken.scope.join(','),
             access_token: generateUID(60),
-            expires_at: addTimeStringToDate(config.oauth.validity.access_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.access_token),
         });
 
         if (!accessToken) {
@@ -239,7 +245,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
             access_token_id: accessToken.id,
             refresh_token: generateUID(60),
             scope: accessToken.scope,
-            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token)
+            expires_at: addTimeStringToDate(config.oauth.validity.refresh_token),
         });
 
         if (!refreshToken) {
@@ -249,7 +255,7 @@ server.exchange(oauth2orize.exchange.refreshToken({scopeSeparator: ','}, async f
         return done(null, accessToken.access_token, refreshToken.refresh_token, {
             scope: accessToken.scope,
             expires_at: accessToken.expires_at,
-            refresh_token_expires_at: refreshToken.expires_at
+            refresh_token_expires_at: refreshToken.expires_at,
         });
     } catch (err) {
         return done(err);
@@ -262,7 +268,7 @@ export const authorization = [
         try {
             const client = await OAuthClient.query().where({
                 client_id: clientID,
-                redirect_uri: redirectURI
+                redirect_uri: redirectURI,
             }).first();
 
             if (!client) {
@@ -288,22 +294,22 @@ export const authorization = [
             user: req.user,
             scopes,
             scopeString: scope.join(','),
-            client: req.oauth2.client
+            client: req.oauth2.client,
         });
-    }
+    },
 ];
 
 export const decision = [
     login.ensureLoggedIn('/auth/login'),
     server.decision((req, done) => {
         done(null, {scope: req.body.scope});
-    })
+    }),
 ];
 
 export const token = [
     passport.authenticate(['oauth2-client-password'], {session: false}),
     server.token(),
-    server.errorHandler()
+    server.errorHandler(),
 ];
 
 export default server;

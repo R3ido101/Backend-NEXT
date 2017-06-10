@@ -12,17 +12,6 @@ const config = getConfig();
 export const store = config.cache.type === 'memory' ? 'memory' : require(`cache-manager-${config.cache.type}`);
 
 /**
- * The cache instance.
- *
- * @type {object}
- */
-export const cache = cacheManager.caching({
-    store,
-    ...config.cache.options,
-    isCacheableValue
-});
-
-/**
  * Determines if the value can be cached or not.
  *
  * Does some basic checking on the value to check it's set and disabled caching for the test environment.
@@ -31,30 +20,19 @@ export const cache = cacheManager.caching({
  * @returns {boolean}
  */
 function isCacheableValue(value) {
-    return environment !== 'test' && value !== null && value !== false && value !== undefined;
+    return environment !== 'test' && value !== null && value !== false;
 }
 
 /**
- * This is used to wrap a function up and cache the result based on the set cache rules.
+ * The cache instance.
  *
- * @param {object} req
- * @param {function} func
- * @param {string} [postfix]
+ * @type {object}
  */
-export async function cacheWrap(req, func, postfix = '') {
-    if (postfix) {
-        postfix = ` - ${postfix}`;
-    }
-
-    const ttl = getTTL(req);
-    const name = `${req.method} ${req.baseUrl}${postfix}`;
-
-    if (req.method !== 'GET') {
-        return await func();
-    }
-
-    return await cache.wrap(name, func, {ttl});
-}
+export const cache = cacheManager.caching({
+    store,
+    ...config.cache.options,
+    isCacheableValue,
+});
 
 /**
  * This will get the TTL configured based on if the user is logged in and their roles.
@@ -76,4 +54,25 @@ function getTTL(req) {
     }
 
     return config.cache.ttl.user;
+}
+
+/**
+ * This is used to wrap a function up and cache the result based on the set cache rules.
+ *
+ * @param {object} req
+ * @param {function} func
+ * @param {string} [postfix='']
+ * @returns {*}
+ */
+export async function cacheWrap(req, func, postfix = '') {
+    const postfixToUse = postfix && ` - ${postfix}`;
+
+    const ttl = getTTL(req);
+    const name = `${req.method} ${req.baseUrl}${postfixToUse}`;
+
+    if (req.method !== 'GET') {
+        return await func();
+    }
+
+    return await cache.wrap(name, func, {ttl});
 }

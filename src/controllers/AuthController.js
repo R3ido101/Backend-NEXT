@@ -20,7 +20,6 @@ class AuthController extends BaseController {
      *
      * @param {object} req
      * @param {object} res
-     * @returns {object}
      */
     static logout(req, res) {
         const redirectUrl = req.header('Referer') || '/';

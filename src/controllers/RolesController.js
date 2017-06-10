@@ -27,7 +27,7 @@ class RolesController extends BaseController {
      * @param {object} res
      * @returns {object}
      */
-    static async get(req, res) {
+    static get(req, res) {
         return res.json(req.data.role);
     }
 

@@ -20,7 +20,7 @@ export default (app) => {
     // documentation routes
     app.use('/docs', docsRoutes());
 
-    // BELOW ARE ROUTES FOR THE ACTUAL API CALLS
+    // bELOW ARE ROUTES FOR THE ACTUAL API CALLS
 
     // cache routes
     app.use('/cache', cacheRoutes());
@@ -33,4 +33,4 @@ export default (app) => {
 
     // users routes
     app.use('/users', usersRoutes());
-}
+};

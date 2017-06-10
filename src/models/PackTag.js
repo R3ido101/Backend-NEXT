@@ -9,7 +9,7 @@ import BaseModel from './BaseModel';
  *
  * Tags can only consist of letters, numbers, dashes, underscores and colons.
  *
- * @extends ./BaseModel
+ * @extends BaseModel
  */
 class PackTag extends BaseModel {
     static tableName = 'pack_tags';
@@ -24,11 +24,29 @@ class PackTag extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            tag: {type: 'string', minLength: 3, maxLength: 128, pattern: '^[A-Za-z0-9-_:]+$'},
-            pack_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            created_at: {type: 'string', format: 'date-time'}
-        }
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            tag: {
+                type: 'string',
+                minLength: 3,
+                maxLength: 128,
+                pattern: '^[A-Za-z0-9-_:]+$',
+            },
+            pack_id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+        },
     };
 
     static relationMappings = {
@@ -37,9 +55,9 @@ class PackTag extends BaseModel {
             modelClass: `${__dirname}/Pack`,
             join: {
                 from: 'pack_tags.pack_id',
-                to: 'packs.id'
-            }
-        }
+                to: 'packs.id',
+            },
+        },
     };
 }
 

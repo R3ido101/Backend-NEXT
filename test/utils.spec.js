@@ -135,42 +135,42 @@ describe('Utils', function () {
             const date = new Date();
             const expectedOutput = dateFns.addSeconds(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1S')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1S', date)).to.deep.equal(expectedOutput);
         });
 
         it('should add 1 minute to the given date', async function () {
             const date = new Date();
             const expectedOutput = dateFns.addMinutes(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1MI')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1MI', date)).to.deep.equal(expectedOutput);
         });
 
         it('should add 1 hour to the given date', async function () {
             const date = new Date();
             const expectedOutput = dateFns.addHours(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1H')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1H', date)).to.deep.equal(expectedOutput);
         });
 
         it('should add 1 day to the given date', async function () {
             const date = new Date();
             const expectedOutput = dateFns.addDays(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1D')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1D', date)).to.deep.equal(expectedOutput);
         });
 
         it('should add 1 month to the given date', async function () {
             const date = new Date();
             const expectedOutput = dateFns.addMonths(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1MO')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1MO', date)).to.deep.equal(expectedOutput);
         });
 
         it('should add 1 year to the given date', async function () {
             const date = new Date();
             const expectedOutput = dateFns.addYears(date, 1);
 
-            expect(utils.addTimeStringToDate(date, '1Y')).to.deep.equal(expectedOutput);
+            expect(utils.addTimeStringToDate('1Y', date)).to.deep.equal(expectedOutput);
         });
     });
 });

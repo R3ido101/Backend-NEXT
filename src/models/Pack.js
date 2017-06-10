@@ -5,12 +5,13 @@ import BaseModel from './BaseModel';
 import { getSafeString } from '../utils';
 
 /**
- * Packs are self explanatory. Packs must have a unique name and a unique safe name (removing all non alphanumeric characters, dashes and underscores).
+ * Packs are self explanatory. Packs must have a unique name and a unique safe name (removing all non alphanumeric
+ * characters, dashes and underscores).
  *
  * All packs are public and rely on launcher tags to distinguish packs on the launcher.
  *
- * @see ./LauncherTag
- * @extends ./BaseModel
+ * @see LauncherTag
+ * @extends BaseModel
  */
 class Pack extends BaseModel {
     static tableName = 'packs';
@@ -25,17 +26,55 @@ class Pack extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            name: {type: 'string', minLength: 3, maxLength: 255},
-            safe_name: {type: 'string', minLength: 3, maxLength: 255},
-            description: {type: ['string', 'null'], minLength: 3, default: null},
-            position: {type: 'integer', minimum: 1},
-            is_disabled: {type: 'boolean', default: false},
-            discord_invite_code: {type: 'string', minLength: 8, maxLength: 32},
-            created_at: {type: 'string', format: 'date-time'},
-            updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
-            disabled_at: {type: ['string', 'null'], format: 'date-time', default: null}
-        }
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            name: {
+                type: 'string',
+                minLength: 3,
+                maxLength: 255,
+            },
+            safe_name: {
+                type: 'string',
+                minLength: 3,
+                maxLength: 255,
+            },
+            description: {
+                type: ['string', 'null'],
+                minLength: 3,
+                default: null,
+            },
+            position: {
+                type: 'integer',
+                minimum: 1,
+            },
+            is_disabled: {
+                type: 'boolean',
+                default: false,
+            },
+            discord_invite_code: {
+                type: 'string',
+                minLength: 8,
+                maxLength: 32,
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+            updated_at: {
+                type: ['string', 'null'],
+                format: 'date-time',
+                default: null,
+            },
+            disabled_at: {
+                type: ['string', 'null'],
+                format: 'date-time',
+                default: null,
+            },
+        },
     };
 
     static relationMappings = {
@@ -44,32 +83,32 @@ class Pack extends BaseModel {
             modelClass: `${__dirname}/LauncherTag`,
             join: {
                 from: 'packs.id',
-                to: 'launcher_tags.pack_id'
-            }
+                to: 'launcher_tags.pack_id',
+            },
         },
         packLeaderboards: {
             relation: Model.HasManyRelation,
             modelClass: `${__dirname}/PackLeaderboard`,
             join: {
                 from: 'packs.id',
-                to: 'pack_leaderboards.pack_id'
-            }
+                to: 'pack_leaderboards.pack_id',
+            },
         },
         packLogs: {
             relation: Model.HasManyRelation,
             modelClass: `${__dirname}/PackLog`,
             join: {
                 from: 'packs.id',
-                to: 'pack_logs.pack_id'
-            }
+                to: 'pack_logs.pack_id',
+            },
         },
         packTags: {
             relation: Model.HasManyRelation,
             modelClass: `${__dirname}/PackTag`,
             join: {
                 from: 'packs.id',
-                to: 'pack_tags.pack_id'
-            }
+                to: 'pack_tags.pack_id',
+            },
         },
         users: {
             relation: Model.ManyToManyRelation,
@@ -79,11 +118,11 @@ class Pack extends BaseModel {
                 through: {
                     from: 'pack_users.pack_id',
                     to: 'pack_users.user_id',
-                    modelClass: `${__dirname}/pivots/PackUser`
+                    modelClass: `${__dirname}/pivots/PackUser`,
                 },
-                to: 'users.id'
-            }
-        }
+                to: 'users.id',
+            },
+        },
     };
 
     /**
@@ -125,7 +164,7 @@ class Pack extends BaseModel {
      * @type {object}
      */
     static transforms = {
-        is_disabled: (input) => (!!input)
+        is_disabled: (input) => (!!input),
     };
 }
 

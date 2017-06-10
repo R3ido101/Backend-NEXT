@@ -30,7 +30,7 @@ export default (app) => {
             status: statusCode,
             message,
             ...validation,
-            ...stacktrace
+            ...stacktrace,
         });
     });
 };

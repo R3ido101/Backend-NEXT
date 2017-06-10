@@ -9,12 +9,31 @@ class OAuthScope extends BaseModel {
         required: ['name', 'description'],
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            name: {type: 'string', minLength: 3, maxLength: 255},
-            description: {type: 'string', minLength: 3},
-            created_at: {type: 'string', format: 'date-time'},
-            updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
-        }
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            name: {
+                type: 'string',
+                minLength: 3,
+                maxLength: 255,
+            },
+            description: {
+                type: 'string',
+                minLength: 3,
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+            updated_at: {
+                type: ['string', 'null'],
+                format: 'date-time',
+                default: null,
+            },
+        },
     };
 
     /**
@@ -31,9 +50,9 @@ class OAuthScope extends BaseModel {
         const validScopes = await this.query().select('name');
 
         // get all the invalid scopes
-        const invalidScopes = scopes.filter((scope) => {
-            return (validScopes.filter((validScope) => (validScope.name === scope)).length === 0);
-        });
+        const invalidScopes = scopes.filter((scope) => (
+            validScopes.filter((validScope) => (validScope.name === scope)).length === 0
+        ));
 
         // if there are any invalid scopes, then return false
         return invalidScopes.length === 0;

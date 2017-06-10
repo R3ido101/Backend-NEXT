@@ -29,9 +29,11 @@ class BaseModel extends Model {
      *
      * It will:
      *   - add the created_at field if timestamps are enabled
-     *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
+     *   - check to make sure there are no duplicates values in the database as defined in the
+     *     jsonSchema.uniqueProperties value
      *
      * @param {object} queryContext
+     * @returns {*}
      */
     $beforeInsert(queryContext) {
         super.$beforeInsert(queryContext);
@@ -46,53 +48,53 @@ class BaseModel extends Model {
 
         const uniqueProperties = this.constructor.jsonSchema && this.constructor.jsonSchema.uniqueProperties || [];
 
-        return Promise.all(uniqueProperties.map((property) => {
-            return new Promise((resolve, reject) => {
-                if (Array.isArray(property)) {
-                    if (property.every((prop) => (this.hasOwnProperty(prop)))) {
-                        const whereConditions = {};
+        return Promise.all(uniqueProperties.map((property) => new Promise((resolve, reject) => {
+            if (Array.isArray(property)) {
+                if (property.every((prop) => (this.hasOwnProperty(prop)))) {
+                    // eslint-disable-next-line prefer-const
+                    let whereConditions = {};
 
-                        property.forEach((prop) => {
-                            whereConditions[prop] = this[prop];
-                        });
+                    property.forEach((prop) => {
+                        whereConditions[prop] = this[prop];
+                    });
 
-                        this.constructor.query().select('id').where(whereConditions).first().then((row) => {
-                            if (row) {
-                                const errors = {};
+                    // eslint-disable-next-line promise/prefer-await-to-then
+                    this.constructor.query().select('id').where(whereConditions).first().then((row) => {
+                        if (row) {
+                            // eslint-disable-next-line prefer-const
+                            let errors = {};
 
-                                property.forEach((prop) => {
-                                    errors[prop] = [
-                                        {
-                                            message: `${prop} is already taken.`
-                                        }
-                                    ];
-                                });
+                            property.forEach((prop) => {
+                                errors[prop] = [
+                                    {
+                                        message: `${prop} is already taken.`,
+                                    },
+                                ];
+                            });
 
-                                return reject(new ValidationError(errors));
-                            }
+                            return reject(new ValidationError(errors));
+                        }
 
-                            return resolve();
-                        }).catch(reject);
-                    }
-                } else {
-                    if (this.hasOwnProperty(property)) {
-                        this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
-                            if (row) {
-                                return reject(new ValidationError({
-                                    [property]: [
-                                        {
-                                            message: `${property} is already taken.`
-                                        }
-                                    ]
-                                }));
-                            }
-
-                            return resolve();
-                        }).catch(reject);
-                    }
+                        return resolve();
+                    }).catch(reject);
                 }
-            });
-        }));
+            } else if (this.hasOwnProperty(property)) {
+                // eslint-disable-next-line promise/prefer-await-to-then
+                this.constructor.query().select('id').where(property, this[property]).first().then((row) => {
+                    if (row) {
+                        return reject(new ValidationError({
+                            [property]: [
+                                {
+                                    message: `${property} is already taken.`,
+                                },
+                            ],
+                        }));
+                    }
+
+                    return resolve();
+                }).catch(reject);
+            }
+        })));
     }
 
     /**
@@ -100,10 +102,12 @@ class BaseModel extends Model {
      *
      * It will:
      *   - change the updated_at field if timestamps are enabled
-     *   - check to make sure there are no duplicates values in the database as defined in the jsonSchema.uniqueProperties value
+     *   - check to make sure there are no duplicates values in the database as defined in the
+     *     jsonSchema.uniqueProperties value
      *
      * @param {ModelOptions} opt
      * @param {QueryBuilderContext} queryContext
+     * @returns {*}
      */
     $beforeUpdate(opt, queryContext) {
         super.$beforeUpdate(opt, queryContext);
@@ -114,25 +118,30 @@ class BaseModel extends Model {
 
         const uniqueProperties = this.constructor.jsonSchema && this.constructor.jsonSchema.uniqueProperties || [];
 
-        return Promise.all(uniqueProperties.map((property) => {
-            return new Promise((resolve, reject) => {
-                if (Array.isArray(property)) {
-                    if (property.every((prop) => (this.hasOwnProperty(prop)))) {
-                        const whereConditions = {};
+        return Promise.all(uniqueProperties.map((property) => new Promise((resolve, reject) => {
+            if (Array.isArray(property)) {
+                if (property.every((prop) => (this.hasOwnProperty(prop)))) {
+                    const whereConditions = {};
 
-                        property.forEach((prop) => {
-                            whereConditions[prop] = this[prop];
-                        });
+                    property.forEach((prop) => {
+                        whereConditions[prop] = this[prop];
+                    });
 
-                        this.constructor.query().select('id').where(whereConditions).whereNot('id', queryContext.old.id).first().then((row) => {
+                    this.constructor.query()
+                        .select('id')
+                        .where(whereConditions)
+                        .whereNot('id', queryContext.old.id)
+                        .first()
+                        // eslint-disable-next-line promise/prefer-await-to-then
+                        .then((row) => {
                             if (row) {
                                 const errors = {};
 
                                 property.forEach((prop) => {
                                     errors[prop] = [
                                         {
-                                            message: `${prop} is already taken.`
-                                        }
+                                            message: `${prop} is already taken.`,
+                                        },
                                     ];
                                 });
 
@@ -141,26 +150,29 @@ class BaseModel extends Model {
 
                             return resolve();
                         }).catch(reject);
-                    }
-                } else {
-                    if (this.hasOwnProperty(property)) {
-                        this.constructor.query().select('id').where(property, this[property]).whereNot('id', queryContext.old.id).first().then((row) => {
-                            if (row) {
-                                return reject(new ValidationError({
-                                    [property]: [
-                                        {
-                                            message: `${property} is already taken.`
-                                        }
-                                    ]
-                                }));
-                            }
-
-                            return resolve();
-                        }).catch(reject);
-                    }
                 }
-            });
-        }));
+            } else if (this.hasOwnProperty(property)) {
+                this.constructor.query()
+                    .select('id')
+                    .where(property, this[property])
+                    .whereNot('id', queryContext.old.id)
+                    .first()
+                    // eslint-disable-next-line promise/prefer-await-to-then
+                    .then((row) => {
+                        if (row) {
+                            return reject(new ValidationError({
+                                [property]: [
+                                    {
+                                        message: `${property} is already taken.`,
+                                    },
+                                ],
+                            }));
+                        }
+
+                        return resolve();
+                    }).catch(reject);
+            }
+        })));
     }
 
     /**
@@ -170,15 +182,16 @@ class BaseModel extends Model {
      * @returns {object}
      */
     $parseDatabaseJson(json) {
-        json = super.$parseDatabaseJson.call(this, json);
+        // eslint-disable-next-line prefer-const
+        let parsedJson = super.$parseDatabaseJson.call(this, json);
 
         Object.keys(this.constructor.transforms).forEach((key) => {
-            if (json.hasOwnProperty(key)) {
-                json[key] = this.constructor.transforms[key](json[key]);
+            if (parsedJson.hasOwnProperty(key)) {
+                parsedJson[key] = this.constructor.transforms[key](parsedJson[key]);
             }
         });
 
-        return json;
+        return parsedJson;
     }
 }
 

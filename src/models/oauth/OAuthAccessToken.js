@@ -10,16 +10,48 @@ class OAuthAccessToken extends BaseModel {
         required: ['user_id', 'client_id', 'access_token', 'scope', 'expires_at'],
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            user_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            client_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            access_token: {type: 'string', minLength: 60, maxLength: 60},
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            user_id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            client_id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            access_token: {
+                type: 'string',
+                minLength: 60,
+                maxLength: 60,
+            },
             scope: {type: 'string'},
-            revoked: {type: 'boolean', default: false},
-            created_at: {type: 'string', format: 'date-time'},
-            updated_at: {type: ['string', 'null'], format: 'date-time', default: null},
-            expires_at: {type: 'string', format: 'date-time'}
-        }
+            revoked: {
+                type: 'boolean',
+                default: false,
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+            updated_at: {
+                type: ['string', 'null'],
+                format: 'date-time',
+                default: null,
+            },
+            expires_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+        },
     };
 
     static relationMappings = {
@@ -28,25 +60,25 @@ class OAuthAccessToken extends BaseModel {
             modelClass: `${__dirname}/OAuthClient`,
             join: {
                 from: 'oauth_access_tokens.user_id',
-                to: 'oauth_clients.id'
-            }
+                to: 'oauth_clients.id',
+            },
         },
         refresh_token: {
             relation: Model.HasOneRelation,
             modelClass: `${__dirname}/OAuthRefreshToken`,
             join: {
                 from: 'oauth_access_tokens.id',
-                to: 'oauth_refresh_tokens.refresh_token_id'
-            }
+                to: 'oauth_refresh_tokens.refresh_token_id',
+            },
         },
         user: {
             relation: Model.HasOneRelation,
             modelClass: `${__dirname}/../User`,
             join: {
                 from: 'oauth_access_tokens.user_id',
-                to: 'users.id'
-            }
-        }
+                to: 'users.id',
+            },
+        },
     };
 
     /**
@@ -56,7 +88,7 @@ class OAuthAccessToken extends BaseModel {
      */
     static transforms = {
         revoked: (input) => (!!input),
-        scope: (input) => (input.split(','))
+        scope: (input) => (input.split(',')),
     };
 
     /**
@@ -67,13 +99,14 @@ class OAuthAccessToken extends BaseModel {
      * @returns {object}
      */
     $parseJson(json, opt) {
-        json = super.$parseJson(json, opt);
+        // eslint-disable-next-line prefer-const
+        let updatedJson = super.$parseJson(json, opt);
 
-        if (json.expires_at && typeof json.expires_at !== 'string' && typeof json.expires_at.toJSON === 'function') {
-            json.expires_at = json.expires_at.toJSON();
+        if (typeof updatedJson.expires_at !== 'string' && typeof updatedJson.expires_at.toJSON === 'function') {
+            updatedJson.expires_at = updatedJson.expires_at.toJSON();
         }
 
-        return json;
+        return updatedJson;
     }
 
     /**

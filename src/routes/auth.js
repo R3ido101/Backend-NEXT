@@ -7,8 +7,10 @@ export default () => {
     const routes = Router();
 
     routes.get('/login', AuthController.login);
-    routes.post('/login', passport.authenticate('local', {successReturnToOrRedirect: '/', failureRedirect: '/login', failureFlash: true}));
+    routes.post('/login', passport.authenticate('local', {successReturnToOrRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true}));
     routes.get('/logout', AuthController.logout);
 
     return routes;
-}
+};

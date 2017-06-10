@@ -7,8 +7,8 @@ import BaseModel from './BaseModel';
  *
  * A mod has many different versions.
  *
- * @see ./ModVersion
- * @extends ./BaseModel
+ * @see ModVersion
+ * @extends BaseModel
  */
 class Mod extends BaseModel {
     static tableName = 'mods';
@@ -21,19 +21,55 @@ class Mod extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            name: {type: 'string', maxLength: 255},
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            name: {
+                type: 'string',
+                maxLength: 255,
+            },
             description: {type: 'string'},
-            authors: {type: 'array', items: {type: 'string'}},
-            license: {type: ['string', 'null'], default: null},
-            website_url: {type: ['string', 'null'], default: null},
-            source_url: {type: ['string', 'null'], default: null},
-            issues_url: {type: ['string', 'null'], default: null},
-            wiki_url: {type: ['string', 'null'], default: null},
-            donation_url: {type: ['string', 'null'], default: null},
-            created_at: {type: 'string', format: 'date-time'},
-            updated_at: {type: ['string', 'null'], format: 'date-time', default: null}
-        }
+            authors: {
+                type: 'array',
+                items: {type: 'string'},
+            },
+            license: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            website_url: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            source_url: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            issues_url: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            wiki_url: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            donation_url: {
+                type: ['string', 'null'],
+                default: null,
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+            updated_at: {
+                type: ['string', 'null'],
+                format: 'date-time',
+                default: null,
+            },
+        },
     };
 
     static relationMappings = {
@@ -42,9 +78,9 @@ class Mod extends BaseModel {
             modelClass: `${__dirname}/ModVersion`,
             join: {
                 from: 'mods.id',
-                to: 'mod_versions.mod_id'
-            }
-        }
+                to: 'mod_versions.mod_id',
+            },
+        },
     };
 }
 

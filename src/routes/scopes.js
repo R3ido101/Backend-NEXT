@@ -8,4 +8,4 @@ export default () => {
     routes.get('/', ScopesController.index);
 
     return routes;
-}
+};

@@ -14,7 +14,7 @@ const secret = (fs.existsSync('../config/secret.json') ? require('../config/secr
 const config = {
     test: mergeDeep(base, test, (secret.all || {}), (secret.test || {})),
     development: mergeDeep(base, development, (secret.all || {}), (secret.development || {})),
-    production: mergeDeep(base, production, (secret.all || {}), (secret.production || {}))
+    production: mergeDeep(base, production, (secret.all || {}), (secret.production || {})),
 };
 
 /**
@@ -29,5 +29,5 @@ function getConfig() {
 module.exports = {
     environment,
     getConfig,
-    config
+    config,
 };

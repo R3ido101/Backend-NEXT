@@ -7,9 +7,9 @@ import BaseModel from '../BaseModel';
  *
  * Users can only have one of the same role.
  *
- * @see ../Role
- * @see ../User
- * @extends ./BaseModel
+ * @see Role
+ * @see User
+ * @extends BaseModel
  */
 class UserRole extends BaseModel {
     static tableName = 'user_roles';
@@ -24,11 +24,29 @@ class UserRole extends BaseModel {
         additionalProperties: false,
 
         properties: {
-            id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            role_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            user_id: {type: 'string', minLength: 36, maxLength: 36, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'},
-            created_at: {type: 'string', format: 'date-time'}
-        }
+            id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            role_id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            user_id: {
+                type: 'string',
+                minLength: 36,
+                maxLength: 36,
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            },
+            created_at: {
+                type: 'string',
+                format: 'date-time',
+            },
+        },
     };
 
     static relationMappings = {
@@ -37,17 +55,17 @@ class UserRole extends BaseModel {
             modelClass: `${__dirname}/../Role`,
             join: {
                 from: 'user_roles.role_id',
-                to: 'roles.id'
-            }
+                to: 'roles.id',
+            },
         },
         user: {
             relation: Model.BelongsToOneRelation,
             modelClass: `${__dirname}/../User`,
             join: {
                 from: 'user_roles.user_id',
-                to: 'users.id'
-            }
-        }
+                to: 'users.id',
+            },
+        },
     };
 }
 

@@ -48,7 +48,8 @@ export function setupAuth() {
 
     passport.use(new ClientPasswordStrategy(async function (clientId, clientSecret, done) {
         try {
-            const client = await OAuthClient.query().where({client_id: clientId, client_secret: clientSecret}).first();
+            const client = await OAuthClient.query().where({client_id: clientId,
+                client_secret: clientSecret}).first();
 
             if (!client) {
                 return done(null, false);
@@ -72,6 +73,7 @@ export function setupAuth() {
 
             if (token.revoked || !isFuture(expiresAt)) {
                 await OAuthAccessToken.query().deleteById(token.id);
+
                 return done(null, false);
             }
 
