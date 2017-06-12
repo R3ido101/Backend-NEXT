@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 6.9.5
+    version: 8
 
 dependencies:
   pre:
@@ -10,7 +10,6 @@ dependencies:
     - npm run build
   cache_directories:
     - "node_modules"
-    - /opt/circleci/nodejs/v6.9.5/lib/node_modules
 
 test:
   override:
