@@ -2,9 +2,14 @@ const fs = require('fs');
 const mergeDeep = require('merge-deep');
 
 const base = require('../config/base.json');
-const test = require('../config/test.json');
 const production = require('../config/production.json');
 const development = require('../config/development.json');
+
+const test = (
+    fs.existsSync('../config/test.json') ?
+        require('../config/test.json') :
+        require('../config/test.js')()
+);
 
 const environment = process.env.NODE_ENV || 'development';
 

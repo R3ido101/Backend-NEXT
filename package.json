@@ -17,9 +17,9 @@
     "prestart": "npm run -s build",
     "seed": "knex seed:run",
     "start": "node dist/server.js",
-    "test": "cross-env NODE_ENV=test jest -i",
+    "test": "cross-env NODE_ENV=test jest",
     "test:clean": "rimraf ./db/test.sqlite3",
-    "test:watch": "cross-env NODE_ENV=test jest -i --watch"
+    "test:watch": "cross-env NODE_ENV=test jest --watch"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,11 @@
   "jest": {
     "bail": true,
     "testEnvironment": "node",
-    "coverageDirectory": "coverage"
+    "coverageDirectory": "coverage",
+    "testMatch": [
+      "**/__tests__/**/*.js?(x)",
+      "**/?(*.)(spec).js?(x)"
+    ]
   },
   "homepage": "https://github.com/ATLauncher/Backend-NEXT#readme",
   "dependencies": {
@@ -109,6 +113,7 @@
     "eslint-plugin-react": "^7.1.0",
     "eslint-watch": "^3.1.2",
     "faker": "^4.1.0",
+    "freeport": "^1.0.5",
     "husky": "^0.14.0",
     "jest": "^20.0.4",
     "knex-cleaner": "^1.1.3",
