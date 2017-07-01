@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -7,23 +6,19 @@ import knex from '../../src/db';
 import Pack from '../../src/models/Pack';
 import PackStat from '../../src/models/PackStat';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: PackStat', function () {
-    before(function (done) {
+describe('Model: PackStat', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('insert', function () {
-        it('should create a pack stat', async function () {
+    describe('insert', () => {
+        it('should create a pack stat', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -35,35 +30,20 @@ describe('Model: PackStat', function () {
                 pack_installs: 1234
             });
 
-            expect(packStat).to.be.an('object');
-
-            expect(packStat).to.have.property('id').that.is.a('string');
-
-            expect(packStat).to.have.property('pack_id').that.is.a('string');
-            expect(packStat).to.have.property('pack_id').that.equals(pack.id);
-
-            expect(packStat).to.have.property('date').that.is.a('string');
-            expect(packStat).to.have.property('date').that.equals('2016-07-07');
-
-            expect(packStat).to.have.property('pack_installs').that.is.a('number');
-            expect(packStat).to.have.property('pack_installs').that.equals(1234);
-
-            expect(packStat).to.have.property('pack_updates').that.is.a('number');
-            expect(packStat).to.have.property('pack_updates').that.equals(0);
-
-            expect(packStat).to.have.property('server_installs').that.is.a('number');
-            expect(packStat).to.have.property('server_installs').that.equals(0);
-
-            expect(packStat).to.have.property('server_updates').that.is.a('number');
-            expect(packStat).to.have.property('server_updates').that.equals(0);
-
-            expect(packStat).to.have.property('time_played').that.is.a('number');
-            expect(packStat).to.have.property('time_played').that.equals(0);
+            expect(packStat).toBeInstanceOf(Object);
+            expect(packStat).toHaveProperty('id');
+            expect(packStat).toHaveProperty('pack_id', pack.id);
+            expect(packStat).toHaveProperty('date', '2016-07-07');
+            expect(packStat).toHaveProperty('pack_installs', 1234);
+            expect(packStat).toHaveProperty('pack_updates', 0);
+            expect(packStat).toHaveProperty('server_installs', 0);
+            expect(packStat).toHaveProperty('server_updates', 0);
+            expect(packStat).toHaveProperty('time_played', 0);
         });
     });
 
-    describe('pack', function () {
-        it('should return the pack for a pack stat', async function () {
+    describe('pack', () => {
+        it('should return the pack for a pack stat', async () => {
             const createdPack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -76,13 +56,10 @@ describe('Model: PackStat', function () {
 
             const pack = await packStat.$relatedQuery('pack');
 
-            expect(pack).to.be.an('object');
-
-            expect(pack).to.have.property('id').that.is.a('string');
-
-            expect(pack).to.have.property('name').that.equals('Test Pack');
-
-            expect(pack).to.have.property('description').that.equals('This is a test pack');
+            expect(pack).toBeInstanceOf(Object);
+            expect(pack).toHaveProperty('id');
+            expect(pack).toHaveProperty('name', 'Test Pack');
+            expect(pack).toHaveProperty('description', 'This is a test pack');
         });
     });
 });

@@ -2,6 +2,11 @@
     "extends": [
         "@atlauncher/eslint-config-atlauncher"
     ],
+    "env": {
+        "es6": true,
+        "jest": true,
+        "node": true
+    },
     "rules": {
         "camelcase": [
             "error",

@@ -1,38 +1,33 @@
-import chaiHttp from 'chai-http';
-import chai, { expect } from 'chai';
+import supertest from 'supertest';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
 import app from '../../src/server';
 
-chai.use(chaiHttp);
-
-describe('Routes: /', function () {
-    before(function (done) {
+describe('Routes: /', () => {
+    beforeAll((done) => {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    after(function (done) {
+    afterAll((done) => {
         app.server.close();
         done();
     });
 
-    describe('GET /', function () {
-        it('should return the version', async function () {
-            const response = await chai.request(app).get('/');
+    describe('GET /', () => {
+        it('should return the version', async () => {
+            const response = await supertest(app).get('/');
 
-            expect(response).to.have.status(200);
-            expect(response).to.be.json;
+            expect(response).toHaveProperty('statusCode', 200);
 
             const body = response.body;
 
-            expect(body).to.be.a('object');
-            expect(body).to.have.property('version').that.is.a('string');
-            expect(body).to.have.property('version').that.equals('v1');
+            expect(body).toBeInstanceOf(Object);
+            expect(body).toHaveProperty('version', 'v1');
         });
     });
 });

@@ -1,5 +1,4 @@
-import chaiHttp from 'chai-http';
-import chai, { expect } from 'chai';
+import supertest from 'supertest';
 import knexCleaner from 'knex-cleaner';
 
 import app from '../../src/server';
@@ -7,44 +6,41 @@ import knex from '../../src/db';
 
 import * as testUtils from '../utils';
 
-chai.use(chaiHttp);
-
-describe('Routes: /scopes', function () {
-    before(function (done) {
+describe('Routes: /scopes', () => {
+    beforeAll((done) => {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    after(function (done) {
+    afterAll((done) => {
         app.server.close();
         done();
     });
 
-    describe('GET /scopes', function () {
-        it('should return all the scopes in the system', async function () {
+    describe('GET /scopes', () => {
+        it('should return all the scopes in the system', async () => {
             await testUtils.createScope({
                 name: 'test',
                 description: 'This is a test scope.'
             });
 
-            const response = await chai.request(app).get('/scopes');
+            const response = await supertest(app).get('/scopes');
 
-            expect(response).to.have.status(200);
-            expect(response).to.be.json;
+            expect(response).toHaveProperty('statusCode', 200);
 
             const body = response.body;
 
-            expect(body).to.be.a('array');
-            expect(body).to.have.length(1);
+            expect(body).toBeInstanceOf(Array);
+            expect(body).toHaveLength(1);
 
             const scope = body[0];
 
-            expect(scope).to.be.an('object');
-            expect(scope.name).to.equal('test');
-            expect(scope.description).to.equal('This is a test scope.');
+            expect(scope).toBeInstanceOf(Object);
+            expect(scope).toHaveProperty('name', 'test');
+            expect(scope).toHaveProperty('description', 'This is a test scope.');
         });
     });
 });

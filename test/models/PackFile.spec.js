@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -8,23 +7,19 @@ import File from '../../src/models/File';
 import Pack from '../../src/models/Pack';
 import PackFile from '../../src/models/PackFile';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: PackFile', function () {
-    before(function (done) {
+describe('Model: PackFile', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given pack file', async function () {
+    describe('findById', () => {
+        it('should return the data for the given pack file', async () => {
             const file = await File.query().insert({
                 hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
@@ -50,20 +45,21 @@ describe('Model: PackFile', function () {
 
             const packFile = await PackFile.query().findById(created.id);
 
-            expect(packFile).to.be.an('object');
-            expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(packFile).toBeInstanceOf(Object);
+            expect(packFile).toMatchObject(expectedOutput);
+            expect(packFile).toHaveProperty('id');
+            expect(packFile).toHaveProperty('created_at');
         });
 
-        it('should return undefined if a pack file cannot be found by id', async function () {
+        it('should return undefined if a pack file cannot be found by id', async () => {
             const packFile = await PackFile.query().findById(1);
 
-            expect(packFile).to.be.undefined;
+            expect(packFile).toBeUndefined();
         });
     });
 
-    describe('insert', function () {
-        it('should create a pack file', async function () {
+    describe('insert', () => {
+        it('should create a pack file', async () => {
             const file = await File.query().insert({
                 hash: 'cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90',
                 size: 22
@@ -87,9 +83,10 @@ describe('Model: PackFile', function () {
                 name: 'test.zip'
             });
 
-            expect(packFile).to.be.an('object');
-            expect(packFile).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packFile).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(packFile).toBeInstanceOf(Object);
+            expect(packFile).toMatchObject(expectedOutput);
+            expect(packFile).toHaveProperty('id');
+            expect(packFile).toHaveProperty('created_at');
         });
     });
 });

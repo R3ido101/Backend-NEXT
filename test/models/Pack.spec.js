@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -10,23 +9,19 @@ import PackLog from '../../src/models/PackLog';
 import PackVersion from '../../src/models/PackVersion';
 import PackLeaderboard from '../../src/models/PackLeaderboard';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: Pack', function () {
-    before(function (done) {
+describe('Model: Pack', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given pack', async function () {
+    describe('findById', () => {
+        it('should return the data for the given pack', async () => {
             const expectedOutput = {
                 name: 'Test Pack',
                 safe_name: 'TestPack',
@@ -44,20 +39,21 @@ describe('Model: Pack', function () {
 
             const pack = await Pack.query().findById(created.id);
 
-            expect(pack).to.be.an('object');
-            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(pack).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(pack).toBeInstanceOf(Object);
+            expect(pack).toMatchObject(expectedOutput);
+            expect(pack).toHaveProperty('id');
+            expect(pack).toHaveProperty('created_at');
         });
 
-        it('should return undefined if a pack cannot be found by id', async function () {
+        it('should return undefined if a pack cannot be found by id', async () => {
             const pack = await Pack.query().findById(1);
 
-            expect(pack).to.be.undefined;
+            expect(pack).toBeUndefined();
         });
     });
 
-    describe('insert', function () {
-        it('should create a pack', async function () {
+    describe('insert', () => {
+        it('should create a pack', async () => {
             const expectedOutput = {
                 name: 'Test Pack',
                 safe_name: 'TestPack',
@@ -73,12 +69,13 @@ describe('Model: Pack', function () {
                 description: 'This is a test pack'
             });
 
-            expect(pack).to.be.an('object');
-            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(pack).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(pack).toBeInstanceOf(Object);
+            expect(pack).toMatchObject(expectedOutput);
+            expect(pack).toHaveProperty('id');
+            expect(pack).toHaveProperty('created_at');
         });
 
-        it('should create a pack with position 2 when a pack already exists', async function () {
+        it('should create a pack with position 2 when a pack already exists', async () => {
             const expectedOutput = {
                 name: 'Test Pack',
                 safe_name: 'TestPack',
@@ -99,14 +96,15 @@ describe('Model: Pack', function () {
                 description: 'This is a test pack'
             });
 
-            expect(pack).to.be.an('object');
-            expect(pack).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(pack).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(pack).toBeInstanceOf(Object);
+            expect(pack).toMatchObject(expectedOutput);
+            expect(pack).toHaveProperty('id');
+            expect(pack).toHaveProperty('created_at');
         });
     });
 
-    describe('launcherTags', function () {
-        it('should attach a launcher tag to a pack', async function () {
+    describe('launcherTags', () => {
+        it('should attach a launcher tag to a pack', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -118,20 +116,19 @@ describe('Model: Pack', function () {
 
             const launcherTags = await pack.$relatedQuery('launcherTags');
 
-            expect(launcherTags).to.be.an('array').with.length(1);
+            expect(launcherTags).toBeInstanceOf(Array);
+            expect(launcherTags).toHaveLength(1);
 
             const launcherTag = launcherTags[0];
 
-            expect(launcherTag).to.be.an('object');
-
-            expect(launcherTag).to.have.property('tag').that.equals('test');
-
-            expect(launcherTag).to.have.property('pack_id').that.equals(pack.id);
+            expect(launcherTag).toBeInstanceOf(Object);
+            expect(launcherTag).toHaveProperty('tag', 'test');
+            expect(launcherTag).toHaveProperty('pack_id', pack.id);
         });
     });
 
-    describe('packLeaderboards', function () {
-        it('should return the pack leaderboards for a user', async function () {
+    describe('packLeaderboards', () => {
+        it('should return the pack leaderboards for a user', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -151,22 +148,20 @@ describe('Model: Pack', function () {
 
             const packLeaderboards = await pack.$relatedQuery('packLeaderboards');
 
-            expect(packLeaderboards).to.be.an('array').with.length(1);
+            expect(packLeaderboards).toBeInstanceOf(Array);
+            expect(packLeaderboards).toHaveLength(1);
 
             const packLeaderboard = packLeaderboards[0];
 
-            expect(packLeaderboard).to.be.an('object');
-
-            expect(packLeaderboard).to.have.property('id').that.is.a('string');
-
-            expect(packLeaderboard).to.have.property('username').that.equals('test');
-
-            expect(packLeaderboard).to.have.property('time_played').that.equals(44);
+            expect(packLeaderboard).toBeInstanceOf(Object);
+            expect(packLeaderboard).toHaveProperty('id');
+            expect(packLeaderboard).toHaveProperty('username', 'test');
+            expect(packLeaderboard).toHaveProperty('time_played', 44);
         });
     });
 
-    describe('packLogs', function () {
-        it('should return the pack logs for a user', async function () {
+    describe('packLogs', () => {
+        it('should return the pack logs for a user', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -186,22 +181,20 @@ describe('Model: Pack', function () {
 
             const packLogs = await pack.$relatedQuery('packLogs');
 
-            expect(packLogs).to.be.an('array').with.length(1);
+            expect(packLogs).toBeInstanceOf(Array);
+            expect(packLogs).toHaveLength(1);
 
             const packLog = packLogs[0];
 
-            expect(packLog).to.be.an('object');
-
-            expect(packLog).to.have.property('id').that.is.a('string');
-
-            expect(packLog).to.have.property('username').that.equals('test');
-
-            expect(packLog).to.have.property('action').that.equals('pack_install');
+            expect(packLog).toBeInstanceOf(Object);
+            expect(packLog).toHaveProperty('id');
+            expect(packLog).toHaveProperty('username', 'test');
+            expect(packLog).toHaveProperty('action', 'pack_install');
         });
     });
 
-    describe('packTags', function () {
-        it('should attach a pack tag to a pack', async function () {
+    describe('packTags', () => {
+        it('should attach a pack tag to a pack', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -213,20 +206,19 @@ describe('Model: Pack', function () {
 
             const packTags = await pack.$relatedQuery('packTags');
 
-            expect(packTags).to.be.an('array').with.length(1);
+            expect(packTags).toBeInstanceOf(Array);
+            expect(packTags).toHaveLength(1);
 
             const packTag = packTags[0];
 
-            expect(packTag).to.be.an('object');
-
-            expect(packTag).to.have.property('tag').that.equals('test');
-
-            expect(packTag).to.have.property('pack_id').that.equals(pack.id);
+            expect(packTag).toBeInstanceOf(Object);
+            expect(packTag).toHaveProperty('tag', 'test');
+            expect(packTag).toHaveProperty('pack_id', pack.id);
         });
     });
 
-    describe('users', function () {
-        it('should create a user for a pack', async function () {
+    describe('users', () => {
+        it('should create a user for a pack', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -240,18 +232,17 @@ describe('Model: Pack', function () {
 
             const packUsers = await pack.$relatedQuery('users');
 
-            expect(packUsers).to.be.an('array').with.length(1);
+            expect(packUsers).toBeInstanceOf(Array);
+            expect(packUsers).toHaveLength(1);
 
             const user = packUsers[0];
 
-            expect(user).to.be.an('object');
-
-            expect(user).to.have.property('username').that.equals('testuser');
-
-            expect(user).to.have.property('email').that.equals('test@example.com');
+            expect(user).toBeInstanceOf(Object);
+            expect(user).toHaveProperty('username', 'testuser');
+            expect(user).toHaveProperty('email', 'test@example.com');
         });
 
-        it('should attach a user to a pack', async function () {
+        it('should attach a user to a pack', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -267,15 +258,14 @@ describe('Model: Pack', function () {
 
             const packUsers = await pack.$relatedQuery('users');
 
-            expect(packUsers).to.be.an('array').with.length(1);
+            expect(packUsers).toBeInstanceOf(Array);
+            expect(packUsers).toHaveLength(1);
 
             const user = packUsers[0];
 
-            expect(user).to.be.an('object');
-
-            expect(user).to.have.property('username').that.equals('testuser');
-
-            expect(user).to.have.property('email').that.equals('test@example.com');
+            expect(user).toBeInstanceOf(Object);
+            expect(user).toHaveProperty('username', 'testuser');
+            expect(user).toHaveProperty('email', 'test@example.com');
         });
     });
 });

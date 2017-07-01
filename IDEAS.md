@@ -1,15 +1,18 @@
 # Ideas
-This file contains a bunch of ideas and things that may be nice to have implemented into this repository.
+This file contains a bunch of ideas and things that may be nice to have implemented into this
+repository.
 
 ## np
 Link: https://github.com/sindresorhus/np
 
-A better version of `npm publish` used to ensure tests pass and dependencies work. Also pushes tags (with correct tags on publish) and might be nice to use.
+A better version of `npm publish` used to ensure tests pass and dependencies work. Also pushes tags
+(with correct tags on publish) and might be nice to use.
 
 ## vantage
 Link: https://github.com/dthree/vantage
 
-Add a CLI to the application. Good for being able to debug live running server, clear caches/queues etc.
+Add a CLI to the application. Good for being able to debug live running server, clear caches/queues
+etc.
 
 ## axios
 Link: https://github.com/mzabriskie/axios

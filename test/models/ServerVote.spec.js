@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -13,19 +12,19 @@ import PackVersion from '../../src/models/PackVersion';
  * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
  * expected
  */
-describe('Model: ServerVote', function () {
-    before(function (done) {
+describe('Model: ServerVote', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given server vote', async function () {
+    describe('findById', () => {
+        it('should return the data for the given server vote', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
@@ -56,14 +55,15 @@ describe('Model: ServerVote', function () {
 
             const serverVote = await ServerVote.query().findById(created.id);
 
-            expect(serverVote).to.be.an('object');
-            expect(serverVote).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverVote).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(serverVote).toBeInstanceOf(Object);
+            expect(serverVote).toMatchObject(expectedOutput);
+            expect(serverVote).toHaveProperty('id');
+            expect(serverVote).toHaveProperty('created_at');
         });
     });
 
-    describe('insert', function () {
-        it('should create a server vote', async function () {
+    describe('insert', () => {
+        it('should create a server vote', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'Test Pack Description'
@@ -92,9 +92,10 @@ describe('Model: ServerVote', function () {
                 username: 'Test'
             });
 
-            expect(serverVote).to.be.an('object');
-            expect(serverVote).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverVote).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(serverVote).toBeInstanceOf(Object);
+            expect(serverVote).toMatchObject(expectedOutput);
+            expect(serverVote).toHaveProperty('id');
+            expect(serverVote).toHaveProperty('created_at');
         });
     });
 });

@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -8,23 +7,19 @@ import Pack from '../../src/models/Pack';
 import PackVersion from '../../src/models/PackVersion';
 import MinecraftVersion from '../../src/models/MinecraftVersion';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: PackVersion', function () {
-    before(function (done) {
+describe('Model: PackVersion', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('insert', function () {
-        it('should create a pack version', async function () {
+    describe('insert', () => {
+        it('should create a pack version', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -36,33 +31,21 @@ describe('Model: PackVersion', function () {
                 pack_id: pack.id
             });
 
-            expect(packVersion).to.be.an('object');
-
-            expect(packVersion).to.have.property('id').that.is.a('string');
-
-            expect(packVersion).to.have.property('pack_id').that.is.a('string');
-            expect(packVersion).to.have.property('pack_id').that.equals(pack.id);
-
-            expect(packVersion).to.have.property('minecraft_version_id').that.is.null;
-
-            expect(packVersion).to.have.property('published_revision_id').that.is.null;
-
-            expect(packVersion).to.have.property('version').that.is.a('string');
-            expect(packVersion).to.have.property('version').that.equals('test');
-
-            expect(packVersion).to.have.property('changelog').that.is.a('string');
-            expect(packVersion).to.have.property('changelog').that.equals('test');
-
-            expect(packVersion).to.have.property('created_at').that.is.a('string');
-
-            expect(packVersion).to.have.property('updated_at').that.is.null;
-
-            expect(packVersion).to.have.property('published_at').that.is.null;
+            expect(packVersion).toBeInstanceOf(Object);
+            expect(packVersion).toHaveProperty('id');
+            expect(packVersion).toHaveProperty('pack_id', pack.id);
+            expect(packVersion).toHaveProperty('minecraft_version_id', null);
+            expect(packVersion).toHaveProperty('published_revision_id', null);
+            expect(packVersion).toHaveProperty('version', 'test');
+            expect(packVersion).toHaveProperty('changelog', 'test');
+            expect(packVersion).toHaveProperty('created_at');
+            expect(packVersion).toHaveProperty('updated_at', null);
+            expect(packVersion).toHaveProperty('published_at', null);
         });
     });
 
-    describe('minecraftVersion', function () {
-        it('should get the Minecraft version for a pack version', async function () {
+    describe('minecraftVersion', () => {
+        it('should get the Minecraft version for a pack version', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -81,9 +64,8 @@ describe('Model: PackVersion', function () {
 
             const minecraftVersion = await packVersion.$relatedQuery('minecraftVersion');
 
-            expect(minecraftVersion).to.be.an('object');
-
-            expect(minecraftVersion).to.have.property('version').that.equals('1.2.3');
+            expect(minecraftVersion).toBeInstanceOf(Object);
+            expect(minecraftVersion).toHaveProperty('version', '1.2.3');
         });
     });
 });

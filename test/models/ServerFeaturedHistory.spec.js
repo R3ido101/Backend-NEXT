@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -10,23 +9,19 @@ import Server from '../../src/models/Server';
 import PackVersion from '../../src/models/PackVersion';
 import ServerFeaturedHistory from '../../src/models/ServerFeaturedHistory';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: ServerFeaturedHistory', function () {
-    before(function (done) {
+describe('Model: ServerFeaturedHistory', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given server feature history', async function () {
+    describe('findById', () => {
+        it('should return the data for the given server feature history', async () => {
             const user = await User.query().insert({
                 username: 'Test',
                 email: 'test@example.com',
@@ -70,14 +65,16 @@ describe('Model: ServerFeaturedHistory', function () {
 
             const serverHistory = await ServerFeaturedHistory.query().findById(serverFeaturedHistory.id);
 
-            expect(serverHistory).to.be.an('object');
-            expect(serverHistory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverHistory).to.contain.all.keys(['id', 'created_at', 'expires_at']); // things that return but are variable
+            expect(serverHistory).toBeInstanceOf(Object);
+            expect(serverHistory).toMatchObject(expectedOutput);
+            expect(serverHistory).toHaveProperty('id');
+            expect(serverHistory).toHaveProperty('created_at');
+            expect(serverHistory).toHaveProperty('expires_at');
         });
     });
 
-    describe('insert', function () {
-        it('should create a server feature history', async function () {
+    describe('insert', () => {
+        it('should create a server feature history', async () => {
             const user = await User.query().insert({
                 username: 'Test',
                 email: 'test@example.com',
@@ -119,9 +116,10 @@ describe('Model: ServerFeaturedHistory', function () {
                 expires_at: new Date().toJSON()
             });
 
-            expect(serverHistory).to.be.an('object');
-            expect(serverHistory).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(serverHistory).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(serverHistory).toBeInstanceOf(Object);
+            expect(serverHistory).toMatchObject(expectedOutput);
+            expect(serverHistory).toHaveProperty('id');
+            expect(serverHistory).toHaveProperty('created_at');
         });
     });
 });

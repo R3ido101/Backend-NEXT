@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../../src/db';
@@ -8,22 +7,23 @@ import * as testUtils from '../../utils';
 import UserRole from '../../../src/models/pivots/UserRole';
 
 /**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
+ * These tests are here not to test the functionality of the provided Model library (Objection.js)
+ * and is more to make sure commonly used queries (with custom changes to the models) are returning
+ * as expected
  */
-describe('Model: UserRole', function () {
-    before(function (done) {
+describe('Model: UserRole', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('insert', function () {
-        it('should create a user role', async function () {
+    describe('insert', () => {
+        it('should create a user role', async () => {
             const user = await testUtils.createUser();
             const role = await testUtils.createRole();
 
@@ -37,12 +37,13 @@ describe('Model: UserRole', function () {
                 role_id: role.id
             });
 
-            expect(userRole).to.be.an('object');
-            expect(userRole).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(userRole).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(userRole).toBeInstanceOf(Object);
+            expect(userRole).toMatchObject(expectedOutput);
+            expect(userRole).toHaveProperty('id');
+            expect(userRole).toHaveProperty('created_at');
         });
 
-        it('should not create a user role when it already exists', async function () {
+        it('should not create a user role when it already exists', async () => {
             const user = await testUtils.createUser();
             const role = await testUtils.createRole();
             await testUtils.addRoleToUser(role, user);
@@ -66,7 +67,7 @@ describe('Model: UserRole', function () {
                     role_id: role.id
                 });
             } catch (error) {
-                expect(error.data).to.deep.equal(expectedOutput);
+                expect(error.data).toEqual(expectedOutput);
             }
         });
     });

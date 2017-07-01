@@ -17,9 +17,9 @@
     "prestart": "npm run -s build",
     "seed": "knex seed:run",
     "start": "node dist/server.js",
-    "test": "cross-env NODE_ENV=test mocha --opts ./mocha.opts",
+    "test": "cross-env NODE_ENV=test jest -i",
     "test:clean": "rimraf ./db/test.sqlite3",
-    "test:watch": "cross-env NODE_ENV=test mocha --opts ./mocha.opts --watch"
+    "test:watch": "cross-env NODE_ENV=test jest -i --watch"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,11 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ATLauncher/Backend-NEXT/issues"
+  },
+  "jest": {
+    "bail": true,
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage"
   },
   "homepage": "https://github.com/ATLauncher/Backend-NEXT#readme",
   "dependencies": {
@@ -88,12 +93,9 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
+    "babel-jest": "^20.0.3",
     "babel-polyfill": "^6.23.0",
     "babel-register": "^6.24.1",
-    "chai": "^4.0.2",
-    "chai-as-promised": "^7.0.0",
-    "chai-http": "^3.0.0",
-    "chai-shallow-deep-equal": "^1.4.6",
     "cross-env": "^5.0.1",
     "eslint": "^4.1.0",
     "eslint-plugin-eslint-comments": "^1.0.2",
@@ -108,14 +110,16 @@
     "eslint-watch": "^3.1.2",
     "faker": "^4.1.0",
     "husky": "^0.14.0",
+    "jest": "^20.0.4",
     "knex-cleaner": "^1.1.3",
-    "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "randexp": "^0.4.5",
-    "rimraf": "^2.6.1"
+    "rimraf": "^2.6.1",
+    "supertest": "^3.0.0"
   },
   "engineStrict": true,
   "engines": {
     "node": ">= 8"
-  }
+  },
+  "false": {}
 }

@@ -57,6 +57,15 @@ class ServerHistory extends BaseModel {
             },
         },
     };
+
+    /**
+     * Transform the boolean fields into a boolean.
+     *
+     * @type {object}
+     */
+    static transforms = {
+        online: (input) => (!!input),
+    };
 }
 
 export default ServerHistory;

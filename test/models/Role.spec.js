@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -7,23 +6,19 @@ import knex from '../../src/db';
 import Role from '../../src/models/Role';
 import User from '../../src/models/User';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: Role', function () {
-    before(function (done) {
+describe('Model: Role', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given role', async function () {
+    describe('findById', () => {
+        it('should return the data for the given role', async () => {
             const expectedOutput = {
                 name: 'testrole',
                 description: 'This is a test role',
@@ -37,20 +32,21 @@ describe('Model: Role', function () {
 
             const role = await Role.query().findById(created.id);
 
-            expect(role).to.be.an('object');
-            expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(role).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(role).toBeInstanceOf(Object);
+            expect(role).toMatchObject(expectedOutput);
+            expect(role).toHaveProperty('id');
+            expect(role).toHaveProperty('created_at');
         });
 
-        it('should return undefined if a role cannot be found by id', async function () {
+        it('should return undefined if a role cannot be found by id', async () => {
             const pack = await Role.query().findById(1);
 
-            expect(pack).to.be.undefined;
+            expect(pack).toBeUndefined();
         });
     });
 
-    describe('insert', function () {
-        it('should create a role', async function () {
+    describe('insert', () => {
+        it('should create a role', async () => {
             const expectedOutput = {
                 name: 'testrole',
                 description: 'This is a test role',
@@ -62,14 +58,15 @@ describe('Model: Role', function () {
                 description: 'This is a test role'
             });
 
-            expect(role).to.be.an('object');
-            expect(role).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(role).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(role).toBeInstanceOf(Object);
+            expect(role).toMatchObject(expectedOutput);
+            expect(role).toHaveProperty('id');
+            expect(role).toHaveProperty('created_at');
         });
     });
 
-    describe('users', function () {
-        it('should create a user for a role', async function () {
+    describe('users', () => {
+        it('should create a user for a role', async () => {
             const expectedOutput = {
                 username: 'test',
                 email: 'test@example.com'
@@ -88,15 +85,16 @@ describe('Model: Role', function () {
 
             const roleUsers = await role.$relatedQuery('users');
 
-            expect(roleUsers).to.be.an('array').with.length(1);
+            expect(roleUsers).toBeInstanceOf(Array);
+            expect(roleUsers).toHaveLength(1);
 
             const user = roleUsers[0];
 
-            expect(user).to.be.an('object');
-            expect(user).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
+            expect(user).toBeInstanceOf(Object);
+            expect(user).toMatchObject(expectedOutput);
         });
 
-        it('should attach a user to a role', async function () {
+        it('should attach a user to a role', async () => {
             const role = await Role.query().insert({
                 name: 'testrole',
                 description: 'This is a test role'
@@ -112,15 +110,14 @@ describe('Model: Role', function () {
 
             const roleUsers = await role.$relatedQuery('users');
 
-            expect(roleUsers).to.be.an('array').with.length(1);
+            expect(roleUsers).toBeInstanceOf(Array);
+            expect(roleUsers).toHaveLength(1);
 
             const user = roleUsers[0];
 
-            expect(user).to.be.an('object');
-
-            expect(user).to.have.property('username').that.equals('test');
-
-            expect(user).to.have.property('email').that.equals('test@example.com');
+            expect(user).toBeInstanceOf(Object);
+            expect(user).toHaveProperty('username', 'test');
+            expect(user).toHaveProperty('email', 'test@example.com');
         });
     });
 });

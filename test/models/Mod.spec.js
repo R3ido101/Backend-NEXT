@@ -1,28 +1,23 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
 
 import Mod from '../../src/models/Mod';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: Mod', function () {
-    before(function (done) {
+describe('Model: Mod', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('findById', function () {
-        it('should return the data for the given mod', async function () {
+    describe('findById', () => {
+        it('should return the data for the given mod', async () => {
             const expectedOutput = {
                 name: 'Test Mod',
                 description: 'This is a test mod',
@@ -40,20 +35,21 @@ describe('Model: Mod', function () {
 
             const mod = await Mod.query().findById(created.id);
 
-            expect(mod).to.be.an('object');
-            expect(mod).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(mod).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(mod).toBeInstanceOf(Object);
+            expect(mod).toMatchObject(expectedOutput);
+            expect(mod).toHaveProperty('id');
+            expect(mod).toHaveProperty('created_at');
         });
 
-        it('should return undefined if a mod cannot be found by id', async function () {
+        it('should return undefined if a mod cannot be found by id', async () => {
             const mod = await Mod.query().findById(1);
 
-            expect(mod).to.be.undefined;
+            expect(mod).toBeUndefined();
         });
     });
 
-    describe('insert', function () {
-        it('should create a mod', async function () {
+    describe('insert', () => {
+        it('should create a mod', async () => {
             const expectedOutput = {
                 name: 'Test Mod',
                 description: 'This is a test mod',
@@ -69,14 +65,15 @@ describe('Model: Mod', function () {
                 authors: ['test1', 'test2']
             });
 
-            expect(mod).to.be.an('object');
-            expect(mod).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(mod).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(mod).toBeInstanceOf(Object);
+            expect(mod).toMatchObject(expectedOutput);
+            expect(mod).toHaveProperty('id');
+            expect(mod).toHaveProperty('created_at');
         });
     });
 
-    describe('versions', function () {
-        it('should attach a mod version to a mod', async function () {
+    describe('versions', () => {
+        it('should attach a mod version to a mod', async () => {
             const mod = await Mod.query().insert({
                 name: 'Test Mod',
                 description: 'This is a test mod',
@@ -90,16 +87,15 @@ describe('Model: Mod', function () {
 
             const versions = await mod.$relatedQuery('versions');
 
-            expect(versions).to.be.an('array').with.length(1);
+            expect(versions).toBeInstanceOf(Array);
+            expect(versions).toHaveLength(1);
 
             const modVersion = versions[0];
 
-            expect(modVersion).to.be.an('object');
-
-            expect(modVersion).to.have.property('version').that.equals('1.2.3');
-            expect(modVersion).to.have.property('changelog').that.equals('Test');
-
-            expect(modVersion).to.have.property('mod_id').that.equals(mod.id);
+            expect(modVersion).toBeInstanceOf(Object);
+            expect(modVersion).toHaveProperty('version', '1.2.3');
+            expect(modVersion).toHaveProperty('changelog', 'Test');
+            expect(modVersion).toHaveProperty('mod_id', mod.id);
         });
     });
 });

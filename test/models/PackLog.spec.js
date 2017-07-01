@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -8,23 +7,19 @@ import Pack from '../../src/models/Pack';
 import PackLog from '../../src/models/PackLog';
 import PackVersion from '../../src/models/PackVersion';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: PackLog', function () {
-    before(function (done) {
+describe('Model: PackLog', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('insert', function () {
-        it('should create a pack log', async function () {
+    describe('insert', () => {
+        it('should create a pack log', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -42,26 +37,17 @@ describe('Model: PackLog', function () {
                 action: 'pack_install'
             });
 
-            expect(packLog).to.be.an('object');
-
-            expect(packLog).to.have.property('id').that.is.a('string');
-
-            expect(packLog).to.have.property('pack_id').that.is.a('string');
-            expect(packLog).to.have.property('pack_id').that.equals(pack.id);
-
-            expect(packLog).to.have.property('pack_version_id').that.is.a('string');
-            expect(packLog).to.have.property('pack_version_id').that.equals(packVersion.id);
-
-            expect(packLog).to.have.property('username').that.is.a('string');
-            expect(packLog).to.have.property('username').that.equals('test');
-
-            expect(packLog).to.have.property('action').that.is.a('string');
-            expect(packLog).to.have.property('action').that.equals('pack_install');
+            expect(packLog).toBeInstanceOf(Object);
+            expect(packLog).toHaveProperty('id');
+            expect(packLog).toHaveProperty('pack_id', pack.id);
+            expect(packLog).toHaveProperty('pack_version_id', packVersion.id);
+            expect(packLog).toHaveProperty('username', 'test');
+            expect(packLog).toHaveProperty('action', 'pack_install');
         });
     });
 
-    describe('pack', function () {
-        it('should return the pack for a pack log', async function () {
+    describe('pack', () => {
+        it('should return the pack for a pack log', async () => {
             const createdPack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -81,18 +67,15 @@ describe('Model: PackLog', function () {
 
             const pack = await packLog.$relatedQuery('pack');
 
-            expect(pack).to.be.an('object');
-
-            expect(pack).to.have.property('id').that.is.a('string');
-
-            expect(pack).to.have.property('name').that.equals('Test Pack');
-
-            expect(pack).to.have.property('description').that.equals('This is a test pack');
+            expect(pack).toBeInstanceOf(Object);
+            expect(pack).toHaveProperty('id');
+            expect(pack).toHaveProperty('name', 'Test Pack');
+            expect(pack).toHaveProperty('description', 'This is a test pack');
         });
     });
 
-    describe('packVersion', function () {
-        it('should return the pack version for a pack log', async function () {
+    describe('packVersion', () => {
+        it('should return the pack version for a pack log', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -112,11 +95,9 @@ describe('Model: PackLog', function () {
 
             const packVersion = await packLog.$relatedQuery('packVersion');
 
-            expect(packVersion).to.be.an('object');
-
-            expect(packVersion).to.have.property('id').that.is.a('string');
-
-            expect(packVersion).to.have.property('version').that.equals('1.2.3');
+            expect(packVersion).toBeInstanceOf(Object);
+            expect(packVersion).toHaveProperty('id');
+            expect(packVersion).toHaveProperty('version', '1.2.3');
         });
     });
 });

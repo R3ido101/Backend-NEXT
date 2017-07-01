@@ -1,5 +1,4 @@
-import chaiHttp from 'chai-http';
-import chai, { expect } from 'chai';
+import supertest from 'supertest';
 import knexCleaner from 'knex-cleaner';
 
 import app from '../../src/server';
@@ -7,30 +6,28 @@ import knex from '../../src/db';
 
 import * as testUtils from '../utils';
 
-chai.use(chaiHttp);
-
-describe('Routes: /users', function () {
-    before(function (done) {
+describe('Routes: /users', () => {
+    beforeAll((done) => {
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
-        knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
+    afterEach((done) => {
+        knexCleaner.clean(knex, { ignoreTables: ['migrations', 'migrations_lock'] }).then(() => done());
     });
 
-    after(function (done) {
+    afterAll((done) => {
         app.server.close();
         done();
     });
 
-    describe('GET /users', function () {
-        describe('When Authenticated', function () {
+    describe('GET /users', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -53,7 +50,7 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should return all the users in the system', async function () {
+            it('should return all the users in the system', async () => {
                 const expectedOutput = {
                     username: 'test',
                     email: 'test@example.com',
@@ -67,28 +64,29 @@ describe('Routes: /users', function () {
                     banned_at: null
                 };
 
-                const response = await chai.request(app).get('/users').set('Authorization', `Bearer ${token.access_token}`);
+                const response = await supertest(app).get('/users').set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(200);
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 200);
 
                 const body = response.body;
 
-                expect(body).to.be.a('array');
-                expect(body).to.have.length(1);
+                expect(body).toBeInstanceOf(Array);
+                expect(body).toHaveLength(1);
 
                 const user = body[0];
 
-                expect(user).to.be.an('object');
-                expect(user).to.shallowDeepEqual(expectedOutput);
-                expect(user).to.contain.all.keys(['id', 'created_at', 'verification_code']);
-                expect(user.password).to.be.undefined;
+                expect(user).toBeInstanceOf(Object);
+                expect(user).toMatchObject(expectedOutput);
+                expect(user).toHaveProperty('id');
+                expect(user).toHaveProperty('created_at');
+                expect(user).toHaveProperty('verification_code');
+                expect(user.password).toBeUndefined();
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -110,29 +108,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:read scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:read scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -154,21 +147,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -177,14 +165,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('GET /users/{user_id}', function () {
-        describe('When Authenticated', function () {
+    describe('GET /users/{user_id}', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -207,61 +195,52 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should return the information for for the given user by their ID', async function () {
-                const response = await chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`);
+            it('should return the information for for the given user by their ID', async () => {
+                const response = await supertest(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(200);
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 200);
 
                 const body = response.body;
 
-                expect(body).to.be.an('object');
+                expect(body).toBeInstanceOf(Object);
 
-                expect(body.username).to.equal('test');
-                expect(body.password).to.be.undefined;
-                expect(body.email).to.equal('test@example.com');
+                expect(body).toHaveProperty('username', 'test');
+                expect(body.password).toBeUndefined();
+                expect(body).toHaveProperty('email', 'test@example.com');
             });
 
-            it('should return an error when the user cannot be found by their id', function (done) {
-                (async() => {
-                    chai.request(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+            it('should return an error when the user cannot be found by their id', (done) => {
+                (async () => {
+                    supertest(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
+                    }).catch(({ response }) => {
                         expect(response).to.have.status(404);
                         expect(response).to.be.json;
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(404);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals('User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 404);
+                        expect(body).toHaveProperty('message', 'User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error when the user id is too long', function (done) {
-                (async() => {
-                    chai.request(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+            it('should return an error when the user id is too long', (done) => {
+                (async () => {
+                    supertest(app).get(`/users/6a4133b2-aec9-4519-be18-e7df91e808b7`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
+                    }).catch(({ response }) => {
                         expect(response).to.have.status(404);
                         expect(response).to.be.json;
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(404);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals('User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 404);
+                        expect(body).toHaveProperty('message', 'User with ID of 6a4133b2-aec9-4519-be18-e7df91e808b7 not found.');
 
                         done();
                     });
@@ -269,9 +248,9 @@ describe('Routes: /users', function () {
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -293,29 +272,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:read scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:read scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -337,21 +311,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -360,14 +329,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('POST /users', function () {
-        describe('When Authenticated', function () {
+    describe('POST /users', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -390,32 +359,31 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should create a user', async function () {
+            it('should create a user', async () => {
                 const user = {
                     username: '_test-User1',
                     email: 'testuser@example.com',
                     password: 'testing'
                 };
 
-                const response = await chai.request(app).post('/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
+                const response = await supertest(app).post('/users').set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(user);
 
-                expect(response).to.have.status(201);
-                expect(response).to.have.header('Location');
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 201);
+                expect(response).toHaveProperty('header.location');
 
                 const body = response.body;
 
-                expect(body).to.be.an('object');
+                expect(body).toBeInstanceOf(Object);
 
-                expect(body.username).to.equal('_test-User1');
-                expect(body.password).to.be.undefined;
-                expect(body.email).to.equal('testuser@example.com');
+                expect(body).toHaveProperty('username', '_test-User1');
+                expect(body.password).toBeUndefined();
+                expect(body).toHaveProperty('email', 'testuser@example.com');
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -437,29 +405,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:write scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -481,21 +444,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -504,14 +462,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('PUT /users/{user_id}', function () {
-        describe('When Authenticated', function () {
+    describe('PUT /users/{user_id}', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -534,7 +492,7 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should update a user', async function () {
+            it('should update a user', async () => {
                 const user = await testUtils.createUser({
                     username: '_test-User1',
                     email: 'testuser@example.com',
@@ -545,24 +503,23 @@ describe('Routes: /users', function () {
                     email: 'testuser1@example.com'
                 };
 
-                const response = await chai.request(app).put(`/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData);
+                const response = await supertest(app).put(`/users/${user.id}`).set('Content-Type', 'application/json').set('Authorization', `Bearer ${token.access_token}`).send(updatedData);
 
-                expect(response).to.have.status(200);
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 200);
 
                 const body = response.body;
 
-                expect(body).to.be.an('object');
+                expect(body).toBeInstanceOf(Object);
 
-                expect(body.username).to.equal('_test-User1');
-                expect(body.password).to.be.undefined;
-                expect(body.email).to.equal('testuser1@example.com');
+                expect(body).toHaveProperty('username', '_test-User1');
+                expect(body.password).toBeUndefined();
+                expect(body).toHaveProperty('email', 'testuser1@example.com');
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -584,29 +541,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:write scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -628,21 +580,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).post('/users/', {}).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -651,14 +598,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('DELETE /users/{user_id}', function () {
-        describe('When Authenticated', function () {
+    describe('DELETE /users/{user_id}', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -681,22 +628,22 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should delete the given user by their ID', async function () {
+            it('should delete the given user by their ID', async () => {
                 const user = await testUtils.createUser({
                     username: '_test-User1',
                     email: 'testuser@example.com',
                     password: 'testing'
                 });
 
-                const response = await chai.request(app).delete(`/users/${user.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await supertest(app).delete(`/users/${user.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(204);
+                expect(response).toHaveProperty('statusCode', 204);
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -718,29 +665,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:read'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:read scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:read scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -762,21 +704,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).delete(`/users/${created_user.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -785,14 +722,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('GET /users/{user_id}/roles', function () {
-        describe('When Authenticated', function () {
+    describe('GET /users/{user_id}/roles', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -815,7 +752,7 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should get the roles for the given user by their ID', async function () {
+            it('should get the roles for the given user by their ID', async () => {
                 const user = await testUtils.createUser();
 
                 const role = await testUtils.createRole({
@@ -825,25 +762,24 @@ describe('Routes: /users', function () {
 
                 await testUtils.addRoleToUser(role, user);
 
-                const response = await chai.request(app).get(`/users/${user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await supertest(app).get(`/users/${user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(200);
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 200);
 
                 const body = response.body;
 
-                expect(body).to.be.an('array');
+                expect(body).toBeInstanceOf(Array);
 
                 const firstRole = body[0];
 
-                expect(firstRole.name).to.equal('test');
-                expect(firstRole.description).to.equal('test role');
+                expect(firstRole).toHaveProperty('name', 'test');
+                expect(firstRole).toHaveProperty('description', 'test role');
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -865,29 +801,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:write scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -909,21 +840,16 @@ describe('Routes: /users', function () {
                         scope: 'self:read'
                     });
 
-                    chai.request(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).get(`/users/${created_user.id}/roles`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:read' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:read' is needed.");
 
                         done();
                     });
@@ -932,14 +858,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('PUT /users/{user_id}/roles/{role_id}', function () {
-        describe('When Authenticated', function () {
+    describe('PUT /users/{user_id}/roles/{role_id}', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -962,7 +888,7 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should attach the given role to the user by their ID', async function () {
+            it('should attach the given role to the user by their ID', async () => {
                 const user = await testUtils.createUser({
                     username: '_test-User1',
                     email: 'testuser@example.com',
@@ -974,23 +900,21 @@ describe('Routes: /users', function () {
                     description: 'test role'
                 });
 
-                const response = await chai.request(app).put(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await supertest(app).put(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(200);
-                expect(response).to.be.json;
+                expect(response).toHaveProperty('statusCode', 200);
 
                 const body = response.body;
 
-                expect(body).to.be.an('object');
-
-                expect(body.role_id).to.equal(role.id);
-                expect(body.user_id).to.equal(user.id);
+                expect(body).toBeInstanceOf(Object);
+                expect(body).toHaveProperty('role_id', role.id);
+                expect(body).toHaveProperty('user_id', user.id);
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -1012,29 +936,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:write scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -1056,21 +975,16 @@ describe('Routes: /users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).put(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });
@@ -1079,14 +993,14 @@ describe('Routes: /users', function () {
         });
     });
 
-    describe('DELETE /users/{user_id}/roles/{role_id}', function () {
-        describe('When Authenticated', function () {
+    describe('DELETE /users/{user_id}/roles/{role_id}', () => {
+        describe('When Authenticated', () => {
             let created_role;
             let created_user;
             let client;
             let token;
 
-            beforeEach(async() => {
+            beforeEach(async () => {
                 created_role = await testUtils.createRole({
                     name: 'admin'
                 });
@@ -1109,7 +1023,7 @@ describe('Routes: /users', function () {
                 });
             });
 
-            it('should delete the given role from the user by their ID', async function () {
+            it('should delete the given role from the user by their ID', async () => {
                 const user = await testUtils.createUser({
                     username: '_test-User1',
                     email: 'testuser@example.com',
@@ -1122,15 +1036,15 @@ describe('Routes: /users', function () {
 
                 await testUtils.addRoleToUser(role, user);
 
-                const response = await chai.request(app).delete(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
+                const response = await supertest(app).delete(`/users/${user.id}/roles/${role.id}`).set('Authorization', `Bearer ${token.access_token}`);
 
-                expect(response).to.have.status(204);
+                expect(response).toHaveProperty('statusCode', 204);
             });
         });
 
-        describe('When Unauthenticated', function () {
-            it('should return an error if user doesn\'t have an admin role', function (done) {
-                (async() => {
+        describe('When Unauthenticated', () => {
+            it('should return an error if user doesn\'t have an admin role', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'user'
                     });
@@ -1152,29 +1066,24 @@ describe('Routes: /users', function () {
                         scope: 'admin:write'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("User doesn't have required role. 'admin' role is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "User doesn't have required role. 'admin' role is needed.");
 
                         done();
                     });
                 })();
             });
 
-            it('should return an error if token doesn\'t have the admin:write scope', function (done) {
-                (async() => {
+            it('should return an error if token doesn\'t have the admin:write scope', (done) => {
+                (async () => {
                     const created_role = await testUtils.createRole({
                         name: 'admin'
                     });
@@ -1196,21 +1105,16 @@ describe('Routes: /users', function () {
                         scope: 'self:write'
                     });
 
-                    chai.request(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
+                    supertest(app).delete(`/users/${created_user.id}/roles/${created_role.id}`).set('Authorization', `Bearer ${token.access_token}`).then(() => {
                         done(new Error('Response was not an error.'));
-                    }).catch(({response}) => {
-                        expect(response).to.have.status(403);
-                        expect(response).to.be.json;
+                    }).catch(({ response }) => {
+                        expect(response).toHaveProperty('statusCode', 403);
 
-                        const {body} = response;
+                        const { body } = response;
 
-                        expect(body).to.be.an('object');
-
-                        expect(body).to.have.property('status').that.is.a('number');
-                        expect(body).to.have.property('status').that.equals(403);
-
-                        expect(body).to.have.property('message').that.is.a('string');
-                        expect(body).to.have.property('message').that.equals("Invalid scope on token. Scope 'admin:write' is needed.");
+                        expect(body).toBeInstanceOf(Object);
+                        expect(body).toHaveProperty('status', 403);
+                        expect(body).toHaveProperty('message', "Invalid scope on token. Scope 'admin:write' is needed.");
 
                         done();
                     });

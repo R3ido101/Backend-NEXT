@@ -1,5 +1,4 @@
 import { Model } from 'objection';
-import chai, { expect } from 'chai';
 import knexCleaner from 'knex-cleaner';
 
 import knex from '../../src/db';
@@ -8,23 +7,19 @@ import Pack from '../../src/models/Pack';
 import PackVersion from '../../src/models/PackVersion';
 import MinecraftVersion from '../../src/models/MinecraftVersion';
 
-/**
- * These tests are here not to test the functionality of the provided Model library (Objection.js) and is more to make sure commonly used queries (with custom changes to the models) are returning as
- * expected
- */
-describe('Model: MinecraftVersion', function () {
-    before(function (done) {
+describe('Model: MinecraftVersion', () => {
+    beforeAll((done) => {
         Model.knex(knex);
 
         knex.migrate.rollback().then(() => knex.migrate.latest().then(() => done()));
     });
 
-    afterEach(function (done) {
+    afterEach((done) => {
         knexCleaner.clean(knex, {ignoreTables: ['migrations', 'migrations_lock']}).then(() => done());
     });
 
-    describe('insert', function () {
-        it('should create a Minecraft version', async function () {
+    describe('insert', () => {
+        it('should create a Minecraft version', async () => {
             const expectedOutput = {
                 version: '1.7.10',
                 json: null,
@@ -35,14 +30,15 @@ describe('Model: MinecraftVersion', function () {
                 version: '1.7.10'
             });
 
-            expect(minecraftVersion).to.be.an('object');
-            expect(minecraftVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(minecraftVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(minecraftVersion).toBeInstanceOf(Object);
+            expect(minecraftVersion).toMatchObject(expectedOutput);
+            expect(minecraftVersion).toHaveProperty('id');
+            expect(minecraftVersion).toHaveProperty('created_at');
         });
     });
 
-    describe('packVersions', function () {
-        it('should list the pack versions for a Minecraft version', async function () {
+    describe('packVersions', () => {
+        it('should list the pack versions for a Minecraft version', async () => {
             const pack = await Pack.query().insert({
                 name: 'Test Pack',
                 description: 'This is a test pack'
@@ -69,13 +65,15 @@ describe('Model: MinecraftVersion', function () {
 
             const packVersions = await minecraftVersion.$relatedQuery('packVersions');
 
-            expect(packVersions).to.be.an('array').with.length(1);
+            expect(packVersions).toBeInstanceOf(Array);
+            expect(packVersions).toHaveLength(1);
 
             const packVersion = packVersions[0];
 
-            expect(packVersion).to.be.an('object');
-            expect(packVersion).to.shallowDeepEqual(expectedOutput); // match our expectedOutput exactly but don't fail on missing
-            expect(packVersion).to.contain.all.keys(['id', 'created_at']); // things that return but are variable
+            expect(packVersion).toBeInstanceOf(Object);
+            expect(packVersion).toMatchObject(expectedOutput);
+            expect(packVersion).toHaveProperty('id');
+            expect(packVersion).toHaveProperty('created_at');
         });
     });
 });
