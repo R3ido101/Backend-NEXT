@@ -13,7 +13,7 @@
     "lint:watch": "esw src config test migrations knexfile.js --watch",
     "migrate": "knex migrate:latest",
     "migrate:rollback": "knex migrate:rollback",
-    "precommit": "npm run test",
+    "precommit": "npm run lint && npm run test",
     "prestart": "npm run -s build",
     "seed": "knex seed:run",
     "start": "node dist/server.js",
