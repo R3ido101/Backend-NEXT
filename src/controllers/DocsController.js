@@ -1,16 +1,13 @@
 import fs from 'fs';
 import pug from 'pug';
 import path from 'path';
+import config from 'config';
 import hljs from 'highlight.js';
 import meta from 'remarkable-meta';
 import Remarkable from 'remarkable';
 import markdownTOC from 'markdown-toc';
 
 import BaseController from './BaseController';
-
-import { getConfig } from '../config';
-
-const config = getConfig();
 
 /**
  * The DocsController controls the routes for the documentation.
@@ -133,7 +130,7 @@ class DocsController extends BaseController {
      */
     static replaceVariables(content) {
         if (content.indexOf('{{{OAUTH_BASE_URL}}}') !== -1) {
-            return content.replace(/{{{OAUTH_BASE_URL}}}/g, `${config.baseUrl}/oauth`);
+            return content.replace(/{{{OAUTH_BASE_URL}}}/g, `${config.get('baseUrl')}/oauth`);
         }
 
         return content;

@@ -1,14 +1,11 @@
+import config from 'config';
 import * as httpStatusCode from 'http-status';
-
-import { getConfig } from '../config';
 
 import User from '../models/User';
 import APIError from '../errors/APIError';
 import BaseController from './BaseController';
 
 import { cacheWrap } from '../cache';
-
-const config = getConfig();
 
 class UsersController extends BaseController {
     /**
@@ -47,7 +44,7 @@ class UsersController extends BaseController {
         try {
             const user = await User.query().insert(req.body);
 
-            const createdResourceUrl = `${config.baseUrl}/users/${user.id}`;
+            const createdResourceUrl = `${config.get('baseUrl')}/users/${user.id}`;
 
             return res.status(httpStatusCode.CREATED).set('Location', createdResourceUrl).json(user.$omit('password'));
         } catch (errors) {

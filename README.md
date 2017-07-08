@@ -88,12 +88,12 @@ All configuration files can be found in the `/config` folder.
 
 They're divided up into 5 main files:
 
- - `base.json`: This file is the very base file and contains configuration that is used in both
-                production and development.
- - `test.json`: This file contains setting overrides for when in test.
+ - `default.json`: This file is the very base file and contains configuration that is used as
+                   defaults in all environments unless overwritten by below files.
+ - `test.js`: This file contains setting overrides for when in test.
  - `development.json`: This file contains setting overrides for when in development.
  - `production.json`: This file contains setting overrides for when in prodution.
- - `secret.json`: This file contains setting overrides for all environments and should be gitignored
+ - `local.json`: This file contains setting overrides for all environments and should be gitignored
                   or dynamically populated with a system like Ansible.
 
 ## Running in production

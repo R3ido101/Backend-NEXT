@@ -1,15 +1,14 @@
+import config from 'config';
 import cacheManager from 'cache-manager';
-
-import { getConfig, environment } from './config';
-
-const config = getConfig();
 
 /**
  * Gets the store to use based on the configuration.
  *
  * @type {string}
  */
-export const store = config.cache.type === 'memory' ? 'memory' : require(`cache-manager-${config.cache.type}`);
+export const store = (
+    config.cache.type === 'memory' ? 'memory' : require(`cache-manager-${config.get('cache.type')}`)
+);
 
 /**
  * Determines if the value can be cached or not.
@@ -20,7 +19,7 @@ export const store = config.cache.type === 'memory' ? 'memory' : require(`cache-
  * @returns {boolean}
  */
 function isCacheableValue(value) {
-    return environment !== 'test' && value !== null && value !== false;
+    return config.util.getEnv('NODE_ENV') !== 'test' && value !== null && value !== false;
 }
 
 /**

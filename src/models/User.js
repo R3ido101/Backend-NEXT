@@ -1,3 +1,4 @@
+import config from 'config';
 import bcrypt from 'bcryptjs';
 import { Model } from 'objection';
 
@@ -7,10 +8,7 @@ import BaseModel from './BaseModel';
 import PackUser from './pivots/PackUser';
 import UserRole from './pivots/UserRole';
 
-import { getConfig } from '../config';
 import { generateUID } from '../utils';
-
-const config = getConfig();
 
 /**
  * A User represents someone who has signed up for an ATLauncher account. An ATLauncher account is not required to
@@ -157,7 +155,7 @@ class User extends BaseModel {
      */
     $beforeInsert(queryContext) {
         if (this.hasOwnProperty('password')) {
-            this.password = bcrypt.hashSync(this.password, config.bcryptRounds);
+            this.password = bcrypt.hashSync(this.password, config.get('bcryptRounds'));
         }
 
         if (!this.hasOwnProperty('verification_code')) {
@@ -177,7 +175,7 @@ class User extends BaseModel {
         super.$beforeUpdate(opt, queryContext);
 
         if (this.hasOwnProperty('password')) {
-            this.password = bcrypt.hashSync(this.password, config.bcryptRounds);
+            this.password = bcrypt.hashSync(this.password, config.get('bcryptRounds'));
         }
     }
 

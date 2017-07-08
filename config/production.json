@@ -3,8 +3,7 @@
     "baseUrl": "https://api-next.atlauncher.com",
     "database": {
         "name": "atlauncher-next",
-        "username": "atlauncher-next",
-        "password": "changeme"
+        "username": "atlauncher-next"
     },
     "cache": {
         "type": "redis",
@@ -16,7 +15,6 @@
         }
     },
     "session": {
-        "secret": "changeme",
         "secure": true
     }
 }

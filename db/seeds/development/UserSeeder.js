@@ -1,8 +1,6 @@
 const bcrypt = require('bcryptjs');
 
-const getConfig = require('../../../src/config').getConfig;
-
-const config = getConfig();
+const config = require('config');
 
 exports.seed = function (knex, Promise) {
     return Promise.join(
@@ -17,7 +15,7 @@ exports.seed = function (knex, Promise) {
             {
                 id: '6a4133b2-aec9-4519-be18-e7df91e808b7',
                 username: 'admin',
-                password: bcrypt.hashSync('password', config.bcryptRounds),
+                password: bcrypt.hashSync('password', config.get('bcryptRounds')),
                 email: 'admin@example.com',
                 verification_code: 'testing',
                 created_at: new Date().toJSON()

@@ -1,6 +1,7 @@
 import cors from 'cors';
 import http from 'http';
 import path from 'path';
+import config from 'config';
 import helmet from 'helmet';
 import express from 'express';
 import passport from 'passport';
@@ -23,10 +24,8 @@ import routes from './routes';
 import { setupAuth } from './auth';
 import middleware from './middleware';
 import errorHandlers from './errorHandlers';
-import { environment, getConfig } from './config';
 import { convertTimeStringToMilliseconds } from './utils';
 
-const config = getConfig();
 const KnexSessionStore = new ConnectSessionKnex(session);
 const sessionStore = new KnexSessionStore({
     tablename: 'sessions',
@@ -44,7 +43,7 @@ app.use(responseTime({
 
 // setup sessions
 app.use(session({
-    ...config.session,
+    ...config.get('session'),
     store: sessionStore,
 }));
 
@@ -98,8 +97,8 @@ app.use(middleware());
 
 // rate limiting
 app.use('/', new RateLimit({
-    windowMs: convertTimeStringToMilliseconds(config.ratelimit.default.time),
-    max: config.ratelimit.default.requests,
+    windowMs: convertTimeStringToMilliseconds(config.get('ratelimit.default.time')),
+    max: config.get('ratelimit.default.requests'),
     delayMs: 0,
     statusCode: httpStatusCodes.TOO_MANY_REQUESTS,
     handler: function (req, res) {
@@ -109,7 +108,7 @@ app.use('/', new RateLimit({
         });
     },
     skip: function () {
-        return environment === 'test';
+        return config.util.getEnv('NODE_ENV') === 'test';
     },
 }));
 
@@ -119,9 +118,9 @@ routes(app);
 // setup error handlers
 errorHandlers(app);
 
-app.server.listen(process.env.PORT || config.port);
+app.server.listen(config.get('port'));
 
-if (environment !== 'test') {
+if (config.util.getEnv('NODE_ENV') !== 'test') {
     logger.info(`Started on port ${app.server.address().port}`);
 }
 
