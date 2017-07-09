@@ -117,6 +117,19 @@ NODE_ENV=production npm start
 
 This will compile all the src files with babel and then run the server.
 
+## Docker builds
+To build an image with Docker, simply run the following:
+
+```shell
+docker build -t atlauncher/backend-next .
+```
+
+Then to run:
+
+```shell
+docker run -p 8080:8080 atlauncher/backend-next
+```
+
 ## Contributing
 If you wish to contribute to this repository in any way, take a look at
 [CONTRIBUTING.md](CONTRIBUTING.md).
