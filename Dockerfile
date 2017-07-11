@@ -19,6 +19,7 @@ ENV NODE_ENV production
 VOLUME ["/app/logs"]
 
 EXPOSE 8080
+EXPOSE 443
 
 ENTRYPOINT ["/usr/local/bin/npm"]
 CMD ["start"]
